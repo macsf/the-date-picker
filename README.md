@@ -32,6 +32,16 @@ This runs automatically via the `prebuild` npm hook when you run `pnpm build`.
 
 To update holiday data (e.g. for a new year range), re-run the script and rebuild.
 
+## GitHub automation
+
+This repo includes two automations:
+
+- Library updates: Dependabot opens weekly PRs for npm dependencies and GitHub Actions versions.
+  - Config: `.github/dependabot.yml`
+- Holiday updates: a scheduled workflow regenerates `src/data/th-holidays.json` and opens a PR when changes are detected.
+  - Workflow: `.github/workflows/update-holidays.yml`
+  - Schedule: monthly (`0 3 1 * *`) plus manual trigger (`workflow_dispatch`)
+
 ---
 
 ## Quick start
