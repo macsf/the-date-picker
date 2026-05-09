@@ -17,7 +17,8 @@
   "files": ["dist"],
   "sideEffects": ["./dist/datepicker.css"],
   "scripts": {
-    "prebuild": "node scripts/gen-holidays.js",
+    "gen:holidays": "node scripts/gen-holidays.js",
+    "prebuild": "pnpm gen:holidays",
     "build": "vite build && tsc --project tsconfig.build.json",
     "build:demo": "vite build --config vite.demo.config.ts",
     "dev": "vite --config vite.demo.config.ts",
