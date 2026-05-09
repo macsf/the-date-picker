@@ -10,6 +10,8 @@
   --dp-primary: #2563eb;
   --dp-primary-text: #ffffff;
   --dp-range: #dbeafe;
+  --dp-weekend-header-text: #fca5a5;
+  --dp-weekend-text: #dc2626;
   --dp-text: #111827;
   --dp-muted: #9ca3af;
   --dp-bg: #ffffff;
@@ -132,6 +134,10 @@
   font-weight: 500;
 }
 
+[data-datepicker-root] .dp-weekday-label--weekend {
+  color: var(--dp-weekend-header-text);
+}
+
 [data-datepicker-root] .dp-week-row {
   display: grid;
   grid-template-columns: repeat(7, var(--dp-day-size));
@@ -232,6 +238,10 @@
 
 [data-datepicker-root] .dp-day--other-month {
   color: var(--dp-muted);
+}
+
+[data-datepicker-root] .dp-day--weekend {
+  color: var(--dp-weekend-text);
 }
 
 [data-datepicker-root] .dp-day--disabled {

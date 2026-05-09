@@ -4,6 +4,8 @@ export interface DatePickerTheme {
     primaryColor?: string;
     primaryTextColor?: string;
     rangeColor?: string;
+    weekendHeaderTextColor?: string;
+    weekendTextColor?: string;
     textColor?: string;
     mutedTextColor?: string;
     backgroundColor?: string;

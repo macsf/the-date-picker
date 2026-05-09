@@ -171,3 +171,31 @@ describe('DatePicker two-month navigation', () => {
     expect(yearSelects[1]).toHaveValue('2027')
   })
 })
+
+describe('DatePicker weekend highlighting', () => {
+  it('highlights weekends by default', () => {
+    render(<DatePicker value={new Date(2024, 0, 1)} />)
+
+    expect(screen.getByText('Su')).toHaveClass('dp-weekday-label--weekend')
+    expect(screen.getByText('Sa')).toHaveClass('dp-weekday-label--weekend')
+    expect(screen.getByRole('button', { name: 'Saturday, January 6, 2024' })).toHaveClass(
+      'dp-day--weekend',
+    )
+    expect(screen.getByRole('button', { name: 'Sunday, January 7, 2024' })).toHaveClass(
+      'dp-day--weekend',
+    )
+  })
+
+  it('can disable weekend highlighting', () => {
+    render(<DatePicker value={new Date(2024, 0, 1)} highlightWeekends={false} />)
+
+    expect(screen.getByText('Su')).not.toHaveClass('dp-weekday-label--weekend')
+    expect(screen.getByText('Sa')).not.toHaveClass('dp-weekday-label--weekend')
+    expect(screen.getByRole('button', { name: 'Saturday, January 6, 2024' })).not.toHaveClass(
+      'dp-day--weekend',
+    )
+    expect(screen.getByRole('button', { name: 'Sunday, January 7, 2024' })).not.toHaveClass(
+      'dp-day--weekend',
+    )
+  })
+})

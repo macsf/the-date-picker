@@ -33,6 +33,7 @@ export interface DatePickerProps {
   maxDate?: Date
   disabledDates?: Date[]
   weekStartsOn?: 0 | 1
+  highlightWeekends?: boolean
   calendarSystem?: 'gregorian' | 'buddhist'
   mode?: 'inline' | 'popover'
   triggerFormat?: string
@@ -57,6 +58,7 @@ export function DatePicker({
   maxDate,
   disabledDates,
   weekStartsOn = 0,
+  highlightWeekends = true,
   calendarSystem = 'gregorian',
   mode = 'inline',
   triggerFormat,
@@ -192,6 +194,7 @@ export function DatePicker({
     locale,
     calendarSystem,
     weekStartsOn,
+    highlightWeekends,
     showWeekNumbers,
     showHolidays,
     holidayTypes,

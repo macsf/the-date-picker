@@ -16,6 +16,7 @@ interface DayCellProps {
   isRowEnd: boolean
   isDisabled: boolean
   isToday: boolean
+  isWeekend: boolean
   holidays: HolidayInfo[]
   onClick: (date: Date) => void
   onMouseEnter: (date: Date) => void
@@ -33,6 +34,7 @@ export function DayCell({
   isRowEnd,
   isDisabled,
   isToday,
+  isWeekend,
   holidays,
   onClick,
   onMouseEnter,
@@ -46,6 +48,7 @@ export function DayCell({
   if (!isCurrentMonth) classNames.push('dp-day--other-month')
   if (isDisabled) classNames.push('dp-day--disabled')
   if (isToday) classNames.push('dp-day--today')
+  if (isWeekend) classNames.push('dp-day--weekend')
   if (isSelected || isRangeStart || isRangeEnd) classNames.push('dp-day--selected')
   if (isInRange) classNames.push('dp-day--in-range')
   if (isRangeStart) classNames.push('dp-day--range-start')

@@ -9,6 +9,8 @@ export function injectTheme(theme: DatePickerTheme): Record<string, string> {
   if (theme.primaryColor) vars['--dp-primary'] = theme.primaryColor
   if (theme.primaryTextColor) vars['--dp-primary-text'] = theme.primaryTextColor
   if (theme.rangeColor) vars['--dp-range'] = theme.rangeColor
+  if (theme.weekendHeaderTextColor) vars['--dp-weekend-header-text'] = theme.weekendHeaderTextColor
+  if (theme.weekendTextColor) vars['--dp-weekend-text'] = theme.weekendTextColor
   if (theme.textColor) vars['--dp-text'] = theme.textColor
   if (theme.mutedTextColor) vars['--dp-muted'] = theme.mutedTextColor
   if (theme.backgroundColor) vars['--dp-bg'] = theme.backgroundColor

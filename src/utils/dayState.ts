@@ -5,6 +5,7 @@ export interface DayStateContext {
   selectionMode: 'single' | 'range'
   selectedDate: Date | null
   activeRange: [Date, Date] | null
+  highlightWeekends: boolean
 }
 
 export interface DayState {
@@ -13,10 +14,11 @@ export interface DayState {
   isRangeEnd: boolean
   isInRange: boolean
   isToday: boolean
+  isWeekend: boolean
 }
 
 export function resolveDayState(date: Date, ctx: DayStateContext): DayState {
-  const { today, selectionMode, selectedDate, activeRange } = ctx
+  const { today, selectionMode, selectedDate, activeRange, highlightWeekends } = ctx
 
   const isSelected =
     selectionMode === 'single' &&
@@ -45,6 +47,7 @@ export function resolveDayState(date: Date, ctx: DayStateContext): DayState {
     !isSameDay(date, activeRange[1])
 
   const isToday = isSameDay(date, today)
+  const isWeekend = highlightWeekends && (date.getDay() === 0 || date.getDay() === 6)
 
-  return { isSelected, isRangeStart, isRangeEnd, isInRange, isToday }
+  return { isSelected, isRangeStart, isRangeEnd, isInRange, isToday, isWeekend }
 }

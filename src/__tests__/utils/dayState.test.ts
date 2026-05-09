@@ -12,6 +12,7 @@ function ctx(overrides: Partial<DayStateContext> = {}): DayStateContext {
     selectionMode: 'single',
     selectedDate: null,
     activeRange: null,
+    highlightWeekends: true,
     ...overrides,
   }
 }
@@ -26,6 +27,25 @@ describe('resolveDayState', () => {
     it('is false when date does not match today', () => {
       const result = resolveDayState(jan1, ctx())
       expect(result.isToday).toBe(false)
+    })
+  })
+
+  describe('isWeekend', () => {
+    it('is true on weekends when highlighting is enabled', () => {
+      const saturday = new Date(2024, 0, 6)
+      const result = resolveDayState(saturday, ctx())
+      expect(result.isWeekend).toBe(true)
+    })
+
+    it('is false on weekdays', () => {
+      const result = resolveDayState(jan5, ctx())
+      expect(result.isWeekend).toBe(false)
+    })
+
+    it('is false when weekend highlighting is disabled', () => {
+      const saturday = new Date(2024, 0, 6)
+      const result = resolveDayState(saturday, ctx({ highlightWeekends: false }))
+      expect(result.isWeekend).toBe(false)
     })
   })
 

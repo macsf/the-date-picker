@@ -14,6 +14,7 @@ export interface CalendarConfig {
   locale: 'th' | 'en'
   calendarSystem: 'gregorian' | 'buddhist'
   weekStartsOn: 0 | 1
+  highlightWeekends: boolean
   showWeekNumbers: boolean
   showHolidays: boolean
   holidayTypes: Array<'public' | 'bank' | 'observance'>
@@ -52,6 +53,7 @@ export function Calendar({
     locale,
     calendarSystem,
     weekStartsOn,
+    highlightWeekends,
     showWeekNumbers,
     showHolidays,
     holidayTypes,
@@ -70,6 +72,10 @@ export function Calendar({
     weekStartsOn === 1
       ? [...weekdays.slice(1), weekdays[0]]
       : weekdays
+  const orderedWeekdayIndexes =
+    weekStartsOn === 1
+      ? [1, 2, 3, 4, 5, 6, 0]
+      : [0, 1, 2, 3, 4, 5, 6]
 
   const weekNumbers = weeks.map((w) => getWeekNumber(w[0].date, weekStartsOn))
 
@@ -114,6 +120,7 @@ export function Calendar({
     selectionMode,
     selectedDate,
     activeRange,
+    highlightWeekends,
   }
 
   return (
@@ -135,7 +142,19 @@ export function Calendar({
           {/* Weekday headers */}
           <div className="dp-weekday-row">
             {orderedWeekdays.map((d, i) => (
-              <div key={i} className="dp-weekday-label" aria-hidden="true">
+              <div
+                key={i}
+                className={[
+                  'dp-weekday-label',
+                  highlightWeekends &&
+                  (orderedWeekdayIndexes[i] === 0 || orderedWeekdayIndexes[i] === 6)
+                    ? 'dp-weekday-label--weekend'
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                aria-hidden="true"
+              >
                 {d}
               </div>
             ))}
@@ -146,7 +165,7 @@ export function Calendar({
               {week.map((day, di) => {
                 const dayHolidays = holidays.getHolidaysForDate(day.date)
                 const disabled = checkDisabled(day.date, minDate, maxDate, disabledDates)
-                const { isSelected, isRangeStart, isRangeEnd, isInRange, isToday } =
+                const { isSelected, isRangeStart, isRangeEnd, isInRange, isToday, isWeekend } =
                   resolveDayState(day.date, dayStateCtx)
 
                 return (
@@ -162,6 +181,7 @@ export function Calendar({
                     isRowEnd={di === 6}
                     isDisabled={disabled}
                     isToday={isToday}
+                    isWeekend={isWeekend}
                     holidays={dayHolidays}
                     onClick={onDayClick}
                     onMouseEnter={onDayHover}

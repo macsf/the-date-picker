@@ -6,6 +6,8 @@ export const darkTheme: DatePickerTheme = {
   primaryColor: '#3B82F6',
   primaryTextColor: '#FFFFFF',
   rangeColor: '#1E3A5F',
+  weekendHeaderTextColor: '#FCA5A5',
+  weekendTextColor: '#F87171',
   textColor: '#F9FAFB',
   mutedTextColor: '#6B7280',
   backgroundColor: '#1F2937',

@@ -3,6 +3,7 @@ export interface CalendarConfig {
     locale: 'th' | 'en';
     calendarSystem: 'gregorian' | 'buddhist';
     weekStartsOn: 0 | 1;
+    highlightWeekends: boolean;
     showWeekNumbers: boolean;
     showHolidays: boolean;
     holidayTypes: Array<'public' | 'bank' | 'observance'>;
