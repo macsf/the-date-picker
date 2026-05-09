@@ -13,24 +13,81 @@ function fmtValue(v: Date | [Date, Date] | null): string {
 
 // ---- Code block renderer ----
 function CodeBlock({ code }: { code: string }) {
-  // Tokenize escaped source text so inserted markup is never re-processed.
-  const escaped = code
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+  const tokenPattern = /(<\/?[A-Za-z][A-Za-z0-9]*)|([a-zA-Z][a-zA-Z0-9]*=)|"([^"]*)"|\{(true|false)\}|\{(\d+)\}/g
 
-  const colored = escaped
-    .replace(/\b([a-zA-Z][a-zA-Z0-9]*)=/g, '<span class="token-prop">$1</span>=')
-    .replace(/"([^"]*)"/g, '"<span class="token-str">$1</span>"')
-    .replace(/\{(true|false)\}/g, '{<span class="token-bool">$1</span>}')
-    .replace(/\{(\d+)\}/g, '{<span class="token-num">$1</span>}')
-    .replace(/(&lt;\/?)([A-Za-z][A-Za-z0-9]*)/g, '$1<span class="token-tag">$2</span>')
+  const renderLine = (line: string) => {
+    const parts: React.ReactNode[] = []
+    let lastIndex = 0
+
+    for (const match of line.matchAll(tokenPattern)) {
+      const [fullMatch, tagToken, propToken, stringToken, boolToken, numToken] = match
+      const start = match.index ?? 0
+
+      if (start > lastIndex) {
+        parts.push(line.slice(lastIndex, start))
+      }
+
+      if (tagToken) {
+        const prefix = tagToken.startsWith('</') ? '</' : '<'
+        const tagName = tagToken.slice(prefix.length)
+        parts.push(prefix)
+        parts.push(
+          <span key={`${start}-tag`} className="token-tag">
+            {tagName}
+          </span>,
+        )
+      } else if (propToken) {
+        parts.push(
+          <span key={`${start}-prop`} className="token-prop">
+            {propToken.slice(0, -1)}
+          </span>,
+        )
+        parts.push('=')
+      } else if (stringToken != null) {
+        parts.push('"')
+        parts.push(
+          <span key={`${start}-str`} className="token-str">
+            {stringToken}
+          </span>,
+        )
+        parts.push('"')
+      } else if (boolToken) {
+        parts.push('{')
+        parts.push(
+          <span key={`${start}-bool`} className="token-bool">
+            {boolToken}
+          </span>,
+        )
+        parts.push('}')
+      } else if (numToken) {
+        parts.push('{')
+        parts.push(
+          <span key={`${start}-num`} className="token-num">
+            {numToken}
+          </span>,
+        )
+        parts.push('}')
+      }
+
+      lastIndex = start + fullMatch.length
+    }
+
+    if (lastIndex < line.length) {
+      parts.push(line.slice(lastIndex))
+    }
+
+    return parts
+  }
 
   return (
-    <div
-      className="demo-code"
-      dangerouslySetInnerHTML={{ __html: colored }}
-    />
+    <div className="demo-code">
+      {code.split('\n').map((line, index, lines) => (
+        <React.Fragment key={index}>
+          {renderLine(line)}
+          {index < lines.length - 1 ? '\n' : null}
+        </React.Fragment>
+      ))}
+    </div>
   )
 }
 
