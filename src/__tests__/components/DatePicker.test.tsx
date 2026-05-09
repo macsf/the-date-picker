@@ -95,3 +95,38 @@ describe('DatePicker natural language input', () => {
     })
   })
 })
+
+describe('DatePicker range selection', () => {
+  it('shows the new start immediately after completing an earlier range', async () => {
+    const user = userEvent.setup()
+    render(<ControlledRangeNaturalLanguagePicker />)
+
+    const currentMonthDays = screen
+      .getAllByRole('button')
+      .filter((button) => button.getAttribute('aria-label')?.includes(',') && button.tabIndex === 0)
+
+    expect(currentMonthDays.length).toBeGreaterThan(12)
+
+    const firstStart = currentMonthDays[0]
+    const firstEnd = currentMonthDays[3]
+    const nextStart = currentMonthDays[10]
+    const nextEnd = currentMonthDays[12]
+
+    await user.click(firstStart)
+    await user.click(firstEnd)
+
+    expect(firstStart).toHaveAttribute('aria-pressed', 'true')
+    expect(firstEnd).toHaveAttribute('aria-pressed', 'true')
+
+    await user.click(nextStart)
+
+    expect(firstStart).toHaveAttribute('aria-pressed', 'false')
+    expect(firstEnd).toHaveAttribute('aria-pressed', 'false')
+    expect(nextStart).toHaveAttribute('aria-pressed', 'true')
+
+    await user.click(nextEnd)
+
+    expect(nextStart).toHaveAttribute('aria-pressed', 'true')
+    expect(nextEnd).toHaveAttribute('aria-pressed', 'true')
+  })
+})

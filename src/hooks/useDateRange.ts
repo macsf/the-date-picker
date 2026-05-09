@@ -36,10 +36,13 @@ export function useDateRange({ value, onChange }: UseDateRangeOptions) {
 
   // Preview range while hovering after first click
   const previewRange: [Date, Date] | null = (() => {
-    if (pendingStart && hoverDate) {
-      const start = isBefore(hoverDate, pendingStart) ? hoverDate : pendingStart
-      const end = isBefore(hoverDate, pendingStart) ? pendingStart : hoverDate
-      return [start, end]
+    if (pendingStart) {
+      if (hoverDate) {
+        const start = isBefore(hoverDate, pendingStart) ? hoverDate : pendingStart
+        const end = isBefore(hoverDate, pendingStart) ? pendingStart : hoverDate
+        return [start, end]
+      }
+      return [pendingStart, pendingStart]
     }
     return value
   })()

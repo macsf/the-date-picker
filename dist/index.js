@@ -4702,9 +4702,12 @@ function mi({ value: n, onChange: e }) {
     },
     [r]
   ), c = (() => {
-    if (r && t) {
-      const l = ye(t, r) ? t : r, u = ye(t, r) ? r : t;
-      return [l, u];
+    if (r) {
+      if (t) {
+        const l = ye(t, r) ? t : r, u = ye(t, r) ? r : t;
+        return [l, u];
+      }
+      return [r, r];
     }
     return n;
   })();
