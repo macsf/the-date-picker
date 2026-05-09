@@ -61,20 +61,34 @@ describe('parseNaturalLanguage', () => {
   })
 
   describe('duration ranges — forward', () => {
-    it('parses "next 10 days" as today → today+10', () => {
+    it('parses "next 10 days" as range today → today+10 (duration)', () => {
       expectRange(parseNaturalLanguage('next 10 days', REF), '2026-05-09', '2026-05-19')
     })
 
-    it('parses "10 days from now" as today → today+10', () => {
-      expectRange(parseNaturalLanguage('10 days from now', REF), '2026-05-09', '2026-05-19')
+    it('parses "within 10 days" as range today → today+10 (deadline)', () => {
+      expectRange(parseNaturalLanguage('within 10 days', REF), '2026-05-09', '2026-05-19')
     })
 
-    it('parses "next 2 weeks" as today → today+14', () => {
+    it('parses "next 2 weeks" as range today → today+14', () => {
       expectRange(parseNaturalLanguage('next 2 weeks', REF), '2026-05-09', '2026-05-23')
     })
 
-    it('parses "next 3 months" as today → today+3 months', () => {
+    it('parses "next 3 months" as range today → today+3 months', () => {
       expectRange(parseNaturalLanguage('next 3 months', REF), '2026-05-09', '2026-08-09')
+    })
+  })
+
+  describe('target dates — forward point', () => {
+    it('parses "10 days from now" as single target date today+10', () => {
+      expectSingle(parseNaturalLanguage('10 days from now', REF), '2026-05-19')
+    })
+
+    it('parses "2 weeks from now" as single target date today+14', () => {
+      expectSingle(parseNaturalLanguage('2 weeks from now', REF), '2026-05-23')
+    })
+
+    it('parses "3 months from now" as single target date today+3 months', () => {
+      expectSingle(parseNaturalLanguage('3 months from now', REF), '2026-08-09')
     })
   })
 

@@ -18,8 +18,11 @@ export interface ParsedDates {
   text: string
 }
 
-// Matches: "next N days/weeks/months" or "N days/weeks/months from now"
-const FORWARD_DURATION = /^(?:next\s+)?(\d+)\s+(day|days|week|weeks|month|months)(?:\s+from\s+now)?$/i
+// "next N days/weeks/months" or "within N days/weeks/months" → duration range [today, today+N]
+const FORWARD_RANGE = /^(?:next|within)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i
+
+// "N days/weeks/months from now" → single target date (today+N)
+const FORWARD_POINT = /^(\d+)\s+(day|days|week|weeks|month|months)\s+from\s+now$/i
 
 // Matches: "last N days/weeks/months" or "past N days/weeks/months"
 const BACKWARD_DURATION = /^(?:last|past)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i
@@ -76,12 +79,20 @@ export function parseNaturalLanguage(text: string, ref: Date = new Date()): Pars
   const trimmed = text.trim()
   if (!trimmed) return null
 
-  // 1. Forward duration: "next 10 days", "10 days from now", "next 2 weeks"
-  const forwardMatch = trimmed.match(FORWARD_DURATION)
-  if (forwardMatch) {
-    const n = parseInt(forwardMatch[1], 10)
-    const unit = forwardMatch[2]
+  // 1a. Duration range: "next 10 days", "within 2 weeks" → [today, today+N]
+  const forwardRangeMatch = trimmed.match(FORWARD_RANGE)
+  if (forwardRangeMatch) {
+    const n = parseInt(forwardRangeMatch[1], 10)
+    const unit = forwardRangeMatch[2]
     return { range: [ref, addUnit(ref, n, unit)], text }
+  }
+
+  // 1b. Target date: "10 days from now" → single date today+N
+  const forwardPointMatch = trimmed.match(FORWARD_POINT)
+  if (forwardPointMatch) {
+    const n = parseInt(forwardPointMatch[1], 10)
+    const unit = forwardPointMatch[2]
+    return { single: addUnit(ref, n, unit), text }
   }
 
   // 2. Backward duration: "last 30 days", "past 7 days"
