@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { isSameDay, isWithinInterval, startOfDay } from 'date-fns'
 import { buildCalendarGrid, getWeekNumber } from '../utils/calendar'
 import { isDisabled as checkDisabled } from '../utils/disabled'
+import { resolveDayState, type DayStateContext } from '../utils/dayState'
 import { DayCell } from './DayCell'
 import { MonthNav } from './MonthNav'
 import { WeekNumbers } from './WeekNumbers'
@@ -118,6 +118,13 @@ export function Calendar({
   )
 
   const activeRange = previewRange ?? rangeValue
+  const today = new Date()
+  const dayStateCtx: DayStateContext = {
+    today,
+    selectionMode,
+    selectedDate,
+    activeRange,
+  }
 
   return (
     <div className="dp-calendar">
@@ -150,34 +157,8 @@ export function Calendar({
                 const dateKey = day.date.toISOString().slice(0, 10)
                 const dayHolidays = holidayMap.get(dateKey) ?? []
                 const disabled = checkDisabled(day.date, minDate, maxDate, disabledDates)
-
-                const isSelected =
-                  selectionMode === 'single' &&
-                  selectedDate != null &&
-                  isSameDay(day.date, selectedDate)
-
-                const isRangeStart =
-                  selectionMode === 'range' &&
-                  activeRange != null &&
-                  isSameDay(day.date, activeRange[0])
-
-                const isRangeEnd =
-                  selectionMode === 'range' &&
-                  activeRange != null &&
-                  isSameDay(day.date, activeRange[1])
-
-                const isInRange =
-                  selectionMode === 'range' &&
-                  activeRange != null &&
-                  !isSameDay(activeRange[0], activeRange[1]) &&
-                  isWithinInterval(startOfDay(day.date), {
-                    start: startOfDay(activeRange[0]),
-                    end: startOfDay(activeRange[1]),
-                  }) &&
-                  !isSameDay(day.date, activeRange[0]) &&
-                  !isSameDay(day.date, activeRange[1])
-
-                const isToday = isSameDay(day.date, new Date())
+                const { isSelected, isRangeStart, isRangeEnd, isInRange, isToday } =
+                  resolveDayState(day.date, dayStateCtx)
 
                 return (
                   <DayCell
