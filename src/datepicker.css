@@ -178,6 +178,12 @@
   position: relative;
   width: var(--dp-day-size);
   height: var(--dp-day-size);
+  z-index: 0;
+}
+
+[data-datepicker-root] .dp-day-wrapper:hover,
+[data-datepicker-root] .dp-day-wrapper:focus-within {
+  z-index: 2;
 }
 
 /* Range fill background */
@@ -227,8 +233,9 @@
   font-size: var(--dp-font-size);
   color: var(--dp-text);
   font-family: var(--dp-font-family);
-  padding-top: 6px;
-  gap: 0;
+  padding-top: calc(var(--dp-day-size) * 0.08);
+  padding-bottom: calc(var(--dp-day-size) * 0.08);
+  gap: calc(var(--dp-day-size) * 0.04);
   transition: background 0.1s;
 }
 
@@ -268,6 +275,7 @@
 
 [data-datepicker-root] .dp-day-number {
   line-height: 1;
+  flex-shrink: 0;
 }
 
 /* =============================================
@@ -275,19 +283,20 @@
    ============================================= */
 
 [data-datepicker-root] .dp-holiday-dots {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   display: flex;
   gap: 2px;
   align-items: center;
+  justify-content: center;
+  min-height: clamp(4px, calc(var(--dp-day-size) * 0.12), 6px);
+  flex-shrink: 0;
+  margin-top: clamp(2px, calc((var(--dp-day-size) - var(--dp-font-size) - 12px) / 2), 8px);
 }
 
 [data-datepicker-root] .dp-holiday-dot {
   display: block;
-  width: 4px;
-  height: 4px;
+  width: clamp(3px, calc(var(--dp-day-size) * 0.11), 4px);
+  height: clamp(3px, calc(var(--dp-day-size) * 0.11), 4px);
   border-radius: 50%;
 }
 
@@ -352,12 +361,24 @@
   width: calc(7 * var(--dp-day-size));
 }
 
+[data-datepicker-root]:has(.dp-months--2) .dp-preset-chips {
+  width: 100%;
+}
+
 [data-datepicker-root] .dp-preset-dropdown-wrap {
+  display: flex;
+  justify-content: flex-start;
   width: calc(7 * var(--dp-day-size));
 }
 
-[data-datepicker-root] .dp-preset-select {
+[data-datepicker-root]:has(.dp-months--2) .dp-preset-dropdown-wrap {
+  justify-content: flex-end;
   width: 100%;
+}
+
+[data-datepicker-root] .dp-preset-select {
+  width: auto;
+  max-width: 100%;
   padding: 8px 10px;
   border: 1px solid var(--dp-border);
   border-radius: 8px;
