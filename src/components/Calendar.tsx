@@ -163,7 +163,7 @@ export function Calendar({
           {weeks.map((week, wi) => (
             <div key={wi} className="dp-week-row">
               {week.map((day, di) => {
-                const dayHolidays = holidays.getHolidaysForDate(day.date)
+                const dayHolidays = showHolidays ? holidays.getHolidaysForDate(day.date) : []
                 const disabled = checkDisabled(day.date, minDate, maxDate, disabledDates)
                 const { isSelected, isRangeStart, isRangeEnd, isInRange, isToday, isWeekend } =
                   resolveDayState(day.date, dayStateCtx)
