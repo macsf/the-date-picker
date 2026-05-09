@@ -70,6 +70,18 @@ describe('5. Holiday anchors', () => {
   it('"Halloween 2025"      → 2025-10-31 (explicit year)', () => expectSingle(parseNaturalLanguage('Halloween 2025', REF), '2025-10-31'))
 })
 
+// ─── Group 5b: Thai Holiday Anchors ────────────────────────────────────────────
+
+describe('5b. Thai holiday anchors', () => {
+  it('"Songkran"             → 2027-04-13 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Songkran', REF), '2027-04-13'))
+  it('"Thai New Year"        → 2027-04-13 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Thai New Year', REF), '2027-04-13'))
+  it('"Chakri Day"           → 2027-04-06 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Chakri Day', REF), '2027-04-06'))
+  it('"Coronation Day"       → 2027-05-04 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Coronation Day', REF), '2027-05-04'))
+  it('"King\'s Birthday"     → 2026-07-28 (future in 2026)', () => expectSingle(parseNaturalLanguage("King's Birthday", REF), '2026-07-28'))
+  it('"Queen Mother\'s Birthday" → 2026-08-12 (future in 2026)', () => expectSingle(parseNaturalLanguage("Queen Mother's Birthday", REF), '2026-08-12'))
+  it('"Songkran 2027"        → 2027-04-13 (explicit year)', () => expectSingle(parseNaturalLanguage('Songkran 2027', REF), '2027-04-13'))
+})
+
 // ─── Group 6: Complex/Nested Phrases ──────────────────────────────────────────
 
 describe('6. Complex/nested phrases', () => {

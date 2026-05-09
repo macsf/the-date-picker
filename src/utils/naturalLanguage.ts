@@ -55,8 +55,8 @@ const WEEKDAY_AFTER_NEXT = /^(?:the\s+)?(sunday|monday|tuesday|wednesday|thursda
 // "N unit(s) from <anchor>", "a unit from <anchor>" — e.g. "two weeks from yesterday", "a week from tomorrow"
 const UNIT_FROM_ANCHOR = /^(a|\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(day|days|week|weeks|month|months)\s+from\s+(.+)$/i
 
-// Holiday with explicit year: "christmas 2027", "halloween 2026"
-const HOLIDAY_WITH_YEAR = /^(christmas|halloween|valentine|"?new\s+year"?|independence\s+day|veterans\s+day|st\.?\s+patrick|cinco\s+de\s+mayo)\s+(\d{4})$/i
+// Holiday with explicit year: "christmas 2027", "halloween 2026", "songkran 2027"
+const HOLIDAY_WITH_YEAR = /^(christmas|halloween|valentine|"?new\s+year"?|independence\s+day|veterans\s+day|st\.?\s+patrick|cinco\s+de\s+mayo|songkran|chakri\s+day|coronation\s+day|king's?\s+birthday|queen\s+(?:mother's\s+)?birthday|king\s+chulalongkorn\s+day|constitution\s+day|thai\s+new\s+year)\s+(\d{4})$/i
 
 // Holiday names → fixed [month, day]
 const HOLIDAYS: Record<string, [number, number]> = {
@@ -80,6 +80,19 @@ const HOLIDAYS: Record<string, [number, number]> = {
   'st patricks day': [3, 17],
   'cinco de mayo': [5, 5],
   'veterans day': [11, 11],
+  // Thai fixed holidays
+  'chakri day': [4, 6],
+  'chakri memorial day': [4, 6],
+  'coronation day': [5, 4],
+  'songkran': [4, 13],
+  'songkran festival': [4, 13],
+  'thai new year': [4, 13],
+  "king's birthday": [7, 28],
+  "queen mother's birthday": [8, 12],
+  'queen suthida\'s birthday': [6, 3],
+  'king bhumibol memorial day': [10, 13],
+  'king chulalongkorn day': [10, 23],
+  'constitution day': [12, 10],
 }
 
 const WEEKDAY_MAP: Record<string, number> = {
