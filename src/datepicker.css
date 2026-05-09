@@ -376,6 +376,37 @@
 }
 
 /* =============================================
+   Footer actions
+   ============================================= */
+
+[data-datepicker-root] .dp-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+[data-datepicker-root] .dp-footer-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--dp-border);
+  background: var(--dp-bg);
+  color: var(--dp-text);
+  font-size: calc(var(--dp-font-size) - 1px);
+  font-family: var(--dp-font-family);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+[data-datepicker-root] .dp-footer-btn:hover:not(:disabled) {
+  background: var(--dp-surface);
+}
+
+[data-datepicker-root] .dp-footer-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =============================================
    Popover trigger
    ============================================= */
 

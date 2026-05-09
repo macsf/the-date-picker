@@ -68,7 +68,31 @@ describe('DatePicker popover mode', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
   })
+
+  it('closes after clicking the today button', async () => {
+    const user = userEvent.setup()
+    render(<DatePicker mode="popover" selectionMode="single" showTodayButton />)
+
+    await user.click(screen.getByRole('button', { name: 'Select date' }))
+    await user.click(screen.getByRole('button', { name: 'Today' }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+  })
 })
+
+function ControlledSingleTodayPicker() {
+  const [value, setValue] = useState<Date | [Date, Date] | null>(null)
+
+  return <DatePicker value={value} onChange={setValue} showTodayButton />
+}
+
+function ControlledRangeTodayPicker() {
+  const [value, setValue] = useState<Date | [Date, Date] | null>(null)
+
+  return <DatePicker selectionMode="range" value={value} onChange={setValue} showTodayButton />
+}
 
 describe('DatePicker natural language input', () => {
   it('selects a one-day range when a single-date phrase is entered in range mode', async () => {
@@ -197,5 +221,48 @@ describe('DatePicker weekend highlighting', () => {
     expect(screen.getByRole('button', { name: 'Sunday, January 7, 2024' })).not.toHaveClass(
       'dp-day--weekend',
     )
+  })
+})
+
+describe('DatePicker today button', () => {
+  it('selects today in single mode', async () => {
+    const user = userEvent.setup()
+    render(<ControlledSingleTodayPicker />)
+
+    const todayLabel = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Today' }))
+
+    expect(screen.getByRole('button', { name: todayLabel })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('selects a one-day range in range mode', async () => {
+    const user = userEvent.setup()
+    render(<ControlledRangeTodayPicker />)
+
+    const todayLabel = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    await user.click(screen.getByRole('button', { name: 'Today' }))
+
+    expect(screen.getByRole('button', { name: todayLabel })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('is disabled when today is not selectable', () => {
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+
+    render(<DatePicker showTodayButton minDate={tomorrow} />)
+
+    expect(screen.getByRole('button', { name: 'Today' })).toBeDisabled()
   })
 })

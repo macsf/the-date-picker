@@ -139,6 +139,8 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `disabledDates` | `Date[]` | — | Specific dates to disable |
 | `weekStartsOn` | `0 \| 1` | `0` | Week start: 0 = Sunday, 1 = Monday |
 | `highlightWeekends` | `boolean` | `true` | Highlight Saturday and Sunday dates with the theme weekend color |
+| `showTodayButton` | `boolean` | `false` | Show a footer action that selects today immediately |
+| `todayButtonLabel` | `string` | `"Today"` | Override the footer action label |
 | `calendarSystem` | `"gregorian" \| "buddhist"` | `"gregorian"` | Display year as BE (+543) when `"buddhist"` |
 | `mode` | `"inline" \| "popover"` | `"inline"` | Inline calendar or floating popover |
 | `triggerFormat` | `string` | `"dd MMM yyyy"` | date-fns format string for popover trigger label |

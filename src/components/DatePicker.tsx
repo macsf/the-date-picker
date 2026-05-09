@@ -12,6 +12,7 @@ import type { DatePickerTheme } from '../theme/types'
 import type { Preset } from '../utils/presets'
 import type { CustomHolidayConfig } from '../hooks/useHolidays'
 import { toLocalDate } from '../utils/dateNormalize'
+import { isDisabled as checkDisabled } from '../utils/disabled'
 
 export type { CustomHolidayConfig }
 
@@ -34,6 +35,8 @@ export interface DatePickerProps {
   disabledDates?: Date[]
   weekStartsOn?: 0 | 1
   highlightWeekends?: boolean
+  showTodayButton?: boolean
+  todayButtonLabel?: string
   calendarSystem?: 'gregorian' | 'buddhist'
   mode?: 'inline' | 'popover'
   triggerFormat?: string
@@ -59,6 +62,8 @@ export function DatePicker({
   disabledDates,
   weekStartsOn = 0,
   highlightWeekends = true,
+  showTodayButton = false,
+  todayButtonLabel = 'Today',
   calendarSystem = 'gregorian',
   mode = 'inline',
   triggerFormat,
@@ -132,6 +137,25 @@ export function DatePicker({
     [numberOfMonths, onChange, mode, popover],
   )
 
+  const applyTodaySelection = useCallback(() => {
+    const today = toLocalDate(new Date())
+
+    if (selectionMode === 'range') {
+      onChange?.([today, today])
+      setVisibleMonthsForRange(today, today)
+    } else {
+      onChange?.(today)
+      setLeftMonth(new Date(today.getFullYear(), today.getMonth(), 1))
+      if (numberOfMonths === 2) {
+        setRightMonth(new Date(today.getFullYear(), today.getMonth() + 1, 1))
+      }
+    }
+
+    if (mode === 'popover') {
+      popover.close()
+    }
+  }, [selectionMode, onChange, setVisibleMonthsForRange, numberOfMonths, mode, popover])
+
   const handleRangeClick = useCallback(
     (date: Date) => {
       const hadPendingStart = pendingStart !== null
@@ -175,6 +199,7 @@ export function DatePicker({
   )
 
   const dayClickHandler = selectionMode === 'range' ? handleRangeClick : handleSingleClick
+  const todayDisabled = checkDisabled(toLocalDate(new Date()), minDate, maxDate, disabledDates)
 
   const defaultTriggerFormat =
     selectionMode === 'range' ? 'dd MMM yyyy' : 'dd MMM yyyy'
@@ -249,6 +274,18 @@ export function DatePicker({
           />
         )}
       </div>
+      {showTodayButton && (
+        <div className="dp-footer-actions">
+          <button
+            type="button"
+            className="dp-footer-btn"
+            onClick={applyTodaySelection}
+            disabled={todayDisabled}
+          >
+            {todayButtonLabel}
+          </button>
+        </div>
+      )}
       {/* aria-live region for screen reader announcements */}
       <div
         role="status"

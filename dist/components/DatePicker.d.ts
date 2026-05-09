@@ -21,9 +21,11 @@ export interface DatePickerProps {
     disabledDates?: Date[];
     weekStartsOn?: 0 | 1;
     highlightWeekends?: boolean;
+    showTodayButton?: boolean;
+    todayButtonLabel?: string;
     calendarSystem?: 'gregorian' | 'buddhist';
     mode?: 'inline' | 'popover';
     triggerFormat?: string;
     className?: string;
 }
-export declare function DatePicker({ numberOfMonths, selectionMode, value, onChange, locale, theme, presets, customHolidays, holidayTypes, showNaturalLanguageInput, showPresets, showHolidays, showWeekNumbers, minDate, maxDate, disabledDates, weekStartsOn, highlightWeekends, calendarSystem, mode, triggerFormat, className, }: DatePickerProps): import("react/jsx-runtime").JSX.Element;
+export declare function DatePicker({ numberOfMonths, selectionMode, value, onChange, locale, theme, presets, customHolidays, holidayTypes, showNaturalLanguageInput, showPresets, showHolidays, showWeekNumbers, minDate, maxDate, disabledDates, weekStartsOn, highlightWeekends, showTodayButton, todayButtonLabel, calendarSystem, mode, triggerFormat, className, }: DatePickerProps): import("react/jsx-runtime").JSX.Element;

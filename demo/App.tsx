@@ -75,11 +75,12 @@ function SingleSection() {
             selectionMode="single"
             value={value}
             onChange={(v) => setValue(v as Date | null)}
+            showTodayButton
           />
         </div>
         <div className="demo-info">
           <ValueDisplay value={value} />
-          <CodeBlock code={`<DatePicker\n  selectionMode="single"\n  value={value}\n  onChange={setValue}\n/>`} />
+          <CodeBlock code={`<DatePicker\n  selectionMode="single"\n  value={value}\n  onChange={setValue}\n  showTodayButton={true}\n/>`} />
         </div>
       </div>
     </div>
