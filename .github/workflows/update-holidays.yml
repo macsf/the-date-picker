@@ -35,7 +35,7 @@ jobs:
         run: node scripts/gen-holidays.js
 
       - name: Create pull request if data changed
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: chore/update-th-holidays
           title: "chore: update Thai holiday data"
