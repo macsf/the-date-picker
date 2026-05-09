@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { computePopoverPosition } from '../utils/popover'
 
 export interface PopoverPosition {
   top: number
@@ -20,34 +21,18 @@ export function usePopover() {
   const close = useCallback(() => setIsOpen(false), [])
   const toggle = useCallback(() => setIsOpen((v) => !v), [])
 
-  // Compute position relative to trigger
   const updatePosition = useCallback(() => {
     if (!triggerRef.current || !popoverRef.current) return
-
-    const triggerRect = triggerRef.current.getBoundingClientRect()
-    const popoverRect = popoverRef.current.getBoundingClientRect()
-    const viewportH = window.innerHeight
-    const viewportW = window.innerWidth
-
-    const spaceBelow = viewportH - triggerRect.bottom
-    const spaceAbove = triggerRect.top
-    const placement =
-      spaceBelow >= popoverRect.height || spaceBelow >= spaceAbove
-        ? 'bottom'
-        : 'top'
-
-    let left = triggerRect.left + window.scrollX
-    if (left + popoverRect.width > viewportW) {
-      left = viewportW - popoverRect.width - 8
-    }
-    left = Math.max(8, left)
-
-    const top =
-      placement === 'bottom'
-        ? triggerRect.bottom + window.scrollY + 4
-        : triggerRect.top + window.scrollY - popoverRect.height - 4
-
-    setPosition({ top, left, placement })
+    setPosition(
+      computePopoverPosition({
+        triggerRect: triggerRef.current.getBoundingClientRect(),
+        popoverRect: popoverRef.current.getBoundingClientRect(),
+        viewportWidth: window.innerWidth,
+        viewportHeight: window.innerHeight,
+        scrollX: window.scrollX,
+        scrollY: window.scrollY,
+      }),
+    )
   }, [])
 
   useEffect(() => {
