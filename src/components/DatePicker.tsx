@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { format } from 'date-fns'
-import { Calendar } from './Calendar'
+import { Calendar, type CalendarConfig } from './Calendar'
 import { PresetChips } from './PresetChips'
 import { NaturalLanguageInput } from './NaturalLanguageInput'
 import { Popover } from './Popover'
@@ -143,6 +143,30 @@ export function DatePicker({
     return 'Select date'
   })()
 
+  const calendarConfig: CalendarConfig = {
+    locale,
+    calendarSystem,
+    weekStartsOn,
+    showWeekNumbers,
+    showHolidays,
+    holidayTypes,
+    customHolidays,
+    minDate,
+    maxDate,
+    disabledDates,
+  }
+
+  const sharedCalendarProps = {
+    selectionMode,
+    selectedDate,
+    rangeValue,
+    previewRange,
+    onDayClick: dayClickHandler,
+    onDayHover: selectionMode === 'range' ? handleDayHover : () => {},
+    onAnnounce: setAnnouncement,
+    config: calendarConfig,
+  }
+
   const calendarContent = (
     <div
       className={['dp-calendar-panel', className].filter(Boolean).join(' ')}
@@ -165,47 +189,15 @@ export function DatePicker({
       )}
       <div className={`dp-months dp-months--${numberOfMonths}`}>
         <Calendar
+          {...sharedCalendarProps}
           month={leftMonth}
           onMonthChange={setLeftMonth}
-          selectionMode={selectionMode}
-          selectedDate={selectedDate}
-          rangeValue={rangeValue}
-          previewRange={previewRange}
-          onDayClick={dayClickHandler}
-          onDayHover={selectionMode === 'range' ? handleDayHover : () => {}}
-          locale={locale}
-          calendarSystem={calendarSystem}
-          weekStartsOn={weekStartsOn}
-          showWeekNumbers={showWeekNumbers}
-          showHolidays={showHolidays}
-          holidayTypes={holidayTypes}
-          customHolidays={customHolidays}
-          minDate={minDate}
-          maxDate={maxDate}
-          disabledDates={disabledDates}
-          onAnnounce={setAnnouncement}
         />
         {numberOfMonths === 2 && (
           <Calendar
+            {...sharedCalendarProps}
             month={rightMonth}
             onMonthChange={(m) => setLeftMonth(new Date(m.getFullYear(), m.getMonth() - 1, 1))}
-            selectionMode={selectionMode}
-            selectedDate={selectedDate}
-            rangeValue={rangeValue}
-            previewRange={previewRange}
-            onDayClick={dayClickHandler}
-            onDayHover={selectionMode === 'range' ? handleDayHover : () => {}}
-            locale={locale}
-            calendarSystem={calendarSystem}
-            weekStartsOn={weekStartsOn}
-            showWeekNumbers={showWeekNumbers}
-            showHolidays={showHolidays}
-            holidayTypes={holidayTypes}
-            customHolidays={customHolidays}
-            minDate={minDate}
-            maxDate={maxDate}
-            disabledDates={disabledDates}
-            onAnnounce={setAnnouncement}
           />
         )}
       </div>

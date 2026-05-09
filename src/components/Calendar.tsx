@@ -10,15 +10,7 @@ import { useHolidays, type CustomHolidayConfig } from '../hooks/useHolidays'
 const WEEKDAY_LABELS_EN = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const WEEKDAY_LABELS_TH = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
 
-interface CalendarProps {
-  month: Date
-  onMonthChange: (month: Date) => void
-  selectionMode: 'single' | 'range'
-  selectedDate: Date | null
-  rangeValue: [Date, Date] | null
-  previewRange: [Date, Date] | null
-  onDayClick: (date: Date) => void
-  onDayHover: (date: Date | null) => void
+export interface CalendarConfig {
   locale: 'th' | 'en'
   calendarSystem: 'gregorian' | 'buddhist'
   weekStartsOn: 0 | 1
@@ -29,8 +21,19 @@ interface CalendarProps {
   minDate?: Date
   maxDate?: Date
   disabledDates?: Date[]
-  // aria-live announcement target
+}
+
+interface CalendarProps {
+  month: Date
+  onMonthChange: (month: Date) => void
+  selectionMode: 'single' | 'range'
+  selectedDate: Date | null
+  rangeValue: [Date, Date] | null
+  previewRange: [Date, Date] | null
+  onDayClick: (date: Date) => void
+  onDayHover: (date: Date | null) => void
   onAnnounce: (msg: string) => void
+  config: CalendarConfig
 }
 
 export function Calendar({
@@ -42,18 +45,22 @@ export function Calendar({
   previewRange,
   onDayClick,
   onDayHover,
-  locale,
-  calendarSystem,
-  weekStartsOn,
-  showWeekNumbers,
-  showHolidays,
-  holidayTypes,
-  customHolidays,
-  minDate,
-  maxDate,
-  disabledDates,
   onAnnounce,
+  config,
 }: CalendarProps) {
+  const {
+    locale,
+    calendarSystem,
+    weekStartsOn,
+    showWeekNumbers,
+    showHolidays,
+    holidayTypes,
+    customHolidays,
+    minDate,
+    maxDate,
+    disabledDates,
+  } = config
+
   const { weeks } = buildCalendarGrid(month, weekStartsOn)
   const year = month.getFullYear()
   const holidays = useHolidays(year, locale, holidayTypes, showHolidays, customHolidays)
