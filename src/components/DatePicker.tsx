@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { format } from 'date-fns'
+import { format, isSameMonth } from 'date-fns'
 import { Calendar, type CalendarConfig } from './Calendar'
 import { PresetChips } from './PresetChips'
 import { NaturalLanguageInput } from './NaturalLanguageInput'
@@ -77,8 +77,17 @@ export function DatePicker({
     }
     return new Date(now.getFullYear(), now.getMonth(), 1)
   })
-
-  const rightMonth = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1)
+  const [rightMonth, setRightMonth] = useState<Date>(() => {
+    if (Array.isArray(value) && value[1]) {
+      const start = value[0] ? toLocalDate(value[0]) : null
+      const normalized = toLocalDate(value[1])
+      if (start && !isSameMonth(start, normalized)) {
+        return new Date(normalized.getFullYear(), normalized.getMonth(), 1)
+      }
+      return new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1)
+    }
+    return new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1)
+  })
 
   const [announcement, setAnnouncement] = useState('')
 
@@ -90,14 +99,35 @@ export function DatePicker({
     onChange: (r) => onChange?.(r),
   })
 
+  const setVisibleMonthsForRange = useCallback(
+    (start: Date, end?: Date) => {
+      const normalizedStart = toLocalDate(start)
+      setLeftMonth(new Date(normalizedStart.getFullYear(), normalizedStart.getMonth(), 1))
+
+      if (numberOfMonths === 2) {
+        const normalizedEnd = toLocalDate(end ?? start)
+        const nextRight = isSameMonth(normalizedStart, normalizedEnd)
+          ? new Date(normalizedStart.getFullYear(), normalizedStart.getMonth() + 1, 1)
+          : new Date(normalizedEnd.getFullYear(), normalizedEnd.getMonth(), 1)
+        setRightMonth(nextRight)
+      }
+    },
+    [numberOfMonths],
+  )
+
   const handleSingleClick = useCallback(
     (date: Date) => {
-      onChange?.(toLocalDate(date))
+      const normalized = toLocalDate(date)
+      onChange?.(normalized)
+      setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
+      if (numberOfMonths === 2) {
+        setRightMonth(new Date(normalized.getFullYear(), normalized.getMonth() + 1, 1))
+      }
       if (mode === 'popover') {
         popover.close()
       }
     },
-    [onChange, mode, popover],
+    [numberOfMonths, onChange, mode, popover],
   )
 
   const handleRangeClick = useCallback(
@@ -114,8 +144,9 @@ export function DatePicker({
   const handleRangePresetSelect = useCallback(
     (range: [Date, Date]) => {
       onChange?.(range)
+      setVisibleMonthsForRange(range[0], range[1])
     },
-    [onChange],
+    [onChange, setVisibleMonthsForRange],
   )
 
   const handleNLCommit = useCallback(
@@ -123,22 +154,22 @@ export function DatePicker({
       if (selectionMode === 'single' && result.single) {
         const normalized = toLocalDate(result.single)
         onChange?.(normalized)
-        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
+        setVisibleMonthsForRange(normalized, new Date(normalized.getFullYear(), normalized.getMonth() + 1, 1))
       } else if (selectionMode === 'range' && result.range) {
         const normalized = [toLocalDate(result.range[0]), toLocalDate(result.range[1])] as [Date, Date]
         onChange?.(normalized)
-        setLeftMonth(new Date(normalized[0].getFullYear(), normalized[0].getMonth(), 1))
+        setVisibleMonthsForRange(normalized[0], normalized[1])
       } else if (selectionMode === 'range' && result.single) {
         const normalized = toLocalDate(result.single)
         onChange?.([normalized, normalized])
-        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
+        setVisibleMonthsForRange(normalized, normalized)
       } else if (result.single) {
         const normalized = toLocalDate(result.single)
         onChange?.(normalized)
-        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
+        setVisibleMonthsForRange(normalized, new Date(normalized.getFullYear(), normalized.getMonth() + 1, 1))
       }
     },
-    [selectionMode, onChange],
+    [selectionMode, onChange, setVisibleMonthsForRange],
   )
 
   const dayClickHandler = selectionMode === 'range' ? handleRangeClick : handleSingleClick
@@ -211,7 +242,7 @@ export function DatePicker({
           <Calendar
             {...sharedCalendarProps}
             month={rightMonth}
-            onMonthChange={(m) => setLeftMonth(new Date(m.getFullYear(), m.getMonth() - 1, 1))}
+            onMonthChange={setRightMonth}
           />
         )}
       </div>

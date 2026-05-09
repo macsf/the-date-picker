@@ -130,3 +130,44 @@ describe('DatePicker range selection', () => {
     expect(nextEnd).toHaveAttribute('aria-pressed', 'true')
   })
 })
+
+describe('DatePicker two-month navigation', () => {
+  it('lets left and right visible months change independently', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <DatePicker
+        numberOfMonths={2}
+        selectionMode="range"
+        value={[new Date(2026, 10, 10), new Date(2026, 10, 12)]}
+      />,
+    )
+
+    const monthSelects = screen.getAllByRole('combobox', { name: 'Select month' })
+    const yearSelects = screen.getAllByRole('combobox', { name: 'Select year' })
+
+    expect(monthSelects).toHaveLength(2)
+    expect(yearSelects).toHaveLength(2)
+
+    expect(monthSelects[0]).toHaveValue('10')
+    expect(yearSelects[0]).toHaveValue('2026')
+    expect(monthSelects[1]).toHaveValue('11')
+    expect(yearSelects[1]).toHaveValue('2026')
+
+    await user.selectOptions(yearSelects[1], '2027')
+    await user.selectOptions(monthSelects[1], '0')
+
+    expect(monthSelects[0]).toHaveValue('10')
+    expect(yearSelects[0]).toHaveValue('2026')
+    expect(monthSelects[1]).toHaveValue('0')
+    expect(yearSelects[1]).toHaveValue('2027')
+
+    await user.selectOptions(yearSelects[0], '2028')
+    await user.selectOptions(monthSelects[0], '4')
+
+    expect(monthSelects[0]).toHaveValue('4')
+    expect(yearSelects[0]).toHaveValue('2028')
+    expect(monthSelects[1]).toHaveValue('0')
+    expect(yearSelects[1]).toHaveValue('2027')
+  })
+})

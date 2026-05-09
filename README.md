@@ -121,7 +121,7 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `numberOfMonths` | `1 \| 2` | `1` | Number of calendar months to display |
+| `numberOfMonths` | `1 \| 2` | `1` | Number of calendar months to display. In `2`-month mode, left and right visible months can be navigated independently. |
 | `selectionMode` | `"single" \| "range"` | `"single"` | Single date or date range selection |
 | `value` | `Date \| [Date, Date] \| null` | `null` | Controlled value |
 | `onChange` | `(value: Date \| [Date, Date] \| null) => void` | — | Change handler |
