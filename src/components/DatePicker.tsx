@@ -24,6 +24,9 @@ export interface DatePickerProps {
   locale?: 'th' | 'en'
   theme?: DatePickerTheme
   presets?: Preset[]
+  presetDisplay?: 'chips' | 'dropdown'
+  presetDropdownPlaceholder?: string
+  presetDropdownAriaLabel?: string
   customHolidays?: CustomHolidayConfig[]
   holidayTypes?: Array<'public' | 'bank' | 'observance'>
   showNaturalLanguageInput?: boolean
@@ -51,6 +54,9 @@ export function DatePicker({
   locale = 'en',
   theme,
   presets,
+  presetDisplay = 'chips',
+  presetDropdownPlaceholder = 'Quick select range',
+  presetDropdownAriaLabel = 'Quick select presets',
   customHolidays = [],
   holidayTypes = ['public'],
   showNaturalLanguageInput = false,
@@ -258,6 +264,9 @@ export function DatePicker({
           presets={presets}
           value={rangeValue}
           onSelect={handleRangePresetSelect}
+          display={presetDisplay}
+          dropdownPlaceholder={presetDropdownPlaceholder}
+          dropdownAriaLabel={presetDropdownAriaLabel}
         />
       )}
       <div className={`dp-months dp-months--${numberOfMonths}`}>

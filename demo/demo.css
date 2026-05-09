@@ -103,6 +103,36 @@ body {
   flex: 0 0 auto;
 }
 
+.demo-control-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.demo-control-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b7280;
+}
+
+.demo-control-select {
+  min-width: 140px;
+  padding: 7px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 14px;
+}
+
+.demo-control-select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
 .demo-info {
   flex: 1;
   min-width: 240px;

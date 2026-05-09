@@ -128,6 +128,9 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `locale` | `"th" \| "en"` | `"en"` | Language for month names and holiday tooltips |
 | `theme` | `DatePickerTheme` | `lightTheme` | Theme override object |
 | `presets` | `Preset[]` | built-in | Custom preset chips (replaces built-ins entirely) |
+| `presetDisplay` | `"chips" \| "dropdown"` | `"chips"` | Render range presets as chips or a select dropdown |
+| `presetDropdownPlaceholder` | `string` | `"Quick select range"` | Placeholder option text for dropdown presets |
+| `presetDropdownAriaLabel` | `string` | `"Quick select presets"` | Accessible label for dropdown presets |
 | `customHolidays` | `CustomHolidayConfig[]` | `[]` | Custom holiday dots merged over built-in holidays |
 | `holidayTypes` | `Array<"public" \| "bank" \| "observance">` | `["public"]` | Which holiday types to display |
 | `showNaturalLanguageInput` | `boolean` | `false` | Show the natural language text input |

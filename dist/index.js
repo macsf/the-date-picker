@@ -1,26 +1,26 @@
-var An = Object.defineProperty;
-var Sn = (n, e, t) => e in n ? An(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t;
-var y = (n, e, t) => Sn(n, typeof e != "symbol" ? e + "" : e, t);
-import { jsxs as $, jsx as T, Fragment as xn } from "react/jsx-runtime";
-import { useState as U, useEffect as Zt, useMemo as en, useCallback as F, useRef as Dt } from "react";
-import { createPortal as kn } from "react-dom";
+var kn = Object.defineProperty;
+var Hn = (n, e, t) => e in n ? kn(n, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : n[e] = t;
+var g = (n, e, t) => Hn(n, typeof e != "symbol" ? e + "" : e, t);
+import { jsxs as W, jsx as T, Fragment as Rn } from "react/jsx-runtime";
+import { useState as L, useEffect as Zt, useMemo as en, useCallback as F, useRef as Dt } from "react";
+import { createPortal as Fn } from "react-dom";
 function w(n) {
   const e = Object.prototype.toString.call(n);
   return n instanceof Date || typeof n == "object" && e === "[object Date]" ? new n.constructor(+n) : typeof n == "number" || e === "[object Number]" || typeof n == "string" || e === "[object String]" ? new Date(n) : /* @__PURE__ */ new Date(NaN);
 }
-function z(n, e) {
+function V(n, e) {
   return n instanceof Date ? new n.constructor(e) : new Date(e);
 }
 function fe(n, e) {
   const t = w(n);
-  return isNaN(e) ? z(n, NaN) : (e && t.setDate(t.getDate() + e), t);
+  return isNaN(e) ? V(n, NaN) : (e && t.setDate(t.getDate() + e), t);
 }
-function ae(n, e) {
+function re(n, e) {
   const t = w(n);
-  if (isNaN(e)) return z(n, NaN);
+  if (isNaN(e)) return V(n, NaN);
   if (!e)
     return t;
-  const a = t.getDate(), r = z(n, t.getTime());
+  const a = t.getDate(), r = V(n, t.getTime());
   r.setMonth(t.getMonth() + e + 1, 0);
   const s = r.getDate();
   return a >= s ? r : (t.setFullYear(
@@ -29,28 +29,28 @@ function ae(n, e) {
     a
   ), t);
 }
-const tn = 6048e5, Hn = 864e5;
-let Rn = {};
-function Ee() {
-  return Rn;
+const tn = 6048e5, vn = 864e5;
+let Cn = {};
+function Ne() {
+  return Cn;
 }
-function J(n, e) {
+function Z(n, e) {
   var o, c, l, u;
-  const t = Ee(), a = (e == null ? void 0 : e.weekStartsOn) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.weekStartsOn) ?? t.weekStartsOn ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.weekStartsOn) ?? 0, r = w(n), s = r.getDay(), i = (s < a ? 7 : 0) + s - a;
+  const t = Ne(), a = (e == null ? void 0 : e.weekStartsOn) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.weekStartsOn) ?? t.weekStartsOn ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.weekStartsOn) ?? 0, r = w(n), s = r.getDay(), i = (s < a ? 7 : 0) + s - a;
   return r.setDate(r.getDate() - i), r.setHours(0, 0, 0, 0), r;
 }
-function ke(n) {
-  return J(n, { weekStartsOn: 1 });
+function Re(n) {
+  return Z(n, { weekStartsOn: 1 });
 }
 function nn(n) {
-  const e = w(n), t = e.getFullYear(), a = z(n, 0);
+  const e = w(n), t = e.getFullYear(), a = V(n, 0);
   a.setFullYear(t + 1, 0, 4), a.setHours(0, 0, 0, 0);
-  const r = ke(a), s = z(n, 0);
+  const r = Re(a), s = V(n, 0);
   s.setFullYear(t, 0, 4), s.setHours(0, 0, 0, 0);
-  const i = ke(s);
+  const i = Re(s);
   return e.getTime() >= r.getTime() ? t + 1 : e.getTime() >= i.getTime() ? t : t - 1;
 }
-function j(n) {
+function G(n) {
   const e = w(n);
   return e.setHours(0, 0, 0, 0), e;
 }
@@ -68,36 +68,36 @@ function Mt(n) {
   );
   return t.setUTCFullYear(e.getFullYear()), +n - +t;
 }
-function Fn(n, e) {
-  const t = j(n), a = j(e), r = +t - Mt(t), s = +a - Mt(a);
-  return Math.round((r - s) / Hn);
+function Yn(n, e) {
+  const t = G(n), a = G(e), r = +t - Mt(t), s = +a - Mt(a);
+  return Math.round((r - s) / vn);
 }
-function Cn(n) {
-  const e = nn(n), t = z(n, 0);
-  return t.setFullYear(e, 0, 4), t.setHours(0, 0, 0, 0), ke(t);
+function Wn(n) {
+  const e = nn(n), t = V(n, 0);
+  return t.setFullYear(e, 0, 4), t.setHours(0, 0, 0, 0), Re(t);
 }
-function be(n, e) {
+function Me(n, e) {
   const t = e * 7;
   return fe(n, t);
 }
-function L(n, e) {
-  const t = j(n), a = j(e);
+function z(n, e) {
+  const t = G(n), a = G(e);
   return +t == +a;
 }
-function vn(n) {
+function _n(n) {
   return n instanceof Date || typeof n == "object" && Object.prototype.toString.call(n) === "[object Date]";
 }
-function Yn(n) {
-  if (!vn(n) && typeof n != "number")
+function $n(n) {
+  if (!_n(n) && typeof n != "number")
     return !1;
   const e = w(n);
   return !isNaN(Number(e));
 }
-function De(n) {
+function Ee(n) {
   const e = w(n), t = e.getMonth();
   return e.setFullYear(e.getFullYear(), t + 1, 0), e.setHours(23, 59, 59, 999), e;
 }
-function Wn(n, e) {
+function In(n, e) {
   const t = w(n.start), a = w(n.end);
   let r = +t > +a;
   const s = r ? +t : +a, i = r ? a : t;
@@ -108,20 +108,20 @@ function Wn(n, e) {
     c.push(w(i)), i.setDate(i.getDate() + o), i.setHours(0, 0, 0, 0);
   return r ? c.reverse() : c;
 }
-function Me(n) {
+function Pe(n) {
   const e = w(n);
   return e.setDate(1), e.setHours(0, 0, 0, 0), e;
 }
-function _n(n) {
-  const e = w(n), t = z(n, 0);
+function Bn(n) {
+  const e = w(n), t = V(n, 0);
   return t.setFullYear(e.getFullYear(), 0, 1), t.setHours(0, 0, 0, 0), t;
 }
 function ft(n, e) {
   var o, c, l, u;
-  const t = Ee(), a = (e == null ? void 0 : e.weekStartsOn) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.weekStartsOn) ?? t.weekStartsOn ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.weekStartsOn) ?? 0, r = w(n), s = r.getDay(), i = (s < a ? -7 : 0) + 6 - (s - a);
+  const t = Ne(), a = (e == null ? void 0 : e.weekStartsOn) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.weekStartsOn) ?? t.weekStartsOn ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.weekStartsOn) ?? 0, r = w(n), s = r.getDay(), i = (s < a ? -7 : 0) + 6 - (s - a);
   return r.setDate(r.getDate() + i), r.setHours(23, 59, 59, 999), r;
 }
-const $n = {
+const Un = {
   lessThanXSeconds: {
     one: "less than a second",
     other: "less than {{count}} seconds"
@@ -183,9 +183,9 @@ const $n = {
     one: "almost 1 year",
     other: "almost {{count}} years"
   }
-}, In = (n, e, t) => {
+}, Ln = (n, e, t) => {
   let a;
-  const r = $n[n];
+  const r = Un[n];
   return typeof r == "string" ? a = r : e === 1 ? a = r.one : a = r.other.replace("{{count}}", e.toString()), t != null && t.addSuffix ? t.comparison && t.comparison > 0 ? "in " + a : a + " ago" : a;
 };
 function Xe(n) {
@@ -194,43 +194,43 @@ function Xe(n) {
     return n.formats[t] || n.formats[n.defaultWidth];
   };
 }
-const Bn = {
+const jn = {
   full: "EEEE, MMMM do, y",
   long: "MMMM do, y",
   medium: "MMM d, y",
   short: "MM/dd/yyyy"
-}, Un = {
+}, zn = {
   full: "h:mm:ss a zzzz",
   long: "h:mm:ss a z",
   medium: "h:mm:ss a",
   short: "h:mm a"
-}, Ln = {
+}, Gn = {
   full: "{{date}} 'at' {{time}}",
   long: "{{date}} 'at' {{time}}",
   medium: "{{date}}, {{time}}",
   short: "{{date}}, {{time}}"
-}, jn = {
+}, Vn = {
   date: Xe({
-    formats: Bn,
+    formats: jn,
     defaultWidth: "full"
   }),
   time: Xe({
-    formats: Un,
+    formats: zn,
     defaultWidth: "full"
   }),
   dateTime: Xe({
-    formats: Ln,
+    formats: Gn,
     defaultWidth: "full"
   })
-}, zn = {
+}, Kn = {
   lastWeek: "'last' eeee 'at' p",
   yesterday: "'yesterday at' p",
   today: "'today at' p",
   tomorrow: "'tomorrow at' p",
   nextWeek: "eeee 'at' p",
   other: "P"
-}, Gn = (n, e, t, a) => zn[n];
-function pe(n) {
+}, qn = (n, e, t, a) => Kn[n];
+function we(n) {
   return (e, t) => {
     const a = t != null && t.context ? String(t.context) : "standalone";
     let r;
@@ -245,15 +245,15 @@ function pe(n) {
     return r[s];
   };
 }
-const Vn = {
+const Qn = {
   narrow: ["B", "A"],
   abbreviated: ["BC", "AD"],
   wide: ["Before Christ", "Anno Domini"]
-}, Kn = {
+}, Xn = {
   narrow: ["1", "2", "3", "4"],
   abbreviated: ["Q1", "Q2", "Q3", "Q4"],
   wide: ["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"]
-}, qn = {
+}, Jn = {
   narrow: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
   abbreviated: [
     "Jan",
@@ -283,7 +283,7 @@ const Vn = {
     "November",
     "December"
   ]
-}, Qn = {
+}, Zn = {
   narrow: ["S", "M", "T", "W", "T", "F", "S"],
   short: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
   abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -296,7 +296,7 @@ const Vn = {
     "Friday",
     "Saturday"
   ]
-}, Xn = {
+}, ea = {
   narrow: {
     am: "a",
     pm: "p",
@@ -327,7 +327,7 @@ const Vn = {
     evening: "evening",
     night: "night"
   }
-}, Jn = {
+}, ta = {
   narrow: {
     am: "a",
     pm: "p",
@@ -358,7 +358,7 @@ const Vn = {
     evening: "in the evening",
     night: "at night"
   }
-}, Zn = (n, e) => {
+}, na = (n, e) => {
   const t = Number(n), a = t % 100;
   if (a > 20 || a < 10)
     switch (a % 10) {
@@ -370,40 +370,40 @@ const Vn = {
         return t + "rd";
     }
   return t + "th";
-}, ea = {
-  ordinalNumber: Zn,
-  era: pe({
-    values: Vn,
-    defaultWidth: "wide"
-  }),
-  quarter: pe({
-    values: Kn,
-    defaultWidth: "wide",
-    argumentCallback: (n) => n - 1
-  }),
-  month: pe({
-    values: qn,
-    defaultWidth: "wide"
-  }),
-  day: pe({
+}, aa = {
+  ordinalNumber: na,
+  era: we({
     values: Qn,
     defaultWidth: "wide"
   }),
-  dayPeriod: pe({
+  quarter: we({
     values: Xn,
     defaultWidth: "wide",
-    formattingValues: Jn,
+    argumentCallback: (n) => n - 1
+  }),
+  month: we({
+    values: Jn,
+    defaultWidth: "wide"
+  }),
+  day: we({
+    values: Zn,
+    defaultWidth: "wide"
+  }),
+  dayPeriod: we({
+    values: ea,
+    defaultWidth: "wide",
+    formattingValues: ta,
     defaultFormattingWidth: "wide"
   })
 };
-function Te(n) {
+function be(n) {
   return (e, t = {}) => {
     const a = t.width, r = a && n.matchPatterns[a] || n.matchPatterns[n.defaultMatchWidth], s = e.match(r);
     if (!s)
       return null;
-    const i = s[0], o = a && n.parsePatterns[a] || n.parsePatterns[n.defaultParseWidth], c = Array.isArray(o) ? na(o, (d) => d.test(i)) : (
+    const i = s[0], o = a && n.parsePatterns[a] || n.parsePatterns[n.defaultParseWidth], c = Array.isArray(o) ? sa(o, (d) => d.test(i)) : (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I challange you to fix the type
-      ta(o, (d) => d.test(i))
+      ra(o, (d) => d.test(i))
     );
     let l;
     l = n.valueCallback ? n.valueCallback(c) : c, l = t.valueCallback ? (
@@ -414,17 +414,17 @@ function Te(n) {
     return { value: l, rest: u };
   };
 }
-function ta(n, e) {
+function ra(n, e) {
   for (const t in n)
     if (Object.prototype.hasOwnProperty.call(n, t) && e(n[t]))
       return t;
 }
-function na(n, e) {
+function sa(n, e) {
   for (let t = 0; t < n.length; t++)
     if (e(n[t]))
       return t;
 }
-function aa(n) {
+function ia(n) {
   return (e, t = {}) => {
     const a = e.match(n.matchPattern);
     if (!a) return null;
@@ -436,23 +436,23 @@ function aa(n) {
     return { value: i, rest: o };
   };
 }
-const ra = /^(\d+)(th|st|nd|rd)?/i, sa = /\d+/i, ia = {
+const oa = /^(\d+)(th|st|nd|rd)?/i, ca = /\d+/i, la = {
   narrow: /^(b|a)/i,
   abbreviated: /^(b\.?\s?c\.?|b\.?\s?c\.?\s?e\.?|a\.?\s?d\.?|c\.?\s?e\.?)/i,
   wide: /^(before christ|before common era|anno domini|common era)/i
-}, oa = {
+}, ua = {
   any: [/^b/i, /^(a|c)/i]
-}, ca = {
+}, da = {
   narrow: /^[1234]/i,
   abbreviated: /^q[1234]/i,
   wide: /^[1234](th|st|nd|rd)? quarter/i
-}, la = {
+}, ma = {
   any: [/1/i, /2/i, /3/i, /4/i]
-}, ua = {
+}, fa = {
   narrow: /^[jfmasond]/i,
   abbreviated: /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i,
   wide: /^(january|february|march|april|may|june|july|august|september|october|november|december)/i
-}, da = {
+}, ha = {
   narrow: [
     /^j/i,
     /^f/i,
@@ -481,18 +481,18 @@ const ra = /^(\d+)(th|st|nd|rd)?/i, sa = /\d+/i, ia = {
     /^n/i,
     /^d/i
   ]
-}, ma = {
+}, ga = {
   narrow: /^[smtwf]/i,
   short: /^(su|mo|tu|we|th|fr|sa)/i,
   abbreviated: /^(sun|mon|tue|wed|thu|fri|sat)/i,
   wide: /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)/i
-}, fa = {
+}, ya = {
   narrow: [/^s/i, /^m/i, /^t/i, /^w/i, /^t/i, /^f/i, /^s/i],
   any: [/^su/i, /^m/i, /^tu/i, /^w/i, /^th/i, /^f/i, /^sa/i]
-}, ha = {
+}, pa = {
   narrow: /^(a|p|mi|n|(in the|at) (morning|afternoon|evening|night))/i,
   any: /^([ap]\.?\s?m\.?|midnight|noon|(in the|at) (morning|afternoon|evening|night))/i
-}, ga = {
+}, Ta = {
   any: {
     am: /^a/i,
     pm: /^p/i,
@@ -503,86 +503,86 @@ const ra = /^(\d+)(th|st|nd|rd)?/i, sa = /\d+/i, ia = {
     evening: /evening/i,
     night: /night/i
   }
-}, ya = {
-  ordinalNumber: aa({
-    matchPattern: ra,
-    parsePattern: sa,
+}, wa = {
+  ordinalNumber: ia({
+    matchPattern: oa,
+    parsePattern: ca,
     valueCallback: (n) => parseInt(n, 10)
   }),
-  era: Te({
-    matchPatterns: ia,
+  era: be({
+    matchPatterns: la,
     defaultMatchWidth: "wide",
-    parsePatterns: oa,
+    parsePatterns: ua,
     defaultParseWidth: "any"
   }),
-  quarter: Te({
-    matchPatterns: ca,
+  quarter: be({
+    matchPatterns: da,
     defaultMatchWidth: "wide",
-    parsePatterns: la,
+    parsePatterns: ma,
     defaultParseWidth: "any",
     valueCallback: (n) => n + 1
   }),
-  month: Te({
-    matchPatterns: ua,
+  month: be({
+    matchPatterns: fa,
     defaultMatchWidth: "wide",
-    parsePatterns: da,
+    parsePatterns: ha,
     defaultParseWidth: "any"
   }),
-  day: Te({
-    matchPatterns: ma,
+  day: be({
+    matchPatterns: ga,
     defaultMatchWidth: "wide",
-    parsePatterns: fa,
+    parsePatterns: ya,
     defaultParseWidth: "any"
   }),
-  dayPeriod: Te({
-    matchPatterns: ha,
+  dayPeriod: be({
+    matchPatterns: pa,
     defaultMatchWidth: "any",
-    parsePatterns: ga,
+    parsePatterns: Ta,
     defaultParseWidth: "any"
   })
-}, pa = {
+}, ba = {
   code: "en-US",
-  formatDistance: In,
-  formatLong: jn,
-  formatRelative: Gn,
-  localize: ea,
-  match: ya,
+  formatDistance: Ln,
+  formatLong: Vn,
+  formatRelative: qn,
+  localize: aa,
+  match: wa,
   options: {
     weekStartsOn: 0,
     firstWeekContainsDate: 1
   }
 };
-function Ta(n) {
+function Da(n) {
   const e = w(n);
-  return Fn(e, _n(e)) + 1;
+  return Yn(e, Bn(e)) + 1;
 }
 function an(n) {
-  const e = w(n), t = +ke(e) - +Cn(e);
+  const e = w(n), t = +Re(e) - +Wn(e);
   return Math.round(t / tn) + 1;
 }
 function rn(n, e) {
   var u, d, b, M;
-  const t = w(n), a = t.getFullYear(), r = Ee(), s = (e == null ? void 0 : e.firstWeekContainsDate) ?? ((d = (u = e == null ? void 0 : e.locale) == null ? void 0 : u.options) == null ? void 0 : d.firstWeekContainsDate) ?? r.firstWeekContainsDate ?? ((M = (b = r.locale) == null ? void 0 : b.options) == null ? void 0 : M.firstWeekContainsDate) ?? 1, i = z(n, 0);
+  const t = w(n), a = t.getFullYear(), r = Ne(), s = (e == null ? void 0 : e.firstWeekContainsDate) ?? ((d = (u = e == null ? void 0 : e.locale) == null ? void 0 : u.options) == null ? void 0 : d.firstWeekContainsDate) ?? r.firstWeekContainsDate ?? ((M = (b = r.locale) == null ? void 0 : b.options) == null ? void 0 : M.firstWeekContainsDate) ?? 1, i = V(n, 0);
   i.setFullYear(a + 1, 0, s), i.setHours(0, 0, 0, 0);
-  const o = J(i, e), c = z(n, 0);
+  const o = Z(i, e), c = V(n, 0);
   c.setFullYear(a, 0, s), c.setHours(0, 0, 0, 0);
-  const l = J(c, e);
+  const l = Z(c, e);
   return t.getTime() >= o.getTime() ? a + 1 : t.getTime() >= l.getTime() ? a : a - 1;
 }
-function wa(n, e) {
+function Ma(n, e) {
   var o, c, l, u;
-  const t = Ee(), a = (e == null ? void 0 : e.firstWeekContainsDate) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.firstWeekContainsDate) ?? t.firstWeekContainsDate ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.firstWeekContainsDate) ?? 1, r = rn(n, e), s = z(n, 0);
-  return s.setFullYear(r, 0, a), s.setHours(0, 0, 0, 0), J(s, e);
+  const t = Ne(), a = (e == null ? void 0 : e.firstWeekContainsDate) ?? ((c = (o = e == null ? void 0 : e.locale) == null ? void 0 : o.options) == null ? void 0 : c.firstWeekContainsDate) ?? t.firstWeekContainsDate ?? ((u = (l = t.locale) == null ? void 0 : l.options) == null ? void 0 : u.firstWeekContainsDate) ?? 1, r = rn(n, e), s = V(n, 0);
+  return s.setFullYear(r, 0, a), s.setHours(0, 0, 0, 0), Z(s, e);
 }
 function sn(n, e) {
-  const t = w(n), a = +J(t, e) - +wa(t, e);
+  const t = w(n), a = +Z(t, e) - +Ma(t, e);
   return Math.round(a / tn) + 1;
 }
 function E(n, e) {
   const t = n < 0 ? "-" : "", a = Math.abs(n).toString().padStart(e, "0");
   return t + a;
 }
-const Q = {
+const X = {
   // Year
   y(n, e) {
     const t = n.getFullYear(), a = t > 0 ? t : 1 - t;
@@ -665,7 +665,7 @@ const Q = {
       const a = n.getFullYear(), r = a > 0 ? a : 1 - a;
       return t.ordinalNumber(r, { unit: "year" });
     }
-    return Q.y(n, e);
+    return X.y(n, e);
   },
   // Local week-numbering year
   Y: function(n, e, t, a) {
@@ -756,7 +756,7 @@ const Q = {
     switch (e) {
       case "M":
       case "MM":
-        return Q.M(n, e);
+        return X.M(n, e);
       case "Mo":
         return t.ordinalNumber(a + 1, { unit: "month" });
       case "MMM":
@@ -811,11 +811,11 @@ const Q = {
   },
   // Day of the month
   d: function(n, e, t) {
-    return e === "do" ? t.ordinalNumber(n.getDate(), { unit: "date" }) : Q.d(n, e);
+    return e === "do" ? t.ordinalNumber(n.getDate(), { unit: "date" }) : X.d(n, e);
   },
   // Day of year
   D: function(n, e, t) {
-    const a = Ta(n);
+    const a = Da(n);
     return e === "Do" ? t.ordinalNumber(a, { unit: "dayOfYear" }) : E(a, e.length);
   },
   // Day of week
@@ -1034,11 +1034,11 @@ const Q = {
       let a = n.getHours() % 12;
       return a === 0 && (a = 12), t.ordinalNumber(a, { unit: "hour" });
     }
-    return Q.h(n, e);
+    return X.h(n, e);
   },
   // Hour [0-23]
   H: function(n, e, t) {
-    return e === "Ho" ? t.ordinalNumber(n.getHours(), { unit: "hour" }) : Q.H(n, e);
+    return e === "Ho" ? t.ordinalNumber(n.getHours(), { unit: "hour" }) : X.H(n, e);
   },
   // Hour [0-11]
   K: function(n, e, t) {
@@ -1052,15 +1052,15 @@ const Q = {
   },
   // Minute
   m: function(n, e, t) {
-    return e === "mo" ? t.ordinalNumber(n.getMinutes(), { unit: "minute" }) : Q.m(n, e);
+    return e === "mo" ? t.ordinalNumber(n.getMinutes(), { unit: "minute" }) : X.m(n, e);
   },
   // Second
   s: function(n, e, t) {
-    return e === "so" ? t.ordinalNumber(n.getSeconds(), { unit: "second" }) : Q.s(n, e);
+    return e === "so" ? t.ordinalNumber(n.getSeconds(), { unit: "second" }) : X.s(n, e);
   },
   // Fraction of second
   S: function(n, e) {
-    return Q.S(n, e);
+    return X.S(n, e);
   },
   // Timezone (ISO-8601. If offset is 0, output is always `'Z'`)
   X: function(n, e, t) {
@@ -1072,11 +1072,11 @@ const Q = {
         return Nt(a);
       case "XXXX":
       case "XX":
-        return ne(a);
+        return ae(a);
       case "XXXXX":
       case "XXX":
       default:
-        return ne(a, ":");
+        return ae(a, ":");
     }
   },
   // Timezone (ISO-8601. If offset is 0, output is `'+00:00'` or equivalent)
@@ -1087,11 +1087,11 @@ const Q = {
         return Nt(a);
       case "xxxx":
       case "xx":
-        return ne(a);
+        return ae(a);
       case "xxxxx":
       case "xxx":
       default:
-        return ne(a, ":");
+        return ae(a, ":");
     }
   },
   // Timezone (GMT)
@@ -1104,7 +1104,7 @@ const Q = {
         return "GMT" + Pt(a, ":");
       case "OOOO":
       default:
-        return "GMT" + ne(a, ":");
+        return "GMT" + ae(a, ":");
     }
   },
   // Timezone (specific non-location)
@@ -1117,7 +1117,7 @@ const Q = {
         return "GMT" + Pt(a, ":");
       case "zzzz":
       default:
-        return "GMT" + ne(a, ":");
+        return "GMT" + ae(a, ":");
     }
   },
   // Seconds timestamp
@@ -1136,9 +1136,9 @@ function Pt(n, e = "") {
   return s === 0 ? t + String(r) : t + String(r) + e + E(s, 2);
 }
 function Nt(n, e) {
-  return n % 60 === 0 ? (n > 0 ? "-" : "+") + E(Math.abs(n) / 60, 2) : ne(n, e);
+  return n % 60 === 0 ? (n > 0 ? "-" : "+") + E(Math.abs(n) / 60, 2) : ae(n, e);
 }
-function ne(n, e = "") {
+function ae(n, e = "") {
   const t = n > 0 ? "-" : "+", a = Math.abs(n), r = E(Math.trunc(a / 60), 2), s = E(a % 60, 2);
   return t + r + e + s;
 }
@@ -1166,7 +1166,7 @@ const Ot = (n, e) => {
     default:
       return e.time({ width: "full" });
   }
-}, ba = (n, e) => {
+}, Ea = (n, e) => {
   const t = n.match(/(P+)(p+)?/) || [], a = t[1], r = t[2];
   if (!r)
     return Ot(n, e);
@@ -1187,50 +1187,50 @@ const Ot = (n, e) => {
       break;
   }
   return s.replace("{{date}}", Ot(a, e)).replace("{{time}}", on(r, e));
-}, Da = {
+}, Pa = {
   p: on,
-  P: ba
-}, Ma = /^D+$/, Ea = /^Y+$/, Pa = ["D", "DD", "YY", "YYYY"];
-function Na(n) {
-  return Ma.test(n);
+  P: Ea
+}, Na = /^D+$/, Oa = /^Y+$/, Aa = ["D", "DD", "YY", "YYYY"];
+function Sa(n) {
+  return Na.test(n);
 }
-function Oa(n) {
-  return Ea.test(n);
+function xa(n) {
+  return Oa.test(n);
 }
-function Aa(n, e, t) {
-  const a = Sa(n, e, t);
-  if (console.warn(a), Pa.includes(n)) throw new RangeError(a);
+function ka(n, e, t) {
+  const a = Ha(n, e, t);
+  if (console.warn(a), Aa.includes(n)) throw new RangeError(a);
 }
-function Sa(n, e, t) {
+function Ha(n, e, t) {
   const a = n[0] === "Y" ? "years" : "days of the month";
   return `Use \`${n.toLowerCase()}\` instead of \`${n}\` (in \`${e}\`) for formatting ${a} to the input \`${t}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
 }
-const xa = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g, ka = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g, Ha = /^'([^]*?)'?$/, Ra = /''/g, Fa = /[a-zA-Z]/;
+const Ra = /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g, Fa = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g, va = /^'([^]*?)'?$/, Ca = /''/g, Ya = /[a-zA-Z]/;
 function Je(n, e, t) {
   var u, d, b, M;
-  const a = Ee(), r = a.locale ?? pa, s = a.firstWeekContainsDate ?? ((d = (u = a.locale) == null ? void 0 : u.options) == null ? void 0 : d.firstWeekContainsDate) ?? 1, i = a.weekStartsOn ?? ((M = (b = a.locale) == null ? void 0 : b.options) == null ? void 0 : M.weekStartsOn) ?? 0, o = w(n);
-  if (!Yn(o))
+  const a = Ne(), r = a.locale ?? ba, s = a.firstWeekContainsDate ?? ((d = (u = a.locale) == null ? void 0 : u.options) == null ? void 0 : d.firstWeekContainsDate) ?? 1, i = a.weekStartsOn ?? ((M = (b = a.locale) == null ? void 0 : b.options) == null ? void 0 : M.weekStartsOn) ?? 0, o = w(n);
+  if (!$n(o))
     throw new RangeError("Invalid time value");
-  let c = e.match(ka).map((P) => {
-    const h = P[0];
+  let c = e.match(Fa).map((N) => {
+    const h = N[0];
     if (h === "p" || h === "P") {
-      const x = Da[h];
-      return x(P, r.formatLong);
+      const S = Pa[h];
+      return S(N, r.formatLong);
     }
-    return P;
-  }).join("").match(xa).map((P) => {
-    if (P === "''")
+    return N;
+  }).join("").match(Ra).map((N) => {
+    if (N === "''")
       return { isToken: !1, value: "'" };
-    const h = P[0];
+    const h = N[0];
     if (h === "'")
-      return { isToken: !1, value: Ca(P) };
+      return { isToken: !1, value: Wa(N) };
     if (Et[h])
-      return { isToken: !0, value: P };
-    if (h.match(Fa))
+      return { isToken: !0, value: N };
+    if (h.match(Ya))
       throw new RangeError(
         "Format string contains an unescaped latin alphabet character `" + h + "`"
       );
-    return { isToken: !1, value: P };
+    return { isToken: !1, value: N };
   });
   r.localize.preprocessor && (c = r.localize.preprocessor(o, c));
   const l = {
@@ -1238,36 +1238,36 @@ function Je(n, e, t) {
     weekStartsOn: i,
     locale: r
   };
-  return c.map((P) => {
-    if (!P.isToken) return P.value;
-    const h = P.value;
-    (Oa(h) || Na(h)) && Aa(h, e, String(n));
-    const x = Et[h[0]];
-    return x(o, h, r.localize, l);
+  return c.map((N) => {
+    if (!N.isToken) return N.value;
+    const h = N.value;
+    (xa(h) || Sa(h)) && ka(h, e, String(n));
+    const S = Et[h[0]];
+    return S(o, h, r.localize, l);
   }).join("");
 }
-function Ca(n) {
-  const e = n.match(Ha);
-  return e ? e[1].replace(Ra, "'") : n;
+function Wa(n) {
+  const e = n.match(va);
+  return e ? e[1].replace(Ca, "'") : n;
 }
 function ot(n) {
   return w(n).getDay();
 }
-function va(n) {
+function _a(n) {
   return w(n).getMonth();
 }
-function Ya(n) {
+function $a(n) {
   return w(n).getFullYear();
 }
-function Wa(n, e) {
+function Ia(n, e) {
   const t = w(n), a = w(e);
   return t.getTime() > a.getTime();
 }
-function we(n, e) {
+function De(n, e) {
   const t = w(n), a = w(e);
   return +t < +a;
 }
-function _a(n, e, t) {
+function Ba(n, e, t) {
   const a = t == null ? void 0 : t.weekStartsOn, r = w(n), s = r.getDay(), o = (e % 7 + 7) % 7, c = 7 - a, l = e < 0 || e > 6 ? e - (s + c) % 7 : (o + c) % 7 - (s + c) % 7;
   return fe(r, l);
 }
@@ -1275,7 +1275,7 @@ function At(n, e) {
   const t = w(n), a = w(e);
   return t.getFullYear() === a.getFullYear() && t.getMonth() === a.getMonth();
 }
-function $a(n, e) {
+function Ua(n, e) {
   const t = +w(n), [a, r] = [
     +w(e.start),
     +w(e.end)
@@ -1286,13 +1286,13 @@ function ct(n, e) {
   return fe(n, -e);
 }
 function ht(n, e) {
-  return ae(n, -e);
+  return re(n, -e);
 }
 function cn(n, e) {
-  return be(n, -e);
+  return Me(n, -e);
 }
-function Ia(n, e = 0) {
-  const t = Me(n), a = De(n), r = J(t, { weekStartsOn: e }), s = ft(a, { weekStartsOn: e }), i = Wn({ start: r, end: s }), o = [];
+function La(n, e = 0) {
+  const t = Pe(n), a = Ee(n), r = Z(t, { weekStartsOn: e }), s = ft(a, { weekStartsOn: e }), i = In({ start: r, end: s }), o = [];
   let c = [];
   return i.forEach((l, u) => {
     c.push({
@@ -1301,21 +1301,21 @@ function Ia(n, e = 0) {
     }), (u + 1) % 7 === 0 && (o.push(c), c = []);
   }), { weeks: o, month: n };
 }
-function Ba(n, e = 0) {
+function ja(n, e = 0) {
   return e === 1 ? an(n) : sn(n, { weekStartsOn: 0 });
 }
 function ln(n, e, t, a) {
-  const r = j(n);
-  return !!(e && we(r, j(e)) || t && Wa(r, j(t)) || a != null && a.some((s) => L(s, r)));
+  const r = G(n);
+  return !!(e && De(r, G(e)) || t && Ia(r, G(t)) || a != null && a.some((s) => z(s, r)));
 }
-function Ua(n, e) {
-  const { today: t, selectionMode: a, selectedDate: r, activeRange: s, highlightWeekends: i } = e, o = a === "single" && r != null && L(n, r), c = a === "range" && s != null && L(n, s[0]), l = a === "range" && s != null && L(n, s[1]), u = a === "range" && s != null && !L(s[0], s[1]) && $a(j(n), {
-    start: j(s[0]),
-    end: j(s[1])
-  }) && !L(n, s[0]) && !L(n, s[1]), d = L(n, t), b = i && (n.getDay() === 0 || n.getDay() === 6);
+function za(n, e) {
+  const { today: t, selectionMode: a, selectedDate: r, activeRange: s, highlightWeekends: i } = e, o = a === "single" && r != null && z(n, r), c = a === "range" && s != null && z(n, s[0]), l = a === "range" && s != null && z(n, s[1]), u = a === "range" && s != null && !z(s[0], s[1]) && Ua(G(n), {
+    start: G(s[0]),
+    end: G(s[1])
+  }) && !z(n, s[0]) && !z(n, s[1]), d = z(n, t), b = i && (n.getDay() === 0 || n.getDay() === 6);
   return { isSelected: o, isRangeStart: c, isRangeEnd: l, isInRange: u, isToday: d, isWeekend: b };
 }
-function La({
+function Ga({
   date: n,
   isCurrentMonth: e,
   isSelected: t,
@@ -1330,17 +1330,17 @@ function La({
   holidays: d,
   onClick: b,
   onMouseEnter: M,
-  onMouseLeave: P
+  onMouseLeave: N
 }) {
-  const [h, x] = U(!1), V = n.getDate(), k = ["dp-day"];
+  const [h, S] = L(!1), j = n.getDate(), k = ["dp-day"];
   e || k.push("dp-day--other-month"), c && k.push("dp-day--disabled"), l && k.push("dp-day--today"), u && k.push("dp-day--weekend"), (t || a || r) && k.push("dp-day--selected"), s && k.push("dp-day--in-range"), a && k.push("dp-day--range-start"), r && k.push("dp-day--range-end"), s && i && k.push("dp-day--row-start"), s && o && k.push("dp-day--row-end");
-  const K = n.toLocaleDateString("en-US", {
+  const q = n.toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric"
   });
-  return /* @__PURE__ */ $("div", { className: "dp-day-wrapper", children: [
+  return /* @__PURE__ */ W("div", { className: "dp-day-wrapper", children: [
     (s || a || r) && /* @__PURE__ */ T(
       "div",
       {
@@ -1354,35 +1354,35 @@ function La({
         "aria-hidden": "true"
       }
     ),
-    /* @__PURE__ */ $(
+    /* @__PURE__ */ W(
       "button",
       {
         className: k.join(" "),
         onClick: () => !c && b(n),
         onMouseEnter: () => !c && M(n),
-        onMouseLeave: P,
+        onMouseLeave: N,
         disabled: c,
-        "aria-label": K,
+        "aria-label": q,
         "aria-pressed": t || a || r,
         tabIndex: e && !c ? 0 : -1,
         type: "button",
         children: [
-          /* @__PURE__ */ T("span", { className: "dp-day-number", children: V }),
-          d.length > 0 && /* @__PURE__ */ $(
+          /* @__PURE__ */ T("span", { className: "dp-day-number", children: j }),
+          d.length > 0 && /* @__PURE__ */ W(
             "span",
             {
               className: "dp-holiday-dots",
-              onMouseEnter: () => x(!0),
-              onMouseLeave: () => x(!1),
+              onMouseEnter: () => S(!0),
+              onMouseLeave: () => S(!1),
               children: [
-                d.slice(0, 2).map((m, g) => /* @__PURE__ */ T(
+                d.slice(0, 2).map((m, p) => /* @__PURE__ */ T(
                   "span",
                   {
                     className: "dp-holiday-dot",
                     style: { backgroundColor: m.dotColor },
                     "aria-hidden": "true"
                   },
-                  g
+                  p
                 )),
                 h && /* @__PURE__ */ T("span", { className: "dp-holiday-tooltip", role: "tooltip", children: d.map((m) => m.name).join(", ") })
               ]
@@ -1393,7 +1393,7 @@ function La({
     )
   ] });
 }
-const ja = [
+const Va = [
   "January",
   "February",
   "March",
@@ -1406,7 +1406,7 @@ const ja = [
   "October",
   "November",
   "December"
-], za = [
+], Ka = [
   "มกราคม",
   "กุมภาพันธ์",
   "มีนาคม",
@@ -1420,7 +1420,7 @@ const ja = [
   "พฤศจิกายน",
   "ธันวาคม"
 ];
-function Ga({
+function qa({
   month: n,
   onPrev: e,
   onNext: t,
@@ -1431,11 +1431,11 @@ function Ga({
   minDate: o,
   maxDate: c
 }) {
-  const l = va(n), u = Ya(n), d = s === "th" ? za : ja, b = [];
+  const l = _a(n), u = $a(n), d = s === "th" ? Ka : Va, b = [];
   for (let h = u - 10; h <= u + 10; h++)
     b.push(h);
-  const M = o ? ae(n, -1) < new Date(o.getFullYear(), o.getMonth(), 1) : !1, P = c ? ae(n, 1) > new Date(c.getFullYear(), c.getMonth(), 1) : !1;
-  return /* @__PURE__ */ $("div", { className: "dp-month-nav", children: [
+  const M = o ? re(n, -1) < new Date(o.getFullYear(), o.getMonth(), 1) : !1, N = c ? re(n, 1) > new Date(c.getFullYear(), c.getMonth(), 1) : !1;
+  return /* @__PURE__ */ W("div", { className: "dp-month-nav", children: [
     /* @__PURE__ */ T(
       "button",
       {
@@ -1446,7 +1446,7 @@ function Ga({
         children: "‹"
       }
     ),
-    /* @__PURE__ */ $("div", { className: "dp-month-year-labels", children: [
+    /* @__PURE__ */ W("div", { className: "dp-month-year-labels", children: [
       /* @__PURE__ */ T(
         "select",
         {
@@ -1454,7 +1454,7 @@ function Ga({
           value: l,
           onChange: (h) => a(Number(h.target.value)),
           "aria-label": "Select month",
-          children: d.map((h, x) => /* @__PURE__ */ T("option", { value: x, children: h }, x))
+          children: d.map((h, S) => /* @__PURE__ */ T("option", { value: S, children: h }, S))
         }
       ),
       /* @__PURE__ */ T(
@@ -1473,20 +1473,20 @@ function Ga({
       {
         className: "dp-nav-btn",
         onClick: t,
-        disabled: P,
+        disabled: N,
         "aria-label": "Next month",
         children: "›"
       }
     )
   ] });
 }
-function Va({ weekNumbers: n }) {
-  return /* @__PURE__ */ $("div", { className: "dp-week-numbers", "aria-hidden": "true", children: [
+function Qa({ weekNumbers: n }) {
+  return /* @__PURE__ */ W("div", { className: "dp-week-numbers", "aria-hidden": "true", children: [
     /* @__PURE__ */ T("div", { className: "dp-week-number-header", children: "W" }),
     n.map((e, t) => /* @__PURE__ */ T("div", { className: "dp-week-number", children: e }, t))
   ] });
 }
-const Ka = {
+const Xa = {
   2026: [
     {
       date: "2026-01-01",
@@ -2501,22 +2501,22 @@ const Ka = {
   ]
 };
 function un() {
-  return JSON.parse(JSON.stringify(Ka));
+  return JSON.parse(JSON.stringify(Xa));
 }
 const Ze = /* @__PURE__ */ new Map();
-function qa(n) {
+function Ja(n) {
   const e = n.getFullYear(), t = String(n.getMonth() + 1).padStart(2, "0"), a = String(n.getDate()).padStart(2, "0");
   return `${e}-${t}-${a}`;
 }
-function Qa(n, e, t) {
+function Za(n, e, t) {
   return `${n}-${e}-${t.sort().join(",")}`;
 }
 const St = "#EF4444";
-function Xa(n, e, t = ["public"], a = !0, r = []) {
-  const [s, i] = U([]);
+function er(n, e, t = ["public"], a = !0, r = []) {
+  const [s, i] = L([]);
   Zt(() => {
     if (!a) return;
-    const c = Qa(n, e, t);
+    const c = Za(n, e, t);
     if (Ze.has(c)) {
       i(Ze.get(c));
       return;
@@ -2539,11 +2539,11 @@ function Xa(n, e, t = ["public"], a = !0, r = []) {
   }, [s, r, e]);
   return {
     getHolidaysForDate(c) {
-      return o.get(qa(c)) ?? [];
+      return o.get(Ja(c)) ?? [];
     }
   };
 }
-const Ja = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], Za = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
+const tr = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"], nr = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
 function xt({
   month: n,
   onMonthChange: e,
@@ -2561,110 +2561,110 @@ function xt({
     calendarSystem: d,
     weekStartsOn: b,
     highlightWeekends: M,
-    showWeekNumbers: P,
+    showWeekNumbers: N,
     showHolidays: h,
-    holidayTypes: x,
-    customHolidays: V,
+    holidayTypes: S,
+    customHolidays: j,
     minDate: k,
-    maxDate: K,
+    maxDate: q,
     disabledDates: m
-  } = l, { weeks: g } = Ia(n, b), O = n.getFullYear(), v = Xa(O, u, x, h, V), C = u === "th" ? Za : Ja, S = b === 1 ? [...C.slice(1), C[0]] : C, q = b === 1 ? [1, 2, 3, 4, 5, 6, 0] : [0, 1, 2, 3, 4, 5, 6], ie = g.map((R) => Ba(R[0].date, b)), $e = F(() => {
+  } = l, { weeks: p } = La(n, b), O = n.getFullYear(), v = er(O, u, S, h, j), x = u === "th" ? nr : tr, I = b === 1 ? [...x.slice(1), x[0]] : x, Se = b === 1 ? [1, 2, 3, 4, 5, 6, 0] : [0, 1, 2, 3, 4, 5, 6], Be = p.map((R) => ja(R[0].date, b)), C = F(() => {
     const R = new Date(n.getFullYear(), n.getMonth() - 1, 1);
     e(R);
-    const I = R.toLocaleString(u === "th" ? "th-TH" : "en-US", {
+    const $ = R.toLocaleString(u === "th" ? "th-TH" : "en-US", {
       month: "long",
       year: "numeric"
     });
-    c(I);
-  }, [n, e, u, c]), oe = F(() => {
+    c($);
+  }, [n, e, u, c]), te = F(() => {
     const R = new Date(n.getFullYear(), n.getMonth() + 1, 1);
     e(R);
-    const I = R.toLocaleString(u === "th" ? "th-TH" : "en-US", {
+    const $ = R.toLocaleString(u === "th" ? "th-TH" : "en-US", {
       month: "long",
       year: "numeric"
     });
-    c(I);
-  }, [n, e, u, c]), Ie = F(
+    c($);
+  }, [n, e, u, c]), oe = F(
     (R) => {
       e(new Date(n.getFullYear(), R, 1));
     },
     [n, e]
-  ), Be = F(
+  ), Ue = F(
     (R) => {
       e(new Date(R, n.getMonth(), 1));
     },
     [n, e]
-  ), Ae = {
+  ), Le = {
     today: /* @__PURE__ */ new Date(),
     selectionMode: t,
     selectedDate: a,
     activeRange: s ?? r,
     highlightWeekends: M
   };
-  return /* @__PURE__ */ $("div", { className: "dp-calendar", children: [
+  return /* @__PURE__ */ W("div", { className: "dp-calendar", children: [
     /* @__PURE__ */ T(
-      Ga,
+      qa,
       {
         month: n,
-        onPrev: $e,
-        onNext: oe,
-        onMonthSelect: Ie,
-        onYearSelect: Be,
+        onPrev: C,
+        onNext: te,
+        onMonthSelect: oe,
+        onYearSelect: Ue,
         locale: u,
         calendarSystem: d,
         minDate: k,
-        maxDate: K
+        maxDate: q
       }
     ),
-    /* @__PURE__ */ $("div", { className: "dp-grid-container", children: [
-      P && /* @__PURE__ */ T(Va, { weekNumbers: ie }),
-      /* @__PURE__ */ $("div", { className: "dp-grid", children: [
-        /* @__PURE__ */ T("div", { className: "dp-weekday-row", children: S.map((R, I) => /* @__PURE__ */ T(
+    /* @__PURE__ */ W("div", { className: "dp-grid-container", children: [
+      N && /* @__PURE__ */ T(Qa, { weekNumbers: Be }),
+      /* @__PURE__ */ W("div", { className: "dp-grid", children: [
+        /* @__PURE__ */ T("div", { className: "dp-weekday-row", children: I.map((R, $) => /* @__PURE__ */ T(
           "div",
           {
             className: [
               "dp-weekday-label",
-              M && (q[I] === 0 || q[I] === 6) ? "dp-weekday-label--weekend" : ""
+              M && (Se[$] === 0 || Se[$] === 6) ? "dp-weekday-label--weekend" : ""
             ].filter(Boolean).join(" "),
             "aria-hidden": "true",
             children: R
           },
-          I
+          $
         )) }),
-        g.map((R, I) => /* @__PURE__ */ T("div", { className: "dp-week-row", children: R.map((ee, _) => {
-          const Ue = v.getHolidaysForDate(ee.date), Le = ln(ee.date, k, K, m), { isSelected: je, isRangeStart: ze, isRangeEnd: Ge, isInRange: Ve, isToday: Ke, isWeekend: qe } = Ua(ee.date, Ae);
+        p.map((R, $) => /* @__PURE__ */ T("div", { className: "dp-week-row", children: R.map((Q, pe) => {
+          const xe = v.getHolidaysForDate(Q.date), je = ln(Q.date, k, q, m), { isSelected: U, isRangeStart: ze, isRangeEnd: Ge, isInRange: Ve, isToday: Ke, isWeekend: qe } = za(Q.date, Le);
           return /* @__PURE__ */ T(
-            La,
+            Ga,
             {
-              date: ee.date,
-              isCurrentMonth: ee.isCurrentMonth,
-              isSelected: je,
+              date: Q.date,
+              isCurrentMonth: Q.isCurrentMonth,
+              isSelected: U,
               isRangeStart: ze,
               isRangeEnd: Ge,
               isInRange: Ve,
-              isRowStart: _ === 0,
-              isRowEnd: _ === 6,
-              isDisabled: Le,
+              isRowStart: pe === 0,
+              isRowEnd: pe === 6,
+              isDisabled: je,
               isToday: Ke,
               isWeekend: qe,
-              holidays: Ue,
+              holidays: xe,
               onClick: i,
               onMouseEnter: o,
               onMouseLeave: () => o(null)
             },
-            _
+            pe
           );
-        }) }, I))
+        }) }, $))
       ] })
     ] })
   ] });
 }
-const er = [
+const ar = [
   {
     label: "This week",
     resolve: () => {
       const n = /* @__PURE__ */ new Date();
-      return [J(n, { weekStartsOn: 1 }), ft(n, { weekStartsOn: 1 })];
+      return [Z(n, { weekStartsOn: 1 }), ft(n, { weekStartsOn: 1 })];
     }
   },
   {
@@ -2685,32 +2685,54 @@ const er = [
     label: "This month",
     resolve: () => {
       const n = /* @__PURE__ */ new Date();
-      return [Me(n), De(n)];
+      return [Pe(n), Ee(n)];
     }
   },
   {
     label: "Last month",
     resolve: () => {
       const n = ht(/* @__PURE__ */ new Date(), 1);
-      return [Me(n), De(n)];
+      return [Pe(n), Ee(n)];
     }
   }
 ];
-function tr({ presets: n, value: e, onSelect: t }) {
-  const a = n ?? er, r = (s) => {
+function rr({
+  presets: n,
+  value: e,
+  onSelect: t,
+  display: a = "chips",
+  dropdownPlaceholder: r = "Quick select range",
+  dropdownAriaLabel: s = "Quick select presets"
+}) {
+  const i = n ?? ar, o = (l) => {
     if (!e) return !1;
-    const [i, o] = s.resolve();
-    return L(i, e[0]) && L(o, e[1]);
-  };
-  return /* @__PURE__ */ T("div", { className: "dp-preset-chips", role: "group", "aria-label": "Quick select presets", children: a.map((s, i) => /* @__PURE__ */ T(
+    const [u, d] = l.resolve();
+    return z(u, e[0]) && z(d, e[1]);
+  }, c = i.findIndex((l) => o(l));
+  return a === "dropdown" ? /* @__PURE__ */ T("div", { className: "dp-preset-dropdown-wrap", children: /* @__PURE__ */ W(
+    "select",
+    {
+      className: "dp-preset-select",
+      "aria-label": s,
+      value: c >= 0 ? String(c) : "",
+      onChange: (l) => {
+        const u = l.target.value;
+        u !== "" && t(i[Number(u)].resolve());
+      },
+      children: [
+        /* @__PURE__ */ T("option", { value: "", children: r }),
+        i.map((l, u) => /* @__PURE__ */ T("option", { value: u, children: l.label }, u))
+      ]
+    }
+  ) }) : /* @__PURE__ */ T("div", { className: "dp-preset-chips", role: "group", "aria-label": "Quick select presets", children: i.map((l, u) => /* @__PURE__ */ T(
     "button",
     {
-      className: ["dp-chip", r(s) ? "dp-chip--active" : ""].join(" "),
-      onClick: () => t(s.resolve()),
+      className: ["dp-chip", o(l) ? "dp-chip--active" : ""].join(" "),
+      onClick: () => t(l.resolve()),
       type: "button",
-      children: s.label
+      children: l.label
     },
-    i
+    u
   )) });
 }
 var D;
@@ -2725,7 +2747,7 @@ var B;
 (function(n) {
   n[n.JANUARY = 1] = "JANUARY", n[n.FEBRUARY = 2] = "FEBRUARY", n[n.MARCH = 3] = "MARCH", n[n.APRIL = 4] = "APRIL", n[n.MAY = 5] = "MAY", n[n.JUNE = 6] = "JUNE", n[n.JULY = 7] = "JULY", n[n.AUGUST = 8] = "AUGUST", n[n.SEPTEMBER = 9] = "SEPTEMBER", n[n.OCTOBER = 10] = "OCTOBER", n[n.NOVEMBER = 11] = "NOVEMBER", n[n.DECEMBER = 12] = "DECEMBER";
 })(B || (B = {}));
-function se(n, e) {
+function ie(n, e) {
   n.assign("day", e.getDate()), n.assign("month", e.getMonth() + 1), n.assign("year", e.getFullYear());
 }
 function dn(n, e) {
@@ -2737,7 +2759,7 @@ function ue(n, e) {
 function gt(n, e) {
   n.imply("hour", e.getHours()), n.imply("minute", e.getMinutes()), n.imply("second", e.getSeconds()), n.imply("millisecond", e.getMilliseconds()), n.imply("meridiem", e.getHours() < 12 ? D.AM : D.PM);
 }
-const nr = {
+const sr = {
   ACDT: 630,
   ACST: 570,
   ADT: -180,
@@ -2787,8 +2809,8 @@ const nr = {
   CT: {
     timezoneOffsetDuringDst: -5 * 60,
     timezoneOffsetNonDst: -6 * 60,
-    dstStart: (n) => X(n, B.MARCH, A.SUNDAY, 2, 2),
-    dstEnd: (n) => X(n, B.NOVEMBER, A.SUNDAY, 1, 2)
+    dstStart: (n) => J(n, B.MARCH, A.SUNDAY, 2, 2),
+    dstEnd: (n) => J(n, B.NOVEMBER, A.SUNDAY, 1, 2)
   },
   CVT: -60,
   CXT: 420,
@@ -2807,8 +2829,8 @@ const nr = {
   ET: {
     timezoneOffsetDuringDst: -4 * 60,
     timezoneOffsetNonDst: -5 * 60,
-    dstStart: (n) => X(n, B.MARCH, A.SUNDAY, 2, 2),
-    dstEnd: (n) => X(n, B.NOVEMBER, A.SUNDAY, 1, 2)
+    dstStart: (n) => J(n, B.MARCH, A.SUNDAY, 2, 2),
+    dstEnd: (n) => J(n, B.NOVEMBER, A.SUNDAY, 1, 2)
   },
   FJST: 780,
   FJT: 720,
@@ -2874,8 +2896,8 @@ const nr = {
   MT: {
     timezoneOffsetDuringDst: -6 * 60,
     timezoneOffsetNonDst: -7 * 60,
-    dstStart: (n) => X(n, B.MARCH, A.SUNDAY, 2, 2),
-    dstEnd: (n) => X(n, B.NOVEMBER, A.SUNDAY, 1, 2)
+    dstStart: (n) => J(n, B.MARCH, A.SUNDAY, 2, 2),
+    dstEnd: (n) => J(n, B.NOVEMBER, A.SUNDAY, 1, 2)
   },
   MUT: 240,
   MVT: 300,
@@ -2907,8 +2929,8 @@ const nr = {
   PT: {
     timezoneOffsetDuringDst: -7 * 60,
     timezoneOffsetNonDst: -8 * 60,
-    dstStart: (n) => X(n, B.MARCH, A.SUNDAY, 2, 2),
-    dstEnd: (n) => X(n, B.NOVEMBER, A.SUNDAY, 1, 2)
+    dstStart: (n) => J(n, B.MARCH, A.SUNDAY, 2, 2),
+    dstEnd: (n) => J(n, B.NOVEMBER, A.SUNDAY, 1, 2)
   },
   PWT: 540,
   PYST: -180,
@@ -2957,7 +2979,7 @@ const nr = {
   YEKST: 360,
   YEKT: 360
 };
-function X(n, e, t, a, r = 0) {
+function J(n, e, t, a, r = 0) {
   let s = 0, i = 0;
   for (; i < a; )
     s++, new Date(n, e - 1, s).getDay() === t && i++;
@@ -2973,10 +2995,10 @@ function mn(n, e, t = {}) {
     return null;
   if (typeof n == "number")
     return n;
-  const a = t[n] ?? nr[n];
+  const a = t[n] ?? sr[n];
   return a == null ? null : typeof a == "number" ? a : e == null ? null : e > a.dstStart(e.getFullYear()) && !(e > a.dstEnd(e.getFullYear())) ? a.timezoneOffsetDuringDst : a.timezoneOffsetNonDst;
 }
-const ar = {
+const ir = {
   day: 0,
   second: 0,
   millisecond: 0
@@ -3035,26 +3057,26 @@ function Y(n, e) {
   }
   return t;
 }
-function Fe(n) {
+function Ce(n) {
   const e = {};
   for (const t in n)
     e[t] = -n[t];
   return e;
 }
-class re {
+class se {
   constructor(e, t) {
-    y(this, "instant");
-    y(this, "timezoneOffset");
+    g(this, "instant");
+    g(this, "timezoneOffset");
     this.instant = e ?? /* @__PURE__ */ new Date(), this.timezoneOffset = t ?? null;
   }
   static fromDate(e) {
-    return new re(e);
+    return new se(e);
   }
   static fromInput(e, t) {
     if (e instanceof Date)
-      return re.fromDate(e);
+      return se.fromDate(e);
     const a = (e == null ? void 0 : e.instant) ?? /* @__PURE__ */ new Date(), r = mn(e == null ? void 0 : e.timezone, a, t);
-    return new re(a, r);
+    return new se(a, r);
   }
   getDateWithAdjustedTimezone() {
     const e = new Date(this.instant);
@@ -3069,22 +3091,22 @@ class re {
     return this.timezoneOffset ?? -this.instant.getTimezoneOffset();
   }
 }
-class N {
+class P {
   constructor(e, t) {
-    y(this, "knownValues");
-    y(this, "impliedValues");
-    y(this, "reference");
-    y(this, "_tags", /* @__PURE__ */ new Set());
+    g(this, "knownValues");
+    g(this, "impliedValues");
+    g(this, "reference");
+    g(this, "_tags", /* @__PURE__ */ new Set());
     if (this.reference = e, this.knownValues = {}, this.impliedValues = {}, t)
       for (const r in t)
         this.knownValues[r] = t[r];
     const a = e.getDateWithAdjustedTimezone();
     this.imply("day", a.getDate()), this.imply("month", a.getMonth() + 1), this.imply("year", a.getFullYear()), this.imply("hour", 12), this.imply("minute", 0), this.imply("second", 0), this.imply("millisecond", 0);
   }
-  static createRelativeFromReference(e, t = ar) {
+  static createRelativeFromReference(e, t = ir) {
     let a = Y(e.getDateWithAdjustedTimezone(), t);
-    const r = new N(e);
-    return r.addTag("result/relativeDate"), "hour" in t || "minute" in t || "second" in t || "millisecond" in t ? (r.addTag("result/relativeDateAndTime"), dn(r, a), se(r, a), r.assign("timezoneOffset", e.getTimezoneOffset())) : (gt(r, a), r.imply("timezoneOffset", e.getTimezoneOffset()), "day" in t ? (r.assign("day", a.getDate()), r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear()), r.assign("weekday", a.getDay())) : "week" in t ? (r.assign("day", a.getDate()), r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear()), r.imply("weekday", a.getDay())) : (r.imply("day", a.getDate()), "month" in t ? (r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear())) : (r.imply("month", a.getMonth() + 1), "year" in t ? r.assign("year", a.getFullYear()) : r.imply("year", a.getFullYear())))), r;
+    const r = new P(e);
+    return r.addTag("result/relativeDate"), "hour" in t || "minute" in t || "second" in t || "millisecond" in t ? (r.addTag("result/relativeDateAndTime"), dn(r, a), ie(r, a), r.assign("timezoneOffset", e.getTimezoneOffset())) : (gt(r, a), r.imply("timezoneOffset", e.getTimezoneOffset()), "day" in t ? (r.assign("day", a.getDate()), r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear()), r.assign("weekday", a.getDay())) : "week" in t ? (r.assign("day", a.getDate()), r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear()), r.imply("weekday", a.getDay())) : (r.imply("day", a.getDate()), "month" in t ? (r.assign("month", a.getMonth() + 1), r.assign("year", a.getFullYear())) : (r.imply("month", a.getMonth() + 1), "year" in t ? r.assign("year", a.getFullYear()) : r.imply("year", a.getFullYear())))), r;
   }
   get(e) {
     return e in this.knownValues ? this.knownValues[e] : e in this.impliedValues ? this.impliedValues[e] : null;
@@ -3111,7 +3133,7 @@ class N {
       delete this.knownValues[t], delete this.impliedValues[t];
   }
   clone() {
-    const e = new N(this.reference);
+    const e = new P(this.reference);
     e.knownValues = {}, e.impliedValues = {};
     for (const t in this.knownValues)
       e.knownValues[t] = this.knownValues[t];
@@ -3164,13 +3186,13 @@ class N {
 }
 class he {
   constructor(e, t, a, r, s) {
-    y(this, "refDate");
-    y(this, "index");
-    y(this, "text");
-    y(this, "reference");
-    y(this, "start");
-    y(this, "end");
-    this.reference = e, this.refDate = e.instant, this.index = t, this.text = a, this.start = r || new N(e), this.end = s;
+    g(this, "refDate");
+    g(this, "index");
+    g(this, "text");
+    g(this, "reference");
+    g(this, "start");
+    g(this, "end");
+    this.reference = e, this.refDate = e.instant, this.index = t, this.text = a, this.start = r || new P(e), this.end = s;
   }
   clone() {
     const e = new he(this.reference, this.index, this.text);
@@ -3201,17 +3223,17 @@ function fn(n, e, t = "\\s{0,5},?\\s{0,5}") {
   const a = e.replace(/\((?!\?)/g, "(?:");
   return `${n}${a}(?:${t}${a}){0,10}`;
 }
-function rr(n) {
+function or(n) {
   let e;
   return n instanceof Array ? e = [...n] : n instanceof Map ? e = Array.from(n.keys()) : e = Object.keys(n), e;
 }
-function G(n) {
-  return `(?:${rr(n).sort((t, a) => a.length - t.length).join("|").replace(/\./g, "\\.")})`;
+function K(n) {
+  return `(?:${or(n).sort((t, a) => a.length - t.length).join("|").replace(/\./g, "\\.")})`;
 }
 function hn(n) {
   return n < 100 && (n > 50 ? n = n + 1900 : n = n + 2e3), n;
 }
-function Ce(n, e, t) {
+function Ye(n, e, t) {
   let a = new Date(n);
   a.setMonth(t - 1), a.setDate(e);
   const r = Y(a, { year: 1 }), s = Y(a, { year: -1 });
@@ -3256,7 +3278,7 @@ const lt = {
   october: 10,
   november: 11,
   december: 12
-}, Z = {
+}, ee = {
   ...gn,
   jan: 1,
   "jan.": 1,
@@ -3354,7 +3376,7 @@ const lt = {
   quarters: "quarter",
   year: "year",
   years: "year"
-}, ve = {
+}, We = {
   s: "second",
   sec: "second",
   second: "second",
@@ -3388,18 +3410,18 @@ const lt = {
   year: "year",
   years: "year",
   ...yn
-}, pn = `(?:${G(ut)}|[0-9]+|[0-9]+\\.[0-9]+|half(?:\\s{0,2}an?)?|an?\\b(?:\\s{0,2}few)?|few|several|the|a?\\s{0,2}couple\\s{0,2}(?:of)?)`;
-function sr(n) {
+}, pn = `(?:${K(ut)}|[0-9]+|[0-9]+\\.[0-9]+|half(?:\\s{0,2}an?)?|an?\\b(?:\\s{0,2}few)?|few|several|the|a?\\s{0,2}couple\\s{0,2}(?:of)?)`;
+function cr(n) {
   const e = n.toLowerCase();
   return ut[e] !== void 0 ? ut[e] : e === "a" || e === "an" || e == "the" ? 1 : e.match(/few/) ? 3 : e.match(/half/) ? 0.5 : e.match(/couple/) ? 2 : e.match(/several/) ? 7 : parseFloat(e);
 }
-const He = `(?:${G(dt)}|[0-9]{1,2}(?:st|nd|rd|th)?)`;
-function Re(n) {
+const Fe = `(?:${K(dt)}|[0-9]{1,2}(?:st|nd|rd|th)?)`;
+function ve(n) {
   let e = n.toLowerCase();
   return dt[e] !== void 0 ? dt[e] : (e = e.replace(/(?:st|nd|rd|th)$/i, ""), parseInt(e));
 }
-const Ye = "(?:[1-9][0-9]{0,3}\\s{0,2}(?:BE|AD|BC|BCE|CE)|[1-9][0-9]{3}|[5-9][0-9]|2[0-5])";
-function We(n) {
+const _e = "(?:[1-9][0-9]{0,3}\\s{0,2}(?:BE|AD|BC|BCE|CE)|[1-9][0-9]{3}|[5-9][0-9]|2[0-5])";
+function $e(n) {
   if (/BE/i.test(n))
     return n = n.replace(/BE/i, ""), parseInt(n) - 543;
   if (/BCE?/i.test(n))
@@ -3409,24 +3431,24 @@ function We(n) {
   const e = parseInt(n);
   return hn(e);
 }
-const Tn = `(${pn})\\s{0,3}(${G(ve)})`, Ht = new RegExp(Tn, "i"), ir = `(${pn})\\s{0,3}(${G(yn)})`, wn = "\\s{0,5},?(?:\\s*and)?\\s{0,5}", Pe = fn("(?:(?:about|around)\\s{0,3})?", Tn, wn), _e = fn("(?:(?:about|around)\\s{0,3})?", ir, wn);
+const Tn = `(${pn})\\s{0,3}(${K(We)})`, Ht = new RegExp(Tn, "i"), lr = `(${pn})\\s{0,3}(${K(yn)})`, wn = "\\s{0,5},?(?:\\s*and)?\\s{0,5}", Oe = fn("(?:(?:about|around)\\s{0,3})?", Tn, wn), Ie = fn("(?:(?:about|around)\\s{0,3})?", lr, wn);
 function ge(n) {
   const e = {};
   let t = n, a = Ht.exec(t);
   for (; a; )
-    or(e, a), t = t.substring(a[0].length).trim(), a = Ht.exec(t);
+    ur(e, a), t = t.substring(a[0].length).trim(), a = Ht.exec(t);
   return Object.keys(e).length == 0 ? null : e;
 }
-function or(n, e) {
+function ur(n, e) {
   if (e[0].match(/^[a-zA-Z]+$/))
     return;
-  const t = sr(e[1]), a = ve[e[2].toLowerCase()];
+  const t = cr(e[1]), a = We[e[2].toLowerCase()];
   n[a] = t;
 }
-class W {
+class _ {
   constructor() {
-    y(this, "cachedInnerPattern", null);
-    y(this, "cachedPattern", null);
+    g(this, "cachedInnerPattern", null);
+    g(this, "cachedPattern", null);
   }
   innerPatternHasChange(e, t) {
     return this.innerPattern(e) !== t;
@@ -3445,112 +3467,112 @@ class W {
     return this.innerExtract(e, t);
   }
 }
-const cr = new RegExp(`(?:(?:within|in|for)\\s*)?(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${Pe})(?=\\W|$)`, "i"), lr = new RegExp(`(?:within|in|for)\\s*(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${Pe})(?=\\W|$)`, "i"), ur = new RegExp(`(?:within|in|for)\\s*(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${_e})(?=\\W|$)`, "i");
-class dr extends W {
+const dr = new RegExp(`(?:(?:within|in|for)\\s*)?(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${Oe})(?=\\W|$)`, "i"), mr = new RegExp(`(?:within|in|for)\\s*(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${Oe})(?=\\W|$)`, "i"), fr = new RegExp(`(?:within|in|for)\\s*(?:(?:about|around|roughly|approximately|just)\\s*(?:~\\s*)?)?(${Ie})(?=\\W|$)`, "i");
+class hr extends _ {
   constructor(t) {
     super();
-    y(this, "strictMode");
+    g(this, "strictMode");
     this.strictMode = t;
   }
   innerPattern(t) {
-    return this.strictMode ? ur : t.option.forwardDate ? cr : lr;
+    return this.strictMode ? fr : t.option.forwardDate ? dr : mr;
   }
   innerExtract(t, a) {
     if (a[0].match(/^for\s*the\s*\w+/))
       return null;
     const r = ge(a[1]);
-    return r ? N.createRelativeFromReference(t.reference, r) : null;
+    return r ? P.createRelativeFromReference(t.reference, r) : null;
   }
 }
-const mr = new RegExp(`(?:on\\s{0,3})?(${He})(?:\\s{0,3}(?:to|\\-|\\–|until|through|till)?\\s{0,3}(${He}))?(?:-|/|\\s{0,3}(?:of)?\\s{0,3})(${G(Z)})(?:(?:-|/|,?\\s{0,3})(${Ye}(?!\\w)))?(?=\\W|$)`, "i"), Rt = 1, Ft = 2, fr = 3, Ct = 4;
-class hr extends W {
+const gr = new RegExp(`(?:on\\s{0,3})?(${Fe})(?:\\s{0,3}(?:to|\\-|\\–|until|through|till)?\\s{0,3}(${Fe}))?(?:-|/|\\s{0,3}(?:of)?\\s{0,3})(${K(ee)})(?:(?:-|/|,?\\s{0,3})(${_e}(?!\\w)))?(?=\\W|$)`, "i"), Rt = 1, Ft = 2, yr = 3, vt = 4;
+class pr extends _ {
   innerPattern() {
-    return mr;
+    return gr;
   }
   innerExtract(e, t) {
-    const a = e.createParsingResult(t.index, t[0]), r = Z[t[fr].toLowerCase()], s = Re(t[Rt]);
+    const a = e.createParsingResult(t.index, t[0]), r = ee[t[yr].toLowerCase()], s = ve(t[Rt]);
     if (s > 31)
       return t.index = t.index + t[Rt].length, null;
-    if (a.start.assign("month", r), a.start.assign("day", s), t[Ct]) {
-      const i = We(t[Ct]);
+    if (a.start.assign("month", r), a.start.assign("day", s), t[vt]) {
+      const i = $e(t[vt]);
       a.start.assign("year", i);
     } else {
-      const i = Ce(e.refDate, s, r);
+      const i = Ye(e.refDate, s, r);
       a.start.imply("year", i);
     }
     if (t[Ft]) {
-      const i = Re(t[Ft]);
+      const i = ve(t[Ft]);
       a.end = a.start.clone(), a.end.assign("day", i);
     }
     return a;
   }
 }
-const gr = new RegExp(`(${G(Z)})(?:-|/|\\s*,?\\s*)(${He})(?!\\s*(?:am|pm))\\s*(?:(?:to|\\-)\\s*(${He})\\s*)?(?:(?:-|/|\\s*,\\s*|\\s+)(${Ye}))?(?=\\W|$)(?!\\:\\d)`, "i"), yr = 1, vt = 2, et = 3, tt = 4;
-class pr extends W {
+const Tr = new RegExp(`(${K(ee)})(?:-|/|\\s*,?\\s*)(${Fe})(?!\\s*(?:am|pm))\\s*(?:(?:to|\\-)\\s*(${Fe})\\s*)?(?:(?:-|/|\\s*,\\s*|\\s+)(${_e}))?(?=\\W|$)(?!\\:\\d)`, "i"), wr = 1, Ct = 2, et = 3, tt = 4;
+class br extends _ {
   constructor(t) {
     super();
-    y(this, "shouldSkipYearLikeDate");
+    g(this, "shouldSkipYearLikeDate");
     this.shouldSkipYearLikeDate = t;
   }
   innerPattern() {
-    return gr;
+    return Tr;
   }
   innerExtract(t, a) {
-    const r = Z[a[yr].toLowerCase()], s = Re(a[vt]);
-    if (s > 31 || this.shouldSkipYearLikeDate && !a[et] && !a[tt] && a[vt].match(/^2[0-5]$/))
+    const r = ee[a[wr].toLowerCase()], s = ve(a[Ct]);
+    if (s > 31 || this.shouldSkipYearLikeDate && !a[et] && !a[tt] && a[Ct].match(/^2[0-5]$/))
       return null;
     const i = t.createParsingComponents({
       day: s,
       month: r
     }).addTag("parser/ENMonthNameMiddleEndianParser");
     if (a[tt]) {
-      const l = We(a[tt]);
+      const l = $e(a[tt]);
       i.assign("year", l);
     } else {
-      const l = Ce(t.refDate, s, r);
+      const l = Ye(t.refDate, s, r);
       i.imply("year", l);
     }
     if (!a[et])
       return i;
-    const o = Re(a[et]), c = t.createParsingResult(a.index, a[0]);
+    const o = ve(a[et]), c = t.createParsingResult(a.index, a[0]);
     return c.start = i, c.end = i.clone(), c.end.assign("day", o), c;
   }
 }
-const Tr = new RegExp(`((?:in)\\s*)?(${G(Z)})\\s*(?:(?:,|-|of)?\\s*(${Ye})?)?(?=[^\\s\\w]|\\s+[^0-9]|\\s+$|$)`, "i"), wr = 1, br = 2, Yt = 3;
-class Dr extends W {
+const Dr = new RegExp(`((?:in)\\s*)?(${K(ee)})\\s*(?:(?:,|-|of)?\\s*(${_e})?)?(?=[^\\s\\w]|\\s+[^0-9]|\\s+$|$)`, "i"), Mr = 1, Er = 2, Yt = 3;
+class Pr extends _ {
   innerPattern() {
-    return Tr;
+    return Dr;
   }
   innerExtract(e, t) {
-    const a = t[br].toLowerCase();
+    const a = t[Er].toLowerCase();
     if (t[0].length <= 3 && !gn[a])
       return null;
-    const r = e.createParsingResult(t.index + (t[wr] || "").length, t.index + t[0].length);
+    const r = e.createParsingResult(t.index + (t[Mr] || "").length, t.index + t[0].length);
     r.start.imply("day", 1), r.start.addTag("parser/ENMonthNameParser");
-    const s = Z[a];
+    const s = ee[a];
     if (r.start.assign("month", s), t[Yt]) {
-      const i = We(t[Yt]);
+      const i = $e(t[Yt]);
       r.start.assign("year", i);
     } else {
-      const i = Ce(e.refDate, 1, s);
+      const i = Ye(e.refDate, 1, s);
       r.start.imply("year", i);
     }
     return r;
   }
 }
-const Mr = new RegExp(`([0-9]{4})[-\\.\\/\\s](?:(${G(Z)})|([0-9]{1,2}))[-\\.\\/\\s]([0-9]{1,2})(?=\\W|$)`, "i"), Er = 1, Pr = 2, Wt = 3, Nr = 4;
-class Or extends W {
+const Nr = new RegExp(`([0-9]{4})[-\\.\\/\\s](?:(${K(ee)})|([0-9]{1,2}))[-\\.\\/\\s]([0-9]{1,2})(?=\\W|$)`, "i"), Or = 1, Ar = 2, Wt = 3, Sr = 4;
+class xr extends _ {
   constructor(t) {
     super();
-    y(this, "strictMonthDateOrder");
+    g(this, "strictMonthDateOrder");
     this.strictMonthDateOrder = t;
   }
   innerPattern() {
-    return Mr;
+    return Nr;
   }
   innerExtract(t, a) {
-    const r = parseInt(a[Er]);
-    let s = parseInt(a[Nr]), i = a[Wt] ? parseInt(a[Wt]) : Z[a[Pr].toLowerCase()];
+    const r = parseInt(a[Or]);
+    let s = parseInt(a[Sr]), i = a[Wt] ? parseInt(a[Wt]) : ee[a[Ar].toLowerCase()];
     if (i < 1 || i > 12) {
       if (this.strictMonthDateOrder)
         return null;
@@ -3563,32 +3585,32 @@ class Or extends W {
     };
   }
 }
-const Ar = new RegExp("([0-9]|0[1-9]|1[012])/([0-9]{4})", "i"), Sr = 1, xr = 2;
-class kr extends W {
+const kr = new RegExp("([0-9]|0[1-9]|1[012])/([0-9]{4})", "i"), Hr = 1, Rr = 2;
+class Fr extends _ {
   innerPattern() {
-    return Ar;
+    return kr;
   }
   innerExtract(e, t) {
-    const a = parseInt(t[xr]), r = parseInt(t[Sr]);
+    const a = parseInt(t[Rr]), r = parseInt(t[Hr]);
     return e.createParsingComponents().imply("day", 1).assign("month", r).assign("year", a);
   }
 }
-function Hr(n, e, t, a) {
+function vr(n, e, t, a) {
   return new RegExp(`${n}${e}(\\d{1,4})(?:(?:\\.|:|：)(\\d{1,2})(?:(?::|：)(\\d{2})(?:\\.(\\d{1,6}))?)?)?(?:\\s*(a\\.m\\.|p\\.m\\.|am?|pm?))?${t}`, a);
 }
-function Rr(n, e) {
+function Cr(n, e) {
   return new RegExp(`^(${n})(\\d{1,4})(?:(?:\\.|\\:|\\：)(\\d{1,2})(?:(?:\\.|\\:|\\：)(\\d{1,2})(?:\\.(\\d{1,6}))?)?)?(?:\\s*(a\\.m\\.|p\\.m\\.|am?|pm?))?${e}`, "i");
 }
-const nt = 2, te = 3, Se = 4, xe = 5, le = 6;
-class Fr {
+const nt = 2, ne = 3, ke = 4, He = 5, le = 6;
+class Yr {
   constructor(e = !1) {
-    y(this, "strictMode");
-    y(this, "cachedPrimaryPrefix", null);
-    y(this, "cachedPrimarySuffix", null);
-    y(this, "cachedPrimaryTimePattern", null);
-    y(this, "cachedFollowingPhase", null);
-    y(this, "cachedFollowingSuffix", null);
-    y(this, "cachedFollowingTimePatten", null);
+    g(this, "strictMode");
+    g(this, "cachedPrimaryPrefix", null);
+    g(this, "cachedPrimarySuffix", null);
+    g(this, "cachedPrimaryTimePattern", null);
+    g(this, "cachedFollowingPhase", null);
+    g(this, "cachedFollowingSuffix", null);
+    g(this, "cachedFollowingTimePatten", null);
     this.strictMode = e;
   }
   patternFlags() {
@@ -3619,16 +3641,16 @@ class Fr {
     const r = e.createParsingComponents();
     let s = 0, i = null, o = parseInt(t[nt]);
     if (o > 100) {
-      if (t[nt].length == 4 && t[te] == null && !t[le] || this.strictMode || t[te] != null)
+      if (t[nt].length == 4 && t[ne] == null && !t[le] || this.strictMode || t[ne] != null)
         return null;
       s = o % 100, o = Math.floor(o / 100);
     }
     if (o > 24)
       return null;
-    if (t[te] != null) {
-      if (t[te].length == 1 && !t[le])
+    if (t[ne] != null) {
+      if (t[ne].length == 1 && !t[le])
         return null;
-      s = parseInt(t[te]);
+      s = parseInt(t[ne]);
     }
     if (s >= 60)
       return null;
@@ -3638,14 +3660,14 @@ class Fr {
       const c = t[le][0].toLowerCase();
       c == "a" && (i = D.AM, o == 12 && (o = 0)), c == "p" && (i = D.PM, o != 12 && (o += 12));
     }
-    if (r.assign("hour", o), r.assign("minute", s), i !== null ? r.assign("meridiem", i) : o < 12 ? r.imply("meridiem", D.AM) : r.imply("meridiem", D.PM), t[xe] != null) {
-      const c = parseInt(t[xe].substring(0, 3));
+    if (r.assign("hour", o), r.assign("minute", s), i !== null ? r.assign("meridiem", i) : o < 12 ? r.imply("meridiem", D.AM) : r.imply("meridiem", D.PM), t[He] != null) {
+      const c = parseInt(t[He].substring(0, 3));
       if (c >= 1e3)
         return null;
       r.assign("millisecond", c);
     }
-    if (t[Se] != null) {
-      const c = parseInt(t[Se]);
+    if (t[ke] != null) {
+      const c = parseInt(t[ke]);
       if (c >= 60)
         return null;
       r.assign("second", c);
@@ -3654,20 +3676,20 @@ class Fr {
   }
   extractFollowingTimeComponents(e, t, a) {
     const r = e.createParsingComponents();
-    if (t[xe] != null) {
-      const c = parseInt(t[xe].substring(0, 3));
+    if (t[He] != null) {
+      const c = parseInt(t[He].substring(0, 3));
       if (c >= 1e3)
         return null;
       r.assign("millisecond", c);
     }
-    if (t[Se] != null) {
-      const c = parseInt(t[Se]);
+    if (t[ke] != null) {
+      const c = parseInt(t[ke]);
       if (c >= 60)
         return null;
       r.assign("second", c);
     }
     let s = parseInt(t[nt]), i = 0, o = -1;
-    if (t[te] != null ? i = parseInt(t[te]) : s > 100 && (i = s % 100, s = Math.floor(s / 100)), i >= 60 || s > 24)
+    if (t[ne] != null ? i = parseInt(t[ne]) : s > 100 && (i = s % 100, s = Math.floor(s / 100)), i >= 60 || s > 24)
       return null;
     if (s >= 12 && (o = D.PM), t[le] != null) {
       if (s > 12)
@@ -3706,14 +3728,14 @@ class Fr {
   }
   getPrimaryTimePatternThroughCache() {
     const e = this.primaryPrefix(), t = this.primarySuffix();
-    return this.cachedPrimaryPrefix === e && this.cachedPrimarySuffix === t ? this.cachedPrimaryTimePattern : (this.cachedPrimaryTimePattern = Hr(this.primaryPatternLeftBoundary(), e, t, this.patternFlags()), this.cachedPrimaryPrefix = e, this.cachedPrimarySuffix = t, this.cachedPrimaryTimePattern);
+    return this.cachedPrimaryPrefix === e && this.cachedPrimarySuffix === t ? this.cachedPrimaryTimePattern : (this.cachedPrimaryTimePattern = vr(this.primaryPatternLeftBoundary(), e, t, this.patternFlags()), this.cachedPrimaryPrefix = e, this.cachedPrimarySuffix = t, this.cachedPrimaryTimePattern);
   }
   getFollowingTimePatternThroughCache() {
     const e = this.followingPhase(), t = this.followingSuffix();
-    return this.cachedFollowingPhase === e && this.cachedFollowingSuffix === t ? this.cachedFollowingTimePatten : (this.cachedFollowingTimePatten = Rr(e, t), this.cachedFollowingPhase = e, this.cachedFollowingSuffix = t, this.cachedFollowingTimePatten);
+    return this.cachedFollowingPhase === e && this.cachedFollowingSuffix === t ? this.cachedFollowingTimePatten : (this.cachedFollowingTimePatten = Cr(e, t), this.cachedFollowingPhase = e, this.cachedFollowingSuffix = t, this.cachedFollowingTimePatten);
   }
 }
-class Cr extends Fr {
+class Wr extends Yr {
   constructor(e) {
     super(e);
   }
@@ -3746,34 +3768,34 @@ class Cr extends Fr {
     return r && r.addTag("parser/ENTimeExpressionParser"), r;
   }
 }
-const vr = new RegExp(`(${Pe})\\s{0,5}(?:ago|before|earlier)(?=\\W|$)`, "i"), Yr = new RegExp(`(${_e})\\s{0,5}(?:ago|before|earlier)(?=\\W|$)`, "i");
-class Wr extends W {
+const _r = new RegExp(`(${Oe})\\s{0,5}(?:ago|before|earlier)(?=\\W|$)`, "i"), $r = new RegExp(`(${Ie})\\s{0,5}(?:ago|before|earlier)(?=\\W|$)`, "i");
+class Ir extends _ {
   constructor(t) {
     super();
-    y(this, "strictMode");
-    this.strictMode = t;
-  }
-  innerPattern() {
-    return this.strictMode ? Yr : vr;
-  }
-  innerExtract(t, a) {
-    const r = ge(a[1]);
-    return r ? N.createRelativeFromReference(t.reference, Fe(r)) : null;
-  }
-}
-const _r = new RegExp(`(${Pe})\\s{0,5}(?:later|after|from now|henceforth|forward|out)(?=(?:\\W|$))`, "i"), $r = new RegExp(`(${_e})\\s{0,5}(later|after|from now)(?=\\W|$)`, "i"), Ir = 1;
-class Br extends W {
-  constructor(t) {
-    super();
-    y(this, "strictMode");
+    g(this, "strictMode");
     this.strictMode = t;
   }
   innerPattern() {
     return this.strictMode ? $r : _r;
   }
   innerExtract(t, a) {
-    const r = ge(a[Ir]);
-    return r ? N.createRelativeFromReference(t.reference, r) : null;
+    const r = ge(a[1]);
+    return r ? P.createRelativeFromReference(t.reference, Ce(r)) : null;
+  }
+}
+const Br = new RegExp(`(${Oe})\\s{0,5}(?:later|after|from now|henceforth|forward|out)(?=(?:\\W|$))`, "i"), Ur = new RegExp(`(${Ie})\\s{0,5}(later|after|from now)(?=\\W|$)`, "i"), Lr = 1;
+class jr extends _ {
+  constructor(t) {
+    super();
+    g(this, "strictMode");
+    this.strictMode = t;
+  }
+  innerPattern() {
+    return this.strictMode ? Ur : Br;
+  }
+  innerExtract(t, a) {
+    const r = ge(a[Lr]);
+    return r ? P.createRelativeFromReference(t.reference, r) : null;
   }
 }
 class bn {
@@ -3781,7 +3803,7 @@ class bn {
     return t.filter((a) => this.isValid(e, a));
   }
 }
-class Ne {
+class Ae {
   refine(e, t) {
     if (t.length < 2)
       return t;
@@ -3802,7 +3824,7 @@ class Ne {
     return r != null && a.push(r), a;
   }
 }
-class Ur extends Ne {
+class zr extends Ae {
   shouldMergeResults(e, t, a) {
     return !t.end && !a.end && e.match(this.patternBetween()) != null;
   }
@@ -3819,7 +3841,7 @@ class Ur extends Ne {
     return r.start = t.start, r.end = a.start, r.index = Math.min(t.index, a.index), t.index < a.index ? r.text = t.text + e + a.text : r.text = a.text + e + t.text, r;
   }
 }
-class Lr extends Ur {
+class Gr extends zr {
   patternBetween() {
     return /^\s*(to|-|–|until|through|till)\s*$/i;
   }
@@ -3830,7 +3852,7 @@ function _t(n, e) {
     const s = n.end == null ? n.start : n.end, i = e.end == null ? e.start : e.end, o = $t(s, i);
     if (n.end == null && o.date().getTime() < t.start.date().getTime()) {
       const c = new Date(o.date().getTime());
-      c.setDate(c.getDate() + 1), o.isCertain("day") ? se(o, c) : ue(o, c);
+      c.setDate(c.getDate() + 1), o.isCertain("day") ? ie(o, c) : ue(o, c);
     }
     t.end = o;
   }
@@ -3842,7 +3864,7 @@ function $t(n, e) {
   const a = n.get("meridiem") != null && (n.isCertain("meridiem") || Array.from(n.tags()).some((r) => r.startsWith("casualReference/")));
   return e.isCertain("meridiem") ? t.assign("meridiem", e.get("meridiem")) : e.get("meridiem") != null && !a && t.imply("meridiem", e.get("meridiem")), t.get("meridiem") == D.PM && t.get("hour") < 12 && (e.isCertain("hour") ? t.assign("hour", t.get("hour") + 12) : t.imply("hour", t.get("hour") + 12)), t.addTags(n.tags()), t.addTags(e.tags()), t;
 }
-class jr extends Ne {
+class Vr extends Ae {
   shouldMergeResults(e, t, a) {
     return (t.start.isOnlyDate() && a.start.isOnlyTime() || a.start.isOnlyDate() && t.start.isOnlyTime()) && e.match(this.patternBetween()) != null;
   }
@@ -3851,21 +3873,21 @@ class jr extends Ne {
     return r.index = t.index, r.text = t.text + e + a.text, r;
   }
 }
-class It extends jr {
+class It extends Vr {
   patternBetween() {
     return new RegExp("^\\s*(T|at|after|before|on|of|,|-|\\.|∙|:)?\\s*$");
   }
 }
-const zr = new RegExp("^\\s*,?\\s*\\(?([A-Z]{2,4})\\)?(?=\\W|$)", "i");
-class Gr {
+const Kr = new RegExp("^\\s*,?\\s*\\(?([A-Z]{2,4})\\)?(?=\\W|$)", "i");
+class qr {
   constructor(e) {
-    y(this, "timezoneOverrides");
+    g(this, "timezoneOverrides");
     this.timezoneOverrides = e;
   }
   refine(e, t) {
     const a = e.option.timezones ?? {};
     return t.forEach((r) => {
-      const s = e.text.substring(r.index + r.text.length), i = zr.exec(s);
+      const s = e.text.substring(r.index + r.text.length), i = Kr.exec(s);
       if (!i)
         return;
       const o = i[1].toUpperCase(), c = r.start.date() ?? r.refDate ?? /* @__PURE__ */ new Date(), l = { ...this.timezoneOverrides, ...a }, u = mn(o, c, l);
@@ -3879,21 +3901,21 @@ class Gr {
     }), t;
   }
 }
-const Vr = new RegExp("^\\s*(?:\\(?(?:GMT|UTC)\\s?)?([+-])(\\d{1,2})(?::?(\\d{2}))?\\)?", "i"), Kr = 1, qr = 2, Qr = 3;
-class Xr {
+const Qr = new RegExp("^\\s*(?:\\(?(?:GMT|UTC)\\s?)?([+-])(\\d{1,2})(?::?(\\d{2}))?\\)?", "i"), Xr = 1, Jr = 2, Zr = 3;
+class es {
   refine(e, t) {
     return t.forEach(function(a) {
       if (a.start.isCertain("timezoneOffset"))
         return;
-      const r = e.text.substring(a.index + a.text.length), s = Vr.exec(r);
+      const r = e.text.substring(a.index + a.text.length), s = Qr.exec(r);
       if (!s)
         return;
       e.debug(() => {
         console.log(`Extracting timezone: '${s[0]}' into : ${a}`);
       });
-      const i = parseInt(s[qr]), o = parseInt(s[Qr] || "0");
+      const i = parseInt(s[Jr]), o = parseInt(s[Zr] || "0");
       let c = i * 60 + o;
-      c > 14 * 60 || (s[Kr] === "-" && (c = -c), a.end != null && a.end.assign("timezoneOffset", c), a.start.assign("timezoneOffset", c), a.text += s[0]);
+      c > 14 * 60 || (s[Xr] === "-" && (c = -c), a.end != null && a.end.assign("timezoneOffset", c), a.start.assign("timezoneOffset", c), a.text += s[0]);
     }), t;
   }
 }
@@ -3917,12 +3939,12 @@ class mt {
     return r != null && a.push(r), a;
   }
 }
-function Jr(n, e, t) {
-  const a = n.getDateWithAdjustedTimezone(), r = Zr(a, e, t);
-  let s = new N(n);
+function ts(n, e, t) {
+  const a = n.getDateWithAdjustedTimezone(), r = ns(a, e, t);
+  let s = new P(n);
   return s = s.addDurationAsImplied({ day: r }), s.assign("weekday", e), s;
 }
-function Zr(n, e, t) {
+function ns(n, e, t) {
   const a = n.getDay();
   switch (t) {
     case "this":
@@ -3932,9 +3954,9 @@ function Zr(n, e, t) {
     case "next":
       return a == A.SUNDAY ? e == A.SUNDAY ? 7 : e : a == A.SATURDAY ? e == A.SATURDAY ? 7 : e == A.SUNDAY ? 8 : 1 + e : e < a && e != A.SUNDAY ? de(n, e) : de(n, e) + 7;
   }
-  return es(n, e);
+  return as(n, e);
 }
-function es(n, e) {
+function as(n, e) {
   const t = Dn(n, e), a = de(n, e);
   return a < -t ? a : t;
 }
@@ -3948,7 +3970,7 @@ function Dn(n, e) {
   let a = e - t;
   return a >= 0 && (a -= 7), a;
 }
-class ts {
+class rs {
   refine(e, t) {
     return e.option.forwardDate && t.forEach((a) => {
       let r = e.reference.getDateWithAdjustedTimezone();
@@ -3981,10 +4003,10 @@ class ts {
     }), t;
   }
 }
-class ns extends bn {
+class ss extends bn {
   constructor(t) {
     super();
-    y(this, "strictMode");
+    g(this, "strictMode");
     this.strictMode = t;
   }
   isValid(t, a) {
@@ -4002,18 +4024,18 @@ class ns extends bn {
     }), !1) : !0;
   }
 }
-const as = new RegExp("([0-9]{4})\\-([0-9]{1,2})\\-([0-9]{1,2})(?:T([0-9]{1,2}):([0-9]{1,2})(?::([0-9]{1,2})(?:\\.(\\d{1,4}))?)?(Z|([+-]\\d{2}):?(\\d{2})?)?)?(?=\\W|$)", "i"), rs = 1, ss = 2, is = 3, Bt = 4, os = 5, Ut = 6, Lt = 7, cs = 8, jt = 9, zt = 10;
-class ls extends W {
+const is = new RegExp("([0-9]{4})\\-([0-9]{1,2})\\-([0-9]{1,2})(?:T([0-9]{1,2}):([0-9]{1,2})(?::([0-9]{1,2})(?:\\.(\\d{1,4}))?)?(Z|([+-]\\d{2}):?(\\d{2})?)?)?(?=\\W|$)", "i"), os = 1, cs = 2, ls = 3, Bt = 4, us = 5, Ut = 6, Lt = 7, ds = 8, jt = 9, zt = 10;
+class ms extends _ {
   innerPattern() {
-    return as;
+    return is;
   }
   innerExtract(e, t) {
     const a = e.createParsingComponents({
-      year: parseInt(t[rs]),
-      month: parseInt(t[ss]),
-      day: parseInt(t[is])
+      year: parseInt(t[os]),
+      month: parseInt(t[cs]),
+      day: parseInt(t[ls])
     });
-    if (t[Bt] != null && (a.assign("hour", parseInt(t[Bt])), a.assign("minute", parseInt(t[os])), t[Ut] != null && a.assign("second", parseInt(t[Ut])), t[Lt] != null && a.assign("millisecond", parseInt(t[Lt])), t[cs] != null)) {
+    if (t[Bt] != null && (a.assign("hour", parseInt(t[Bt])), a.assign("minute", parseInt(t[us])), t[Ut] != null && a.assign("second", parseInt(t[Ut])), t[Lt] != null && a.assign("millisecond", parseInt(t[Lt])), t[ds] != null)) {
       let r = 0;
       if (t[jt]) {
         const s = parseInt(t[jt]);
@@ -4025,7 +4047,7 @@ class ls extends W {
     return a.addTag("parser/ISOFormatParser");
   }
 }
-class us extends Ne {
+class fs extends Ae {
   mergeResults(e, t, a) {
     const r = a.clone();
     return r.index = t.index, r.text = t.text + e + r.text, r.start.assign("weekday", t.start.get("weekday")), r.end && r.end.assign("weekday", t.start.get("weekday")), r;
@@ -4034,58 +4056,58 @@ class us extends Ne {
     return t.start.isOnlyWeekdayComponent() && !t.start.isCertain("hour") && a.start.isCertain("day") && e.match(/^,?\s*$/) != null;
   }
 }
-function ds(n, e = !1) {
-  return n.parsers.unshift(new ls()), n.refiners.unshift(new us()), n.refiners.unshift(new Xr()), n.refiners.unshift(new mt()), n.refiners.push(new Gr()), n.refiners.push(new mt()), n.refiners.push(new ts()), n.refiners.push(new ns(e)), n;
-}
-function ms(n) {
-  const e = n.getDateWithAdjustedTimezone(), t = new N(n, {});
-  return se(t, e), dn(t, e), t.assign("timezoneOffset", n.getTimezoneOffset()), t.addTag("casualReference/now"), t;
-}
-function fs(n) {
-  const e = n.getDateWithAdjustedTimezone(), t = new N(n, {});
-  return se(t, e), gt(t, e), t.delete("meridiem"), t.addTag("casualReference/today"), t;
-}
-function hs(n) {
-  return ys(n).addTag("casualReference/yesterday");
+function hs(n, e = !1) {
+  return n.parsers.unshift(new ms()), n.refiners.unshift(new fs()), n.refiners.unshift(new es()), n.refiners.unshift(new mt()), n.refiners.push(new qr()), n.refiners.push(new mt()), n.refiners.push(new rs()), n.refiners.push(new ss(e)), n;
 }
 function gs(n) {
+  const e = n.getDateWithAdjustedTimezone(), t = new P(n, {});
+  return ie(t, e), dn(t, e), t.assign("timezoneOffset", n.getTimezoneOffset()), t.addTag("casualReference/now"), t;
+}
+function ys(n) {
+  const e = n.getDateWithAdjustedTimezone(), t = new P(n, {});
+  return ie(t, e), gt(t, e), t.delete("meridiem"), t.addTag("casualReference/today"), t;
+}
+function ps(n) {
+  return ws(n).addTag("casualReference/yesterday");
+}
+function Ts(n) {
   return yt(n, 1).addTag("casualReference/tomorrow");
 }
-function ys(n, e) {
+function ws(n, e) {
   return yt(n, -1);
 }
 function yt(n, e) {
-  const t = n.getDateWithAdjustedTimezone(), a = new N(n, {}), r = new Date(t.getTime());
-  return r.setDate(r.getDate() + e), se(a, r), gt(a, r), a.delete("meridiem"), a;
+  const t = n.getDateWithAdjustedTimezone(), a = new P(n, {}), r = new Date(t.getTime());
+  return r.setDate(r.getDate() + e), ie(a, r), gt(a, r), a.delete("meridiem"), a;
 }
-function ps(n, e = 22) {
-  const t = n.getDateWithAdjustedTimezone(), a = new N(n, {});
-  return se(a, t), a.imply("hour", e), a.imply("meridiem", D.PM), a.addTag("casualReference/tonight"), a;
+function bs(n, e = 22) {
+  const t = n.getDateWithAdjustedTimezone(), a = new P(n, {});
+  return ie(a, t), a.imply("hour", e), a.imply("meridiem", D.PM), a.addTag("casualReference/tonight"), a;
 }
-function Ts(n, e = 20) {
-  const t = new N(n, {});
+function Ds(n, e = 20) {
+  const t = new P(n, {});
   return t.imply("meridiem", D.PM), t.imply("hour", e), t.addTag("casualReference/evening"), t;
 }
-function ws(n) {
-  const e = new N(n, {});
+function Ms(n) {
+  const e = new P(n, {});
   return n.getDateWithAdjustedTimezone().getHours() > 2 && e.addDurationAsImplied({ day: 1 }), e.assign("hour", 0), e.imply("minute", 0), e.imply("second", 0), e.imply("millisecond", 0), e.addTag("casualReference/midnight"), e;
 }
-function bs(n, e = 6) {
-  const t = new N(n, {});
+function Es(n, e = 6) {
+  const t = new P(n, {});
   return t.imply("meridiem", D.AM), t.imply("hour", e), t.imply("minute", 0), t.imply("second", 0), t.imply("millisecond", 0), t.addTag("casualReference/morning"), t;
 }
-function Ds(n, e = 15) {
-  const t = new N(n, {});
+function Ps(n, e = 15) {
+  const t = new P(n, {});
   return t.imply("meridiem", D.PM), t.imply("hour", e), t.imply("minute", 0), t.imply("second", 0), t.imply("millisecond", 0), t.addTag("casualReference/afternoon"), t;
 }
-function Ms(n) {
-  const e = new N(n, {});
+function Ns(n) {
+  const e = new P(n, {});
   return e.imply("meridiem", D.AM), e.assign("hour", 12), e.imply("minute", 0), e.imply("second", 0), e.imply("millisecond", 0), e.addTag("casualReference/noon"), e;
 }
-const Es = /(now|today|tonight|tomorrow|overmorrow|tmr|tmrw|yesterday|last\s*night)(?=\W|$)/i;
-class Ps extends W {
+const Os = /(now|today|tonight|tomorrow|overmorrow|tmr|tmrw|yesterday|last\s*night)(?=\W|$)/i;
+class As extends _ {
   innerPattern(e) {
-    return Es;
+    return Os;
   }
   innerExtract(e, t) {
     let a = e.refDate;
@@ -4093,21 +4115,21 @@ class Ps extends W {
     let s = e.createParsingComponents();
     switch (r) {
       case "now":
-        s = ms(e.reference);
+        s = gs(e.reference);
         break;
       case "today":
-        s = fs(e.reference);
+        s = ys(e.reference);
         break;
       case "yesterday":
-        s = hs(e.reference);
+        s = ps(e.reference);
         break;
       case "tomorrow":
       case "tmr":
       case "tmrw":
-        s = gs(e.reference);
+        s = Ts(e.reference);
         break;
       case "tonight":
-        s = ps(e.reference);
+        s = bs(e.reference);
         break;
       case "overmorrow":
         s = yt(e.reference, 2);
@@ -4118,54 +4140,54 @@ class Ps extends W {
             const i = new Date(a.getTime());
             i.setDate(i.getDate() - 1), a = i;
           }
-          se(s, a), s.imply("hour", 0);
+          ie(s, a), s.imply("hour", 0);
         }
         break;
     }
     return s.addTag("parser/ENCasualDateParser"), s;
   }
 }
-const Ns = /(?:this)?\s{0,3}(morning|afternoon|evening|night|midnight|midday|noon)(?=\W|$)/i;
-class Os extends W {
+const Ss = /(?:this)?\s{0,3}(morning|afternoon|evening|night|midnight|midday|noon)(?=\W|$)/i;
+class xs extends _ {
   innerPattern() {
-    return Ns;
+    return Ss;
   }
   innerExtract(e, t) {
     let a = null;
     switch (t[1].toLowerCase()) {
       case "afternoon":
-        a = Ds(e.reference);
+        a = Ps(e.reference);
         break;
       case "evening":
       case "night":
-        a = Ts(e.reference);
+        a = Ds(e.reference);
         break;
       case "midnight":
-        a = ws(e.reference);
+        a = Ms(e.reference);
         break;
       case "morning":
-        a = bs(e.reference);
+        a = Es(e.reference);
         break;
       case "noon":
       case "midday":
-        a = Ms(e.reference);
+        a = Ns(e.reference);
         break;
     }
     return a && a.addTag("parser/ENCasualTimeParser"), a;
   }
 }
-const As = new RegExp(`(?:(?:\\,|\\(|\\（)\\s*)?(?:on\\s*?)?(?:(this|last|past|next)\\s*)?(${G(lt)}|weekend|weekday)(?:\\s*(?:\\,|\\)|\\）))?(?:\\s*(?:of\\s*)?(this|last|past|next)\\s*week)?(?=\\W|$)`, "i"), Ss = 1, xs = 2, ks = 3;
-class Hs extends W {
+const ks = new RegExp(`(?:(?:\\,|\\(|\\（)\\s*)?(?:on\\s*?)?(?:(this|last|past|next)\\s*)?(${K(lt)}|weekend|weekday)(?:\\s*(?:\\,|\\)|\\）))?(?:\\s*(?:of\\s*)?(this|last|past|next)\\s*week)?(?=\\W|$)`, "i"), Hs = 1, Rs = 2, Fs = 3;
+class vs extends _ {
   innerPattern() {
-    return As;
+    return ks;
   }
   innerExtract(e, t) {
-    const a = t[Ss], r = t[ks];
+    const a = t[Hs], r = t[Fs];
     let s = a || r;
     s = s || "", s = s.toLowerCase();
     let i = null;
     s == "last" || s == "past" ? i = "last" : s == "next" ? i = "next" : s == "this" && (i = "this");
-    const o = t[xs].toLowerCase();
+    const o = t[Rs].toLowerCase();
     let c;
     if (lt[o] !== void 0)
       c = lt[o];
@@ -4176,41 +4198,41 @@ class Hs extends W {
       l == A.SUNDAY || l == A.SATURDAY ? c = i == "last" ? A.FRIDAY : A.MONDAY : (c = l - 1, c = i == "last" ? c - 1 : c + 1, c = c % 5 + 1);
     } else
       return null;
-    return Jr(e.reference, c, i);
+    return ts(e.reference, c, i);
   }
 }
-const Rs = new RegExp(`(this|last|past|next|after\\s*this)\\s*(${G(ve)})(?=\\s*)(?=\\W|$)`, "i"), Fs = 1, Cs = 2;
-class vs extends W {
+const Cs = new RegExp(`(this|last|past|next|after\\s*this)\\s*(${K(We)})(?=\\s*)(?=\\W|$)`, "i"), Ys = 1, Ws = 2;
+class _s extends _ {
   innerPattern() {
-    return Rs;
+    return Cs;
   }
   innerExtract(e, t) {
-    const a = t[Fs].toLowerCase(), r = t[Cs].toLowerCase(), s = ve[r];
+    const a = t[Ys].toLowerCase(), r = t[Ws].toLowerCase(), s = We[r];
     if (a == "next" || a.startsWith("after")) {
       const c = {};
-      return c[s] = 1, N.createRelativeFromReference(e.reference, c);
+      return c[s] = 1, P.createRelativeFromReference(e.reference, c);
     }
     if (a == "last" || a == "past") {
       const c = {};
-      return c[s] = -1, N.createRelativeFromReference(e.reference, c);
+      return c[s] = -1, P.createRelativeFromReference(e.reference, c);
     }
     const i = e.createParsingComponents();
     let o = new Date(e.reference.instant.getTime());
     return r.match(/week/i) ? (o.setDate(o.getDate() - o.getDay()), i.imply("day", o.getDate()), i.imply("month", o.getMonth() + 1), i.imply("year", o.getFullYear())) : r.match(/month/i) ? (o.setDate(1), i.imply("day", o.getDate()), i.assign("year", o.getFullYear()), i.assign("month", o.getMonth() + 1)) : r.match(/year/i) && (o.setDate(1), o.setMonth(0), i.imply("day", o.getDate()), i.imply("month", o.getMonth() + 1), i.assign("year", o.getFullYear())), i;
   }
 }
-const Ys = new RegExp("([^\\d]|^)([0-3]{0,1}[0-9]{1})[\\/\\.\\-]([0-3]{0,1}[0-9]{1})(?:[\\/\\.\\-]([0-9]{4}|[0-9]{2}))?(\\W|$)", "i"), Ws = 1, _s = 5, Gt = 2, Vt = 3, at = 4;
-class $s {
+const $s = new RegExp("([^\\d]|^)([0-3]{0,1}[0-9]{1})[\\/\\.\\-]([0-3]{0,1}[0-9]{1})(?:[\\/\\.\\-]([0-9]{4}|[0-9]{2}))?(\\W|$)", "i"), Is = 1, Bs = 5, Gt = 2, Vt = 3, at = 4;
+class Us {
   constructor(e) {
-    y(this, "groupNumberMonth");
-    y(this, "groupNumberDay");
+    g(this, "groupNumberMonth");
+    g(this, "groupNumberDay");
     this.groupNumberMonth = e ? Vt : Gt, this.groupNumberDay = e ? Gt : Vt;
   }
   pattern() {
-    return Ys;
+    return $s;
   }
   extract(e, t) {
-    const a = t.index + t[Ws].length, r = t.index + t[0].length - t[_s].length;
+    const a = t.index + t[Is].length, r = t.index + t[0].length - t[Bs].length;
     if (a > 0 && e.text.substring(0, a).match("\\d/?$") || r < e.text.length && e.text.substring(r).match("^/?\\d"))
       return;
     const s = e.text.substring(a, r);
@@ -4229,21 +4251,21 @@ class $s {
       const l = parseInt(t[at]), u = hn(l);
       i.start.assign("year", u);
     } else {
-      const l = Ce(e.refDate, c, o);
+      const l = Ye(e.refDate, c, o);
       i.start.imply("year", l);
     }
     return i.addTag("parser/SlashDateFormatParser");
   }
 }
-const Is = new RegExp(`(this|last|past|next|after|\\+|-)\\s*(${Pe})(?=\\W|$)`, "i"), Bs = new RegExp(`(this|last|past|next|after|\\+|-)\\s*(${_e})(?=\\W|$)`, "i");
-class Us extends W {
+const Ls = new RegExp(`(this|last|past|next|after|\\+|-)\\s*(${Oe})(?=\\W|$)`, "i"), js = new RegExp(`(this|last|past|next|after|\\+|-)\\s*(${Ie})(?=\\W|$)`, "i");
+class zs extends _ {
   constructor(t = !0) {
     super();
-    y(this, "allowAbbreviations");
+    g(this, "allowAbbreviations");
     this.allowAbbreviations = t;
   }
   innerPattern() {
-    return this.allowAbbreviations ? Is : Bs;
+    return this.allowAbbreviations ? Ls : js;
   }
   innerExtract(t, a) {
     const r = a[1].toLowerCase();
@@ -4254,67 +4276,67 @@ class Us extends W {
       case "last":
       case "past":
       case "-":
-        s = Fe(s);
+        s = Ce(s);
         break;
     }
-    return N.createRelativeFromReference(t.reference, s);
+    return P.createRelativeFromReference(t.reference, s);
   }
 }
-function Ls(n) {
+function Gs(n) {
   return n.text.match(/^[+-]/i) != null;
 }
 function Kt(n) {
   return n.text.match(/^-/i) != null;
 }
-class js extends Ne {
+class Vs extends Ae {
   shouldMergeResults(e, t, a) {
-    return e.match(/^\s*$/i) ? Ls(a) || Kt(a) : !1;
+    return e.match(/^\s*$/i) ? Gs(a) || Kt(a) : !1;
   }
   mergeResults(e, t, a, r) {
     let s = ge(a.text);
-    Kt(a) && (s = Fe(s));
-    const i = N.createRelativeFromReference(re.fromDate(t.start.date()), s);
+    Kt(a) && (s = Ce(s));
+    const i = P.createRelativeFromReference(se.fromDate(t.start.date()), s);
     return new he(t.reference, t.index, `${t.text}${e}${a.text}`, i);
   }
 }
 function qt(n) {
   return n.text.match(/\s+(before|from)$/i) != null;
 }
-function zs(n) {
+function Ks(n) {
   return n.text.match(/\s+(after|since)$/i) != null;
 }
-class Gs extends Ne {
+class qs extends Ae {
   patternBetween() {
     return /^\s*$/i;
   }
   shouldMergeResults(e, t, a) {
-    return !e.match(this.patternBetween()) || !qt(t) && !zs(t) ? !1 : !!a.start.get("day") && !!a.start.get("month") && !!a.start.get("year");
+    return !e.match(this.patternBetween()) || !qt(t) && !Ks(t) ? !1 : !!a.start.get("day") && !!a.start.get("month") && !!a.start.get("year");
   }
   mergeResults(e, t, a) {
     let r = ge(t.text);
-    qt(t) && (r = Fe(r));
-    const s = N.createRelativeFromReference(re.fromDate(a.start.date()), r);
+    qt(t) && (r = Ce(r));
+    const s = P.createRelativeFromReference(se.fromDate(a.start.date()), r);
     return new he(a.reference, t.index, `${t.text}${e}${a.text}`, s);
   }
 }
-const Vs = new RegExp(`^\\s*(${Ye})`, "i"), Ks = 1;
-class qs {
+const Qs = new RegExp(`^\\s*(${_e})`, "i"), Xs = 1;
+class Js {
   refine(e, t) {
     return t.forEach(function(a) {
       if (!a.start.isDateWithUnknownYear())
         return;
-      const r = e.text.substring(a.index + a.text.length), s = Vs.exec(r);
+      const r = e.text.substring(a.index + a.text.length), s = Qs.exec(r);
       if (!s || s[0].trim().length <= 3)
         return;
       e.debug(() => {
         console.log(`Extracting year: '${s[0]}' into : ${a}`);
       });
-      const i = We(s[Ks]);
+      const i = $e(s[Xs]);
       a.end != null && a.end.assign("year", i), a.start.assign("year", i), a.text += s[0];
     }), t;
   }
 }
-class Qs extends bn {
+class Zs extends bn {
   constructor() {
     super();
   }
@@ -4330,31 +4352,31 @@ class Qs extends bn {
 class Mn {
   createCasualConfiguration(e = !1) {
     const t = this.createConfiguration(!1, e);
-    return t.parsers.push(new Ps()), t.parsers.push(new Os()), t.parsers.push(new Dr()), t.parsers.push(new vs()), t.parsers.push(new Us()), t.refiners.push(new Qs()), t;
+    return t.parsers.push(new As()), t.parsers.push(new xs()), t.parsers.push(new Pr()), t.parsers.push(new _s()), t.parsers.push(new zs()), t.refiners.push(new Zs()), t;
   }
   createConfiguration(e = !0, t = !1) {
-    const a = ds({
+    const a = hs({
       parsers: [
-        new $s(t),
-        new dr(e),
-        new hr(),
-        new pr(t),
-        new Hs(),
-        new kr(),
-        new Cr(e),
+        new Us(t),
+        new hr(e),
+        new pr(),
+        new br(t),
+        new vs(),
+        new Fr(),
         new Wr(e),
-        new Br(e)
+        new Ir(e),
+        new jr(e)
       ],
       refiners: [new It()]
     }, e);
-    return a.parsers.unshift(new Or(e)), a.refiners.unshift(new Gs()), a.refiners.unshift(new js()), a.refiners.unshift(new mt()), a.refiners.push(new It()), a.refiners.push(new qs()), a.refiners.push(new Lr()), a;
+    return a.parsers.unshift(new xr(e)), a.refiners.unshift(new qs()), a.refiners.unshift(new Vs()), a.refiners.unshift(new mt()), a.refiners.push(new It()), a.refiners.push(new Js()), a.refiners.push(new Gr()), a;
   }
 }
 class me {
   constructor(e) {
-    y(this, "parsers");
-    y(this, "refiners");
-    y(this, "defaultConfig", new Mn());
+    g(this, "parsers");
+    g(this, "refiners");
+    g(this, "defaultConfig", new Mn());
     e = e || this.defaultConfig.createCasualConfiguration(), this.parsers = [...e.parsers], this.refiners = [...e.refiners];
   }
   clone() {
@@ -4368,7 +4390,7 @@ class me {
     return r.length > 0 ? r[0].start.date() : null;
   }
   parse(e, t, a) {
-    const r = new Xs(e, t, a);
+    const r = new ei(e, t, a);
     let s = [];
     return this.parsers.forEach((i) => {
       const o = me.executeParser(r, i);
@@ -4389,23 +4411,23 @@ class me {
         continue;
       }
       let u = null;
-      l instanceof he ? u = l : l instanceof N ? (u = e.createParsingResult(o.index, o[0]), u.start = l) : u = e.createParsingResult(o.index, o[0], l);
+      l instanceof he ? u = l : l instanceof P ? (u = e.createParsingResult(o.index, o[0]), u.start = l) : u = e.createParsingResult(o.index, o[0], l);
       const d = u.index, b = u.text;
       e.debug(() => console.log(`${t.constructor.name} extracted (at index=${d}) '${b}'`)), a.push(u), i = s.substring(d + b.length), o = r.exec(i);
     }
     return a;
   }
 }
-class Xs {
+class ei {
   constructor(e, t, a) {
-    y(this, "text");
-    y(this, "option");
-    y(this, "reference");
-    y(this, "refDate");
-    this.text = e, this.option = a ?? {}, this.reference = re.fromInput(t, this.option.timezones), this.refDate = this.reference.instant;
+    g(this, "text");
+    g(this, "option");
+    g(this, "reference");
+    g(this, "refDate");
+    this.text = e, this.option = a ?? {}, this.reference = se.fromInput(t, this.option.timezones), this.refDate = this.reference.instant;
   }
   createParsingComponents(e) {
-    return e instanceof N ? e : new N(this.reference, e);
+    return e instanceof P ? e : new P(this.reference, e);
   }
   createParsingResult(e, t, a, r) {
     const s = typeof t == "string" ? t : this.text.substring(e, t), i = a ? this.createParsingComponents(a) : null, o = r ? this.createParsingComponents(r) : null;
@@ -4415,14 +4437,14 @@ class Xs {
     this.option.debug && (this.option.debug instanceof Function ? this.option.debug(e) : this.option.debug.debug(e));
   }
 }
-const pt = new Mn(), Js = new me(pt.createCasualConfiguration(!1));
+const pt = new Mn(), ti = new me(pt.createCasualConfiguration(!1));
 new me(pt.createConfiguration(!0, !1));
 new me(pt.createCasualConfiguration(!0));
-const Zs = Js;
-function ei(n, e, t) {
-  return Zs.parse(n, e, t);
+const ni = ti;
+function ai(n, e, t) {
+  return ni.parse(n, e, t);
 }
-const ti = /^(?:next|within)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, ni = /^(\d+)\s+(day|days|week|weeks|month|months)\s+from\s+now$/i, ai = /^(?:last|past)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, ri = /^(this|last|next)\s+(week|month)$/i, si = /^(end|beginning)\s+of\s+(this|next)\s+month$/i, ii = /^(?:the\s+)?(\d+)(?:st|nd|rd|th)?\s+of\s+(this|next)\s+month$/i, oi = /^(first|second|third|fourth|last)\s+(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\s+of\s+(\w+)$/i, ci = /^upcoming\s+(sunday|monday|tuesday|wednesday|thursday|friday|saturday)$/i, li = /^day\s+(after\s+tomorrow|before\s+yesterday)$/i, ui = /^(?:the\s+)?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\s+after\s+next$/i, di = /^(a|\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(day|days|week|weeks|month|months)\s+from\s+(.+)$/i, mi = /^(christmas|halloween|valentine|new\s+year|independence\s+day|veterans\s+day|st\.?\s+patrick|cinco\s+de\s+mayo|labour\s+day|songkran|chakri\s+memorial\s+day|coronation\s+day|queen\s+suthida's\s+birthday|king's\s+birthday|the\s+queen\s+mother's\s+birthday|king\s+bhumibol\s+adulyadej\s+memorial\s+day|king\s+chulalongkorn\s+day|king\s+bhumibol\s+adulyadej's\s+birthday|constitution\s+day)\s+(\d{4})$/i, En = {
+const ri = /^(?:next|within)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, si = /^(\d+)\s+(day|days|week|weeks|month|months)\s+from\s+now$/i, ii = /^(?:last|past)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, oi = /^(this|last|next)\s+(week|month)$/i, ci = /^(end|beginning)\s+of\s+(this|next)\s+month$/i, li = /^(?:the\s+)?(\d+)(?:st|nd|rd|th)?\s+of\s+(this|next)\s+month$/i, ui = /^(first|second|third|fourth|last)\s+(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\s+of\s+(\w+)$/i, di = /^upcoming\s+(sunday|monday|tuesday|wednesday|thursday|friday|saturday)$/i, mi = /^day\s+(after\s+tomorrow|before\s+yesterday)$/i, fi = /^(?:the\s+)?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\s+after\s+next$/i, hi = /^(a|\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(day|days|week|weeks|month|months)\s+from\s+(.+)$/i, gi = /^(christmas|halloween|valentine|new\s+year|independence\s+day|veterans\s+day|st\.?\s+patrick|cinco\s+de\s+mayo|labour\s+day|songkran|chakri\s+memorial\s+day|coronation\s+day|queen\s+suthida's\s+birthday|king's\s+birthday|the\s+queen\s+mother's\s+birthday|king\s+bhumibol\s+adulyadej\s+memorial\s+day|king\s+chulalongkorn\s+day|king\s+bhumibol\s+adulyadej's\s+birthday|constitution\s+day)\s+(\d{4})$/i, En = {
   christmas: [12, 25],
   "christmas day": [12, 25],
   "new year": [1, 1],
@@ -4464,12 +4486,12 @@ const ti = /^(?:next|within)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, ni
   thursday: 4,
   friday: 5,
   saturday: 6
-}, fi = {
+}, yi = {
   first: 1,
   second: 2,
   third: 3,
   fourth: 4
-}, hi = {
+}, pi = {
   a: 1,
   one: 1,
   two: 2,
@@ -4482,23 +4504,23 @@ const ti = /^(?:next|within)\s+(\d+)\s+(day|days|week|weeks|month|months)$/i, ni
   nine: 9,
   ten: 10
 };
-function gi(n, e, t) {
+function Ti(n, e, t) {
   const a = new Date(t.getFullYear(), t.getMonth(), t.getDate()), r = new Date(t.getFullYear(), n - 1, e);
   return r >= a ? r : new Date(t.getFullYear() + 1, n - 1, e);
 }
 function st(n, e) {
   const t = n.toLowerCase().trim().replace(/^next\s+/, ""), a = En[t];
-  return a ? gi(a[0], a[1], e) : null;
+  return a ? Ti(a[0], a[1], e) : null;
 }
 function it(n, e, t) {
   const a = t.toLowerCase();
-  return a.startsWith("day") ? fe(n, e) : a.startsWith("week") ? be(n, e) : a.startsWith("month") ? ae(n, e) : n;
+  return a.startsWith("day") ? fe(n, e) : a.startsWith("week") ? Me(n, e) : a.startsWith("month") ? re(n, e) : n;
 }
-function yi(n, e, t) {
+function wi(n, e, t) {
   const a = t.toLowerCase();
   return a.startsWith("day") ? ct(n, e) : a.startsWith("week") ? cn(n, e) : a.startsWith("month") ? ht(n, e) : n;
 }
-function pi(n, e, t = !1) {
+function bi(n, e, t = !1) {
   const a = ot(n);
   let r = e - a;
   return (r < 0 || !t && r === 0) && (r += 7), fe(n, r);
@@ -4516,7 +4538,7 @@ function Qt(n, e, t, a) {
     return i < 0 && (i += 7), new Date(n, e, r.getDate() - i);
   }
 }
-function Ti(n) {
+function Di(n) {
   const t = [
     "january",
     "february",
@@ -4534,101 +4556,101 @@ function Ti(n) {
   return t === -1 ? null : t;
 }
 function Pn(n, e = /* @__PURE__ */ new Date()) {
-  var K;
+  var q;
   const t = n.trim();
   if (!t) return null;
-  const a = t.toLowerCase(), r = t.match(ti);
+  const a = t.toLowerCase(), r = t.match(ri);
   if (r) {
     const m = parseInt(r[1], 10);
     return { range: [e, it(e, m, r[2])], text: n };
   }
-  const s = t.match(ni);
+  const s = t.match(si);
   if (s) {
     const m = parseInt(s[1], 10);
     return { single: it(e, m, s[2]), text: n };
   }
-  const i = t.match(ai);
+  const i = t.match(ii);
   if (i) {
     const m = parseInt(i[1], 10);
-    return { range: [yi(e, m, i[2]), e], text: n };
+    return { range: [wi(e, m, i[2]), e], text: n };
   }
-  const o = t.match(ri);
+  const o = t.match(oi);
   if (o) {
-    const m = o[1].toLowerCase(), g = o[2].toLowerCase(), O = { weekStartsOn: 1 };
-    if (g === "week") {
-      const v = m === "last" ? cn(e, 1) : m === "next" ? be(e, 1) : e;
-      return { range: [J(v, O), ft(v, O)], text: n };
+    const m = o[1].toLowerCase(), p = o[2].toLowerCase(), O = { weekStartsOn: 1 };
+    if (p === "week") {
+      const v = m === "last" ? cn(e, 1) : m === "next" ? Me(e, 1) : e;
+      return { range: [Z(v, O), ft(v, O)], text: n };
     }
-    if (g === "month") {
-      const v = m === "last" ? ht(e, 1) : m === "next" ? ae(e, 1) : e;
-      return { range: [Me(v), De(v)], text: n };
+    if (p === "month") {
+      const v = m === "last" ? ht(e, 1) : m === "next" ? re(e, 1) : e;
+      return { range: [Pe(v), Ee(v)], text: n };
     }
   }
-  const c = a.match(si);
+  const c = a.match(ci);
   if (c) {
-    const g = c[2] === "next" ? ae(e, 1) : e;
-    return { single: c[1] === "end" ? De(g) : Me(g), text: n };
+    const p = c[2] === "next" ? re(e, 1) : e;
+    return { single: c[1] === "end" ? Ee(p) : Pe(p), text: n };
   }
-  const l = a.match(mi);
+  const l = a.match(gi);
   if (l) {
-    const m = l[1], g = parseInt(l[2], 10), O = En[m];
+    const m = l[1], p = parseInt(l[2], 10), O = En[m];
     if (O)
-      return { single: new Date(g, O[0] - 1, O[1]), text: n };
+      return { single: new Date(p, O[0] - 1, O[1]), text: n };
   }
-  const u = a.match(ii);
+  const u = a.match(li);
   if (u) {
-    const m = parseInt(u[1], 10), g = u[2] === "next" ? ae(e, 1) : e;
-    return { single: new Date(g.getFullYear(), g.getMonth(), m), text: n };
+    const m = parseInt(u[1], 10), p = u[2] === "next" ? re(e, 1) : e;
+    return { single: new Date(p.getFullYear(), p.getMonth(), m), text: n };
   }
-  const d = a.match(oi);
+  const d = a.match(ui);
   if (d) {
-    const m = d[1], g = rt[d[2]], O = Ti(d[3]);
-    if (O !== null && g !== void 0) {
-      const v = m === "last" ? -1 : fi[m] ?? 1, C = e.getFullYear();
-      let S = Qt(C, O, g, v);
-      if ((!S || S < e) && (S = Qt(C + 1, O, g, v)), S) return { single: S, text: n };
+    const m = d[1], p = rt[d[2]], O = Di(d[3]);
+    if (O !== null && p !== void 0) {
+      const v = m === "last" ? -1 : yi[m] ?? 1, x = e.getFullYear();
+      let I = Qt(x, O, p, v);
+      if ((!I || I < e) && (I = Qt(x + 1, O, p, v)), I) return { single: I, text: n };
     }
   }
-  const b = a.match(ci);
+  const b = a.match(di);
   if (b) {
     const m = rt[b[1]];
-    return { single: pi(e, m, !1), text: n };
+    return { single: bi(e, m, !1), text: n };
   }
-  const M = a.match(li);
+  const M = a.match(mi);
   if (M) {
     const m = M[1].startsWith("after") ? 2 : -2;
     return { single: fe(e, m), text: n };
   }
-  const P = a.match(ui);
-  if (P) {
-    const m = rt[P[1]], g = be(e, 1), O = _a(g, m, { weekStartsOn: 1 });
-    return { single: be(O, 1), text: n };
+  const N = a.match(fi);
+  if (N) {
+    const m = rt[N[1]], p = Me(e, 1), O = Ba(p, m, { weekStartsOn: 1 });
+    return { single: Me(O, 1), text: n };
   }
-  const h = a.match(di);
+  const h = a.match(hi);
   if (h) {
-    const m = h[1], g = hi[m] ?? parseInt(m, 10), O = h[2], v = h[3], C = Pn(v, e), S = (C == null ? void 0 : C.single) ?? ((K = C == null ? void 0 : C.range) == null ? void 0 : K[0]);
-    if (S) return { single: it(S, g, O), text: n };
+    const m = h[1], p = pi[m] ?? parseInt(m, 10), O = h[2], v = h[3], x = Pn(v, e), I = (x == null ? void 0 : x.single) ?? ((q = x == null ? void 0 : x.range) == null ? void 0 : q[0]);
+    if (I) return { single: it(I, p, O), text: n };
   }
-  const x = ei(t, e);
-  if (x.length > 0) {
-    const m = x.find((g) => g.end != null);
+  const S = ai(t, e);
+  if (S.length > 0) {
+    const m = S.find((p) => p.end != null);
     if (m) return { range: [m.start.date(), m.end.date()], text: n };
-    if (x.length >= 2) {
-      const g = x[0].start.date(), O = x[1].start.date();
-      return { range: [g < O ? g : O, g < O ? O : g], text: n };
+    if (S.length >= 2) {
+      const p = S[0].start.date(), O = S[1].start.date();
+      return { range: [p < O ? p : O, p < O ? O : p], text: n };
     }
-    return { single: x[0].start.date(), text: n };
+    return { single: S[0].start.date(), text: n };
   }
-  const V = t.match(/^(.+?)\s+to\s+(.+)$/i);
-  if (V) {
-    const m = st(V[1], e), g = st(V[2], m ?? e);
-    if (m && g) return { range: [m, g], text: n };
+  const j = t.match(/^(.+?)\s+to\s+(.+)$/i);
+  if (j) {
+    const m = st(j[1], e), p = st(j[2], m ?? e);
+    if (m && p) return { range: [m, p], text: n };
   }
   const k = st(t, e);
   return k ? { single: k, text: n } : null;
 }
-function wi() {
-  const [n, e] = U(null), [t, a] = U(""), r = F((s) => {
+function Mi() {
+  const [n, e] = L(null), [t, a] = L(""), r = F((s) => {
     a(s), e(Pn(s));
   }, []);
   return { inputValue: t, preview: n, handleChange: r, setInputValue: a, setPreview: e };
@@ -4636,12 +4658,12 @@ function wi() {
 function H(n) {
   return new Date(n.getFullYear(), n.getMonth(), n.getDate());
 }
-function bi({
+function Ei({
   selectionMode: n,
   locale: e,
   onCommit: t
 }) {
-  const { inputValue: a, preview: r, handleChange: s, setInputValue: i, setPreview: o } = wi(), c = () => {
+  const { inputValue: a, preview: r, handleChange: s, setInputValue: i, setPreview: o } = Mi(), c = () => {
     if (!r) return;
     const u = {
       single: r.single ? H(r.single) : void 0,
@@ -4664,7 +4686,7 @@ function bi({
       year: "numeric"
     }) : null;
   })();
-  return /* @__PURE__ */ $("div", { className: "dp-nl-input", children: [
+  return /* @__PURE__ */ W("div", { className: "dp-nl-input", children: [
     /* @__PURE__ */ T(
       "input",
       {
@@ -4683,8 +4705,8 @@ function bi({
     l && /* @__PURE__ */ T("div", { className: "dp-nl-preview", "aria-live": "polite", children: l })
   ] });
 }
-function Di({ isOpen: n, position: e, popoverRef: t, children: a }) {
-  return n ? kn(
+function Pi({ isOpen: n, position: e, popoverRef: t, children: a }) {
+  return n ? Fn(
     /* @__PURE__ */ T(
       "div",
       {
@@ -4704,13 +4726,13 @@ function Di({ isOpen: n, position: e, popoverRef: t, children: a }) {
     document.body
   ) : null;
 }
-function Mi({ value: n, onChange: e }) {
-  const [t, a] = U(null), [r, s] = U(null), i = F(
+function Ni({ value: n, onChange: e }) {
+  const [t, a] = L(null), [r, s] = L(null), i = F(
     (l) => {
       if (r === null)
         s(l), e(null);
       else {
-        const u = we(l, r) ? l : r, d = we(l, r) ? r : l;
+        const u = De(l, r) ? l : r, d = De(l, r) ? r : l;
         e([u, d]), s(null), a(null);
       }
     },
@@ -4723,7 +4745,7 @@ function Mi({ value: n, onChange: e }) {
   ), c = (() => {
     if (r) {
       if (t) {
-        const l = we(t, r) ? t : r, u = we(t, r) ? r : t;
+        const l = De(t, r) ? t : r, u = De(t, r) ? r : t;
         return [l, u];
       }
       return [r, r];
@@ -4739,19 +4761,19 @@ function Mi({ value: n, onChange: e }) {
   };
 }
 const Xt = 8, Jt = 4;
-function Ei(n) {
+function Oi(n) {
   const { triggerRect: e, popoverRect: t, viewportWidth: a, viewportHeight: r, scrollX: s, scrollY: i } = n, o = r - e.bottom, c = e.top, l = o >= t.height || o >= c ? "bottom" : "top";
   let u = e.left + s;
   return u + t.width > a && (u = a - t.width - Xt), u = Math.max(Xt, u), { top: l === "bottom" ? e.bottom + i + Jt : e.top + i - t.height - Jt, left: u, placement: l };
 }
-function Pi() {
-  const [n, e] = U(!1), [t, a] = U({
+function Ai() {
+  const [n, e] = L(!1), [t, a] = L({
     top: 0,
     left: 0,
     placement: "bottom"
   }), r = Dt(null), s = Dt(null), i = F(() => e(!0), []), o = F(() => e(!1), []), c = F(() => e((u) => !u), []), l = F(() => {
     !r.current || !s.current || a(
-      Ei({
+      Oi({
         triggerRect: r.current.getBoundingClientRect(),
         popoverRect: s.current.getBoundingClientRect(),
         viewportWidth: window.innerWidth,
@@ -4773,11 +4795,11 @@ function Pi() {
     };
   }, [n, o, l]), { isOpen: n, open: i, close: o, toggle: c, position: t, triggerRef: r, popoverRef: s };
 }
-function Ni(n) {
+function Si(n) {
   const e = {};
   return n.fontFamily && (e["--dp-font-family"] = n.fontFamily), n.fontSize && (e["--dp-font-size"] = n.fontSize), n.primaryColor && (e["--dp-primary"] = n.primaryColor), n.primaryTextColor && (e["--dp-primary-text"] = n.primaryTextColor), n.rangeColor && (e["--dp-range"] = n.rangeColor), n.weekendHeaderTextColor && (e["--dp-weekend-header-text"] = n.weekendHeaderTextColor), n.weekendTextColor && (e["--dp-weekend-text"] = n.weekendTextColor), n.textColor && (e["--dp-text"] = n.textColor), n.mutedTextColor && (e["--dp-muted"] = n.mutedTextColor), n.backgroundColor && (e["--dp-bg"] = n.backgroundColor), n.surfaceColor && (e["--dp-surface"] = n.surfaceColor), n.borderColor && (e["--dp-border"] = n.borderColor), n.borderRadius && (e["--dp-radius"] = n.borderRadius), n.daySize != null && (e["--dp-day-size"] = `${n.daySize}px`), n.shadow && (e["--dp-shadow"] = n.shadow), e;
 }
-const Oi = {
+const xi = {
   fontFamily: "system-ui, -apple-system, sans-serif",
   fontSize: "14px",
   primaryColor: "#2563EB",
@@ -4794,7 +4816,7 @@ const Oi = {
   daySize: 36,
   shadow: "0 4px 16px rgba(0,0,0,0.10)"
 };
-function Fi({
+function Yi({
   numberOfMonths: n = 1,
   selectionMode: e = "single",
   value: t = null,
@@ -4802,164 +4824,170 @@ function Fi({
   locale: r = "en",
   theme: s,
   presets: i,
-  customHolidays: o = [],
-  holidayTypes: c = ["public"],
-  showNaturalLanguageInput: l = !1,
-  showPresets: u = !1,
-  showHolidays: d = !0,
-  showWeekNumbers: b = !1,
-  minDate: M,
-  maxDate: P,
-  disabledDates: h,
-  weekStartsOn: x = 0,
-  highlightWeekends: V = !0,
-  showTodayButton: k = !1,
-  todayButtonLabel: K = "Today",
-  calendarSystem: m = "gregorian",
-  mode: g = "inline",
-  triggerFormat: O,
-  className: v
+  presetDisplay: o = "chips",
+  presetDropdownPlaceholder: c = "Quick select range",
+  presetDropdownAriaLabel: l = "Quick select presets",
+  customHolidays: u = [],
+  holidayTypes: d = ["public"],
+  showNaturalLanguageInput: b = !1,
+  showPresets: M = !1,
+  showHolidays: N = !0,
+  showWeekNumbers: h = !1,
+  minDate: S,
+  maxDate: j,
+  disabledDates: k,
+  weekStartsOn: q = 0,
+  highlightWeekends: m = !0,
+  showTodayButton: p = !1,
+  todayButtonLabel: O = "Today",
+  calendarSystem: v = "gregorian",
+  mode: x = "inline",
+  triggerFormat: I,
+  className: Se
 }) {
-  const C = en(() => Ni({ ...Oi, ...s }), [s]), S = Pi(), [q, ie] = U(() => {
+  const Be = en(() => Si({ ...xi, ...s }), [s]), C = Ai(), [te, oe] = L(() => {
     const f = H(/* @__PURE__ */ new Date());
     if (Array.isArray(t) && t[0]) {
-      const p = H(t[0]);
-      return new Date(p.getFullYear(), p.getMonth(), 1);
+      const y = H(t[0]);
+      return new Date(y.getFullYear(), y.getMonth(), 1);
     }
     if (t instanceof Date) {
-      const p = H(t);
-      return new Date(p.getFullYear(), p.getMonth(), 1);
+      const y = H(t);
+      return new Date(y.getFullYear(), y.getMonth(), 1);
     }
     return new Date(f.getFullYear(), f.getMonth(), 1);
-  }), [$e, oe] = U(() => {
+  }), [Ue, ye] = L(() => {
     if (Array.isArray(t) && t[1]) {
-      const f = t[0] ? H(t[0]) : null, p = H(t[1]);
-      return f && !At(f, p) ? new Date(p.getFullYear(), p.getMonth(), 1) : new Date(q.getFullYear(), q.getMonth() + 1, 1);
+      const f = t[0] ? H(t[0]) : null, y = H(t[1]);
+      return f && !At(f, y) ? new Date(y.getFullYear(), y.getMonth(), 1) : new Date(te.getFullYear(), te.getMonth() + 1, 1);
     }
-    return new Date(q.getFullYear(), q.getMonth() + 1, 1);
-  }), [Ie, Be] = U(""), Tt = e === "single" && t instanceof Date ? t : null, Oe = e === "range" && Array.isArray(t) ? t : null, { pendingStart: Ae, previewRange: R, handleDayClick: I, handleDayHover: ee } = Mi({
-    value: Oe,
+    return new Date(te.getFullYear(), te.getMonth() + 1, 1);
+  }), [Tt, Le] = L(""), R = e === "single" && t instanceof Date ? t : null, $ = e === "range" && Array.isArray(t) ? t : null, { pendingStart: Q, previewRange: pe, handleDayClick: xe, handleDayHover: je } = Ni({
+    value: $,
     onChange: (f) => a == null ? void 0 : a(f)
-  }), _ = F(
-    (f, p) => {
-      const ye = H(f);
-      if (ie(new Date(ye.getFullYear(), ye.getMonth(), 1)), n === 2) {
-        const Qe = H(p ?? f), On = At(ye, Qe) ? new Date(ye.getFullYear(), ye.getMonth() + 1, 1) : new Date(Qe.getFullYear(), Qe.getMonth(), 1);
-        oe(On);
+  }), U = F(
+    (f, y) => {
+      const Te = H(f);
+      if (oe(new Date(Te.getFullYear(), Te.getMonth(), 1)), n === 2) {
+        const Qe = H(y ?? f), xn = At(Te, Qe) ? new Date(Te.getFullYear(), Te.getMonth() + 1, 1) : new Date(Qe.getFullYear(), Qe.getMonth(), 1);
+        ye(xn);
       }
     },
     [n]
-  ), Ue = F(
-    (f) => {
-      const p = H(f);
-      a == null || a(p), ie(new Date(p.getFullYear(), p.getMonth(), 1)), n === 2 && oe(new Date(p.getFullYear(), p.getMonth() + 1, 1)), g === "popover" && S.close();
-    },
-    [n, a, g, S]
-  ), Le = F(() => {
-    const f = H(/* @__PURE__ */ new Date());
-    e === "range" ? (a == null || a([f, f]), _(f, f)) : (a == null || a(f), ie(new Date(f.getFullYear(), f.getMonth(), 1)), n === 2 && oe(new Date(f.getFullYear(), f.getMonth() + 1, 1))), g === "popover" && S.close();
-  }, [e, a, _, n, g, S]), je = F(
-    (f) => {
-      const p = Ae !== null;
-      I(f), g === "popover" && p && S.close();
-    },
-    [Ae, I, g, S]
   ), ze = F(
     (f) => {
-      a == null || a(f), _(f[0], f[1]);
+      const y = H(f);
+      a == null || a(y), oe(new Date(y.getFullYear(), y.getMonth(), 1)), n === 2 && ye(new Date(y.getFullYear(), y.getMonth() + 1, 1)), x === "popover" && C.close();
     },
-    [a, _]
-  ), Ge = F(
+    [n, a, x, C]
+  ), Ge = F(() => {
+    const f = H(/* @__PURE__ */ new Date());
+    e === "range" ? (a == null || a([f, f]), U(f, f)) : (a == null || a(f), oe(new Date(f.getFullYear(), f.getMonth(), 1)), n === 2 && ye(new Date(f.getFullYear(), f.getMonth() + 1, 1))), x === "popover" && C.close();
+  }, [e, a, U, n, x, C]), Ve = F(
+    (f) => {
+      const y = Q !== null;
+      xe(f), x === "popover" && y && C.close();
+    },
+    [Q, xe, x, C]
+  ), Ke = F(
+    (f) => {
+      a == null || a(f), U(f[0], f[1]);
+    },
+    [a, U]
+  ), qe = F(
     (f) => {
       if (e === "single" && f.single) {
-        const p = H(f.single);
-        a == null || a(p), _(p, new Date(p.getFullYear(), p.getMonth() + 1, 1));
+        const y = H(f.single);
+        a == null || a(y), U(y, new Date(y.getFullYear(), y.getMonth() + 1, 1));
       } else if (e === "range" && f.range) {
-        const p = [H(f.range[0]), H(f.range[1])];
-        a == null || a(p), _(p[0], p[1]);
+        const y = [H(f.range[0]), H(f.range[1])];
+        a == null || a(y), U(y[0], y[1]);
       } else if (e === "range" && f.single) {
-        const p = H(f.single);
-        a == null || a([p, p]), _(p, p);
+        const y = H(f.single);
+        a == null || a([y, y]), U(y, y);
       } else if (f.single) {
-        const p = H(f.single);
-        a == null || a(p), _(p, new Date(p.getFullYear(), p.getMonth() + 1, 1));
+        const y = H(f.single);
+        a == null || a(y), U(y, new Date(y.getFullYear(), y.getMonth() + 1, 1));
       }
     },
-    [e, a, _]
-  ), Ve = e === "range" ? je : Ue, Ke = ln(H(/* @__PURE__ */ new Date()), M, P, h), qe = "dd MMM yyyy", Nn = (() => {
-    const f = O ?? qe;
+    [e, a, U]
+  ), Nn = e === "range" ? Ve : ze, On = ln(H(/* @__PURE__ */ new Date()), S, j, k), An = "dd MMM yyyy", Sn = (() => {
+    const f = I ?? An;
     return Array.isArray(t) && t[0] && t[1] ? `${Je(t[0], f)} - ${Je(t[1], f)}` : t instanceof Date ? Je(t, f) : "Select date";
   })(), wt = {
     selectionMode: e,
-    selectedDate: Tt,
-    rangeValue: Oe,
-    previewRange: R,
-    onDayClick: Ve,
-    onDayHover: e === "range" ? ee : () => {
+    selectedDate: R,
+    rangeValue: $,
+    previewRange: pe,
+    onDayClick: Nn,
+    onDayHover: e === "range" ? je : () => {
     },
-    onAnnounce: Be,
+    onAnnounce: Le,
     config: {
       locale: r,
-      calendarSystem: m,
-      weekStartsOn: x,
-      highlightWeekends: V,
-      showWeekNumbers: b,
-      showHolidays: d,
-      holidayTypes: c,
-      customHolidays: o,
-      minDate: M,
-      maxDate: P,
-      disabledDates: h
+      calendarSystem: v,
+      weekStartsOn: q,
+      highlightWeekends: m,
+      showWeekNumbers: h,
+      showHolidays: N,
+      holidayTypes: d,
+      customHolidays: u,
+      minDate: S,
+      maxDate: j,
+      disabledDates: k
     }
-  }, bt = /* @__PURE__ */ $(
+  }, bt = /* @__PURE__ */ W(
     "div",
     {
-      className: ["dp-calendar-panel", v].filter(Boolean).join(" "),
+      className: ["dp-calendar-panel", Se].filter(Boolean).join(" "),
       "data-datepicker-root": !0,
-      style: C,
+      style: Be,
       children: [
-        l && /* @__PURE__ */ T(
-          bi,
+        b && /* @__PURE__ */ T(
+          Ei,
           {
             selectionMode: e,
             locale: r,
-            onCommit: Ge
+            onCommit: qe
           }
         ),
-        u && e === "range" && /* @__PURE__ */ T(
-          tr,
+        M && e === "range" && /* @__PURE__ */ T(
+          rr,
           {
             presets: i,
-            value: Oe,
-            onSelect: ze
+            value: $,
+            onSelect: Ke,
+            display: o,
+            dropdownPlaceholder: c,
+            dropdownAriaLabel: l
           }
         ),
-        /* @__PURE__ */ $("div", { className: `dp-months dp-months--${n}`, children: [
+        /* @__PURE__ */ W("div", { className: `dp-months dp-months--${n}`, children: [
           /* @__PURE__ */ T(
             xt,
             {
               ...wt,
-              month: q,
-              onMonthChange: ie
+              month: te,
+              onMonthChange: oe
             }
           ),
           n === 2 && /* @__PURE__ */ T(
             xt,
             {
               ...wt,
-              month: $e,
-              onMonthChange: oe
+              month: Ue,
+              onMonthChange: ye
             }
           )
         ] }),
-        k && /* @__PURE__ */ T("div", { className: "dp-footer-actions", children: /* @__PURE__ */ T(
+        p && /* @__PURE__ */ T("div", { className: "dp-footer-actions", children: /* @__PURE__ */ T(
           "button",
           {
             type: "button",
             className: "dp-footer-btn",
-            onClick: Le,
-            disabled: Ke,
-            children: K
+            onClick: Ge,
+            disabled: On,
+            children: O
           }
         ) }),
         /* @__PURE__ */ T(
@@ -4969,37 +4997,37 @@ function Fi({
             "aria-live": "polite",
             "aria-atomic": "true",
             className: "dp-sr-only",
-            children: Ie
+            children: Tt
           }
         )
       ]
     }
   );
-  return g === "popover" ? /* @__PURE__ */ $(xn, { children: [
+  return x === "popover" ? /* @__PURE__ */ W(Rn, { children: [
     /* @__PURE__ */ T(
       "button",
       {
-        ref: S.triggerRef,
+        ref: C.triggerRef,
         className: "dp-trigger",
-        onClick: S.toggle,
+        onClick: C.toggle,
         type: "button",
         "aria-haspopup": "dialog",
-        "aria-expanded": S.isOpen,
-        children: Nn
+        "aria-expanded": C.isOpen,
+        children: Sn
       }
     ),
     /* @__PURE__ */ T(
-      Di,
+      Pi,
       {
-        isOpen: S.isOpen,
-        position: S.position,
-        popoverRef: S.popoverRef,
+        isOpen: C.isOpen,
+        position: C.position,
+        popoverRef: C.popoverRef,
         children: bt
       }
     )
   ] }) : bt;
 }
-function Ai(n, e = "en", t = ["public"]) {
+function ki(n, e = "en", t = ["public"]) {
   return (un()[String(n)] ?? []).filter((s) => t.includes(s.type)).map((s) => ({
     date: s.date,
     name: e === "th" ? s.nameTH : s.name,
@@ -5007,15 +5035,15 @@ function Ai(n, e = "en", t = ["public"]) {
     type: s.type
   }));
 }
-function Ci(n, e = "en", t = ["public"]) {
+function Wi(n, e = "en", t = ["public"]) {
   const a = /* @__PURE__ */ new Map();
-  for (const r of Ai(n, e, t)) {
+  for (const r of ki(n, e, t)) {
     const s = a.get(r.date) ?? [];
     s.push(r), a.set(r.date, s);
   }
   return a;
 }
-const vi = {
+const _i = {
   fontFamily: "system-ui, -apple-system, sans-serif",
   fontSize: "14px",
   primaryColor: "#3B82F6",
@@ -5033,10 +5061,10 @@ const vi = {
   shadow: "0 4px 16px rgba(0,0,0,0.40)"
 };
 export {
-  Fi as DatePicker,
-  er as builtInPresets,
-  vi as darkTheme,
-  Ci as getHolidayMapForYear,
-  Ai as getHolidaysForYear,
-  Oi as lightTheme
+  Yi as DatePicker,
+  ar as builtInPresets,
+  _i as darkTheme,
+  Wi as getHolidayMapForYear,
+  ki as getHolidaysForYear,
+  xi as lightTheme
 };

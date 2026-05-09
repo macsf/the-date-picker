@@ -94,6 +94,31 @@ function ControlledRangeTodayPicker() {
   return <DatePicker selectionMode="range" value={value} onChange={setValue} showTodayButton />
 }
 
+function ControlledRangePresetDropdownPicker() {
+  const [value, setValue] = useState<Date | [Date, Date] | null>(null)
+
+  return (
+    <DatePicker
+      selectionMode="range"
+      value={value}
+      onChange={setValue}
+      showPresets
+      presetDisplay="dropdown"
+      presetDropdownPlaceholder="Choose a preset"
+      presetDropdownAriaLabel="Range preset dropdown"
+      presets={[
+        {
+          label: 'Today only',
+          resolve: () => {
+            const today = new Date()
+            return [today, today]
+          },
+        },
+      ]}
+    />
+  )
+}
+
 describe('DatePicker natural language input', () => {
   it('selects a one-day range when a single-date phrase is entered in range mode', async () => {
     const user = userEvent.setup()
@@ -221,6 +246,28 @@ describe('DatePicker weekend highlighting', () => {
     expect(screen.getByRole('button', { name: 'Sunday, January 7, 2024' })).not.toHaveClass(
       'dp-day--weekend',
     )
+  })
+})
+
+describe('DatePicker preset dropdown', () => {
+  it('renders a configurable preset dropdown and applies the selection', async () => {
+    const user = userEvent.setup()
+    render(<ControlledRangePresetDropdownPicker />)
+
+    const dropdown = screen.getByRole('combobox', { name: 'Range preset dropdown' })
+    expect(screen.getByRole('option', { name: 'Choose a preset' })).toBeInTheDocument()
+
+    await user.selectOptions(dropdown, '0')
+
+    const todayLabel = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    expect(screen.getByRole('button', { name: todayLabel })).toHaveAttribute('aria-pressed', 'true')
+    expect(dropdown).toHaveValue('0')
   })
 })
 

@@ -10,6 +10,9 @@ export interface DatePickerProps {
     locale?: 'th' | 'en';
     theme?: DatePickerTheme;
     presets?: Preset[];
+    presetDisplay?: 'chips' | 'dropdown';
+    presetDropdownPlaceholder?: string;
+    presetDropdownAriaLabel?: string;
     customHolidays?: CustomHolidayConfig[];
     holidayTypes?: Array<'public' | 'bank' | 'observance'>;
     showNaturalLanguageInput?: boolean;
@@ -28,4 +31,4 @@ export interface DatePickerProps {
     triggerFormat?: string;
     className?: string;
 }
-export declare function DatePicker({ numberOfMonths, selectionMode, value, onChange, locale, theme, presets, customHolidays, holidayTypes, showNaturalLanguageInput, showPresets, showHolidays, showWeekNumbers, minDate, maxDate, disabledDates, weekStartsOn, highlightWeekends, showTodayButton, todayButtonLabel, calendarSystem, mode, triggerFormat, className, }: DatePickerProps): import("react/jsx-runtime").JSX.Element;
+export declare function DatePicker({ numberOfMonths, selectionMode, value, onChange, locale, theme, presets, presetDisplay, presetDropdownPlaceholder, presetDropdownAriaLabel, customHolidays, holidayTypes, showNaturalLanguageInput, showPresets, showHolidays, showWeekNumbers, minDate, maxDate, disabledDates, weekStartsOn, highlightWeekends, showTodayButton, todayButtonLabel, calendarSystem, mode, triggerFormat, className, }: DatePickerProps): import("react/jsx-runtime").JSX.Element;

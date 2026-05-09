@@ -89,6 +89,7 @@ function SingleSection() {
 
 function RangeSection() {
   const [value, setValue] = useState<[Date, Date] | null>(null)
+  const [presetDisplay, setPresetDisplay] = useState<'chips' | 'dropdown'>('chips')
   return (
     <div>
       <h1 className="demo-section-title">Date range picker</h1>
@@ -97,17 +98,33 @@ function RangeSection() {
       </p>
       <div className="demo-row">
         <div className="demo-preview">
+          <div className="demo-control-row">
+            <label className="demo-control-label" htmlFor="range-preset-display">
+              Preset UI
+            </label>
+            <select
+              id="range-preset-display"
+              className="demo-control-select"
+              value={presetDisplay}
+              onChange={(e) => setPresetDisplay(e.target.value as 'chips' | 'dropdown')}
+            >
+              <option value="chips">Chips</option>
+              <option value="dropdown">Dropdown</option>
+            </select>
+          </div>
           <DatePicker
             selectionMode="range"
             value={value}
             onChange={(v) => setValue(v as [Date, Date] | null)}
             showPresets
+            presetDisplay={presetDisplay}
+            presetDropdownPlaceholder="Select preset range"
           />
         </div>
         <div className="demo-info">
           <ValueDisplay value={value} />
           <CodeBlock
-            code={`<DatePicker\n  selectionMode="range"\n  value={value}\n  onChange={setValue}\n  showPresets={true}\n/>`}
+            code={`<DatePicker\n  selectionMode="range"\n  value={value}\n  onChange={setValue}\n  showPresets={true}\n  presetDisplay="${presetDisplay}"\n  presetDropdownPlaceholder="Select preset range"\n/>`}
           />
         </div>
       </div>

@@ -352,6 +352,27 @@
   width: calc(7 * var(--dp-day-size));
 }
 
+[data-datepicker-root] .dp-preset-dropdown-wrap {
+  width: calc(7 * var(--dp-day-size));
+}
+
+[data-datepicker-root] .dp-preset-select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--dp-border);
+  border-radius: 8px;
+  background: var(--dp-bg);
+  color: var(--dp-text);
+  font-size: var(--dp-font-size);
+  font-family: var(--dp-font-family);
+  outline: none;
+  box-sizing: border-box;
+}
+
+[data-datepicker-root] .dp-preset-select:focus {
+  border-color: var(--dp-primary);
+}
+
 [data-datepicker-root] .dp-chip {
   padding: 5px 12px;
   border-radius: 20px;
