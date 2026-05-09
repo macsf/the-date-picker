@@ -13,13 +13,18 @@ function fmtValue(v: Date | [Date, Date] | null): string {
 
 // ---- Code block renderer ----
 function CodeBlock({ code }: { code: string }) {
-  // Simple token colorizer for JSX props
-  const colored = code
-    .replace(/(<\/?)([A-Za-z]+)/g, (_, slash, tag) => `${slash}<span class="token-tag">${tag}</span>`)
-    .replace(/\b([a-zA-Z]+)=/g, '<span class="token-prop">$1</span>=')
+  // Tokenize escaped source text so inserted markup is never re-processed.
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+
+  const colored = escaped
+    .replace(/\b([a-zA-Z][a-zA-Z0-9]*)=/g, '<span class="token-prop">$1</span>=')
     .replace(/"([^"]*)"/g, '"<span class="token-str">$1</span>"')
     .replace(/\{(true|false)\}/g, '{<span class="token-bool">$1</span>}')
     .replace(/\{(\d+)\}/g, '{<span class="token-num">$1</span>}')
+    .replace(/(&lt;\/?)([A-Za-z][A-Za-z0-9]*)/g, '$1<span class="token-tag">$2</span>')
 
   return (
     <div
@@ -49,8 +54,9 @@ const SECTIONS = [
   { id: 'custom-holidays', label: '6. Custom holidays' },
   { id: 'theming', label: '7. Theming' },
   { id: 'popover', label: '8. Popover mode' },
-  { id: 'buddhist', label: '9. Buddhist Era' },
-  { id: 'disabled', label: '10. Disabled dates' },
+  { id: 'popover-range-double', label: '9. Popover range double month' },
+  { id: 'buddhist', label: '10. Buddhist Era' },
+  { id: 'disabled', label: '11. Disabled dates' },
 ]
 
 // ==============================================================
@@ -196,8 +202,8 @@ const DEFAULT_CUSTOM_JSON = JSON.stringify(
   [
     {
       date: '2026-11-20',
-      nameTH: 'วันบริษัท',
-      nameEN: 'Company Day',
+      nameTH: 'วันหยุดบริษัท',
+      nameEN: 'Company Holiday',
       dotColor: '#8B5CF6',
     },
   ],
@@ -358,6 +364,36 @@ function PopoverSection() {
   )
 }
 
+function PopoverRangeDoubleSection() {
+  const [value, setValue] = useState<[Date, Date] | null>(null)
+
+  return (
+    <div>
+      <h1 className="demo-section-title">Popover range + double month</h1>
+      <p className="demo-section-desc">
+        Opens as a popover, shows 2 months, and closes automatically after selecting a full range.
+      </p>
+      <div className="demo-row">
+        <div className="demo-preview">
+          <DatePicker
+            mode="popover"
+            numberOfMonths={2}
+            selectionMode="range"
+            value={value}
+            onChange={(v) => setValue(v as [Date, Date] | null)}
+          />
+        </div>
+        <div className="demo-info">
+          <ValueDisplay value={value} />
+          <CodeBlock
+            code={`<DatePicker\n  mode="popover"\n  numberOfMonths={2}\n  selectionMode="range"\n  value={value}\n  onChange={setValue}\n/>`}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function BuddhistSection() {
   const [value, setValue] = useState<Date | null>(null)
   return (
@@ -438,6 +474,7 @@ const SECTION_MAP: Record<string, React.FC> = {
   'custom-holidays': CustomHolidaySection,
   theming: ThemingSection,
   popover: PopoverSection,
+  'popover-range-double': PopoverRangeDoubleSection,
   buddhist: BuddhistSection,
   disabled: DisabledSection,
 }

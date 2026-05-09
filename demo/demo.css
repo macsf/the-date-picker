@@ -132,22 +132,24 @@ body {
 
 /* Code block */
 .demo-code {
-  background: #1e1e1e;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 16px 18px;
   font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
   font-size: 13px;
   line-height: 1.7;
+  color: #1f2937;
   overflow-x: auto;
   white-space: pre;
 }
 
 /* Code token colors (VS Code-inspired) */
-.token-tag { color: #4ec9b0; }
-.token-prop { color: #9cdcfe; }
-.token-str { color: #ce9178; }
-.token-bool { color: #b5cea8; }
-.token-num { color: #b5cea8; }
+.token-tag { color: #0f766e; }
+.token-prop { color: #1d4ed8; }
+.token-str { color: #b45309; }
+.token-bool { color: #166534; }
+.token-num { color: #166534; }
 
 /* Divider */
 .demo-divider {

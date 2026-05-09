@@ -67,6 +67,7 @@ export function DatePicker({
 }: DatePickerProps) {
   const mergedTheme = { ...lightTheme, ...theme }
   const themeVars = injectTheme(mergedTheme)
+  const popover = usePopover()
 
   const [leftMonth, setLeftMonth] = useState<Date>(() => {
     if (Array.isArray(value) && value[0]) return new Date(value[0].getFullYear(), value[0].getMonth(), 1)
@@ -81,7 +82,7 @@ export function DatePicker({
   const selectedDate = selectionMode === 'single' && value instanceof Date ? value : null
   const rangeValue = selectionMode === 'range' && Array.isArray(value) ? (value as [Date, Date]) : null
 
-  const { previewRange, handleDayClick, handleDayHover } = useDateRange({
+  const { pendingStart, previewRange, handleDayClick, handleDayHover } = useDateRange({
     value: rangeValue,
     onChange: (r) => onChange?.(r),
   })
@@ -89,8 +90,22 @@ export function DatePicker({
   const handleSingleClick = useCallback(
     (date: Date) => {
       onChange?.(date)
+      if (mode === 'popover') {
+        popover.close()
+      }
     },
-    [onChange],
+    [onChange, mode, popover],
+  )
+
+  const handleRangeClick = useCallback(
+    (date: Date) => {
+      const hadPendingStart = pendingStart !== null
+      handleDayClick(date)
+      if (mode === 'popover' && hadPendingStart) {
+        popover.close()
+      }
+    },
+    [pendingStart, handleDayClick, mode, popover],
   )
 
   const handleRangePresetSelect = useCallback(
@@ -116,9 +131,7 @@ export function DatePicker({
     [selectionMode, onChange],
   )
 
-  const dayClickHandler = selectionMode === 'range' ? handleDayClick : handleSingleClick
-
-  const popover = usePopover()
+  const dayClickHandler = selectionMode === 'range' ? handleRangeClick : handleSingleClick
 
   const defaultTriggerFormat =
     selectionMode === 'range' ? 'dd MMM yyyy' : 'dd MMM yyyy'

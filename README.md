@@ -119,8 +119,8 @@ import { DatePicker } from 'the-date-picker'
 const myHolidays = [
   {
     date: '2026-11-20',
-    nameTH: 'วันบริษัท',
-    nameEN: 'Company Day',
+    nameTH: 'วันหยุดบริษัท',
+    nameEN: 'Company Holiday',
     dotColor: '#8B5CF6',
   },
 ]
