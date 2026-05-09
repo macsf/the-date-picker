@@ -112,8 +112,9 @@ const SECTIONS = [
   { id: 'theming', label: '7. Theming' },
   { id: 'popover', label: '8. Popover mode' },
   { id: 'popover-range-double', label: '9. Popover range double month' },
-  { id: 'buddhist', label: '10. Buddhist Era' },
-  { id: 'disabled', label: '11. Disabled dates' },
+  { id: 'disabled', label: '10. Disabled dates' },
+  { id: 'buddhist', label: '11. Buddhist calendar' },
+  { id: 'playground', label: '12. Customize demo' },
 ]
 
 // ==============================================================
@@ -286,6 +287,19 @@ const DEFAULT_CUSTOM_JSON = JSON.stringify(
   2,
 )
 
+const DEFAULT_PLAYGROUND_JSON = JSON.stringify(
+  [
+    {
+      date: '2026-07-18',
+      nameTH: 'วันเวิร์กช็อป',
+      nameEN: 'Workshop Day',
+      dotColor: '#F97316',
+    },
+  ],
+  null,
+  2,
+)
+
 function CustomHolidaySection() {
   const [value, setValue] = useState<Date | null>(null)
   const [json, setJson] = useState(DEFAULT_CUSTOM_JSON)
@@ -339,6 +353,15 @@ function CustomHolidaySection() {
 }
 
 function ThemingSection() {
+  const resetTheme = () => {
+    setIsDark(false)
+    setPrimary('#2563eb')
+    setBg('#ffffff')
+    setFontSize(14)
+    setDaySize(36)
+    setBorderRadius(12)
+  }
+
   const [value, setValue] = useState<Date | null>(null)
   const [isDark, setIsDark] = useState(false)
   const [primary, setPrimary] = useState('#2563eb')
@@ -383,12 +406,18 @@ function ThemingSection() {
               <label>Primary color</label>
               <input type="color" value={primary} onChange={(e) => setPrimary(e.target.value)} />
             </div>
-            {!isDark && (
-              <div className="theme-field">
-                <label>Background color</label>
-                <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} />
+            <div className="theme-field">
+              <label>Background color</label>
+              <input
+                type="color"
+                value={bg}
+                onChange={(e) => setBg(e.target.value)}
+                disabled={isDark}
+              />
+              <div className="theme-help">
+                {isDark ? 'Background color is fixed in dark mode.' : 'Applies to light mode only.'}
               </div>
-            )}
+            </div>
             <div className="theme-field">
               <label>Font size <span className="range-value">{fontSize}px</span></label>
               <input type="range" min={12} max={18} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
@@ -401,9 +430,16 @@ function ThemingSection() {
               <label>Border radius <span className="range-value">{borderRadius}px</span></label>
               <input type="range" min={0} max={24} value={borderRadius} onChange={(e) => setBorderRadius(Number(e.target.value))} />
             </div>
-            <div className="theme-field">
-              <label>Dark mode</label>
-              <input type="checkbox" checked={isDark} onChange={(e) => setIsDark(e.target.checked)} />
+            <div className="theme-actions-row">
+              <div className="theme-field theme-field--centered">
+                <label>Dark mode</label>
+                <input type="checkbox" checked={isDark} onChange={(e) => setIsDark(e.target.checked)} />
+              </div>
+              <div className="theme-field theme-field--centered">
+                <button type="button" className="theme-reset-btn" onClick={resetTheme}>
+                  Reset theme
+                </button>
+              </div>
             </div>
           </div>
           <ValueDisplay value={value} />
@@ -469,35 +505,6 @@ function PopoverRangeDoubleSection() {
   )
 }
 
-function BuddhistSection() {
-  const [value, setValue] = useState<Date | null>(null)
-  return (
-    <div>
-      <h1 className="demo-section-title">Buddhist Era year display</h1>
-      <p className="demo-section-desc">
-        Year shown as BE (e.g. 2569). Internal Date objects remain Gregorian.
-      </p>
-      <div className="demo-row">
-        <div className="demo-preview">
-          <DatePicker
-            selectionMode="single"
-            value={value}
-            onChange={(v) => setValue(v as Date | null)}
-            calendarSystem="buddhist"
-            locale="th"
-          />
-        </div>
-        <div className="demo-info">
-          <ValueDisplay value={value} />
-          <CodeBlock
-            code={`<DatePicker\n  calendarSystem="buddhist"\n  locale="th"\n  value={value}\n  onChange={setValue}\n/>`}
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function DisabledSection() {
   const [value, setValue] = useState<Date | null>(null)
   const today = new Date()
@@ -536,6 +543,302 @@ function DisabledSection() {
   )
 }
 
+function BuddhistSection() {
+  const [value, setValue] = useState<Date | null>(null)
+  return (
+    <div>
+      <h1 className="demo-section-title">Buddhist calendar</h1>
+      <p className="demo-section-desc">
+        Set locale to "th" to automatically use Buddhist calendar system. Years display as Buddhist Era (BE = Gregorian + 543).
+      </p>
+      <div className="demo-row">
+        <div className="demo-preview">
+          <DatePicker
+            selectionMode="single"
+            value={value}
+            onChange={(v) => setValue(v as Date | null)}
+            locale="th"
+            showHolidays
+            holidayTypes={['public']}
+          />
+        </div>
+        <div className="demo-info">
+          <ValueDisplay value={value} />
+          <CodeBlock
+            code={`<DatePicker\n  selectionMode="single"\n  locale="th"\n  showHolidays={true}\n  holidayTypes={["public"]}\n/>`}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CustomizeSection() {
+  const [value, setValue] = useState<Date | [Date, Date] | null>(null)
+  const [selectionMode, setSelectionMode] = useState<'single' | 'range'>('single')
+  const [numberOfMonths, setNumberOfMonths] = useState<1 | 2>(1)
+  const [mode, setMode] = useState<'inline' | 'popover'>('inline')
+  const [locale, setLocale] = useState<'en' | 'th'>('en')
+  const [weekStartsOn, setWeekStartsOn] = useState<0 | 1>(0)
+  const [showNaturalLanguageInput, setShowNaturalLanguageInput] = useState(false)
+  const [showPresets, setShowPresets] = useState(true)
+  const [presetDisplay, setPresetDisplay] = useState<'chips' | 'dropdown'>('chips')
+  const [showTodayButton, setShowTodayButton] = useState(false)
+  const [showHolidays, setShowHolidays] = useState(true)
+  const [highlightWeekends, setHighlightWeekends] = useState(true)
+  const [isDark, setIsDark] = useState(false)
+  const [primary, setPrimary] = useState('#2563eb')
+  const [bg, setBg] = useState('#ffffff')
+  const [fontSize, setFontSize] = useState(14)
+  const [daySize, setDaySize] = useState(36)
+  const [borderRadius, setBorderRadius] = useState(12)
+  const [customHolidayJson, setCustomHolidayJson] = useState(DEFAULT_PLAYGROUND_JSON)
+  const [customHolidayError, setCustomHolidayError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const resetPlaygroundTheme = () => {
+    setIsDark(false)
+    setPrimary('#2563eb')
+    setBg('#ffffff')
+    setFontSize(14)
+    setDaySize(36)
+    setBorderRadius(12)
+  }
+
+  let parsedHolidays: CustomHolidayConfig[] = []
+  try {
+    parsedHolidays = JSON.parse(customHolidayJson) as CustomHolidayConfig[]
+  } catch {
+    // handled via customHolidayError
+  }
+
+  const handleSelectionModeChange = (next: 'single' | 'range') => {
+    setSelectionMode(next)
+    setValue(null)
+  }
+
+  const handleHolidayJsonChange = (next: string) => {
+    setCustomHolidayJson(next)
+    try {
+      JSON.parse(next)
+      setCustomHolidayError(null)
+    } catch (error) {
+      setCustomHolidayError((error as Error).message)
+    }
+  }
+
+  const theme: DatePickerTheme = isDark
+    ? {
+        ...darkTheme,
+        primaryColor: primary,
+        fontSize: `${fontSize}px`,
+        daySize,
+        borderRadius: `${borderRadius}px`,
+      }
+    : {
+        ...lightTheme,
+        primaryColor: primary,
+        backgroundColor: bg,
+        fontSize: `${fontSize}px`,
+        daySize,
+        borderRadius: `${borderRadius}px`,
+      }
+
+  const customHolidayCode =
+    !customHolidayError && parsedHolidays.length > 0
+      ? `const customHolidays = ${JSON.stringify(parsedHolidays, null, 2)}\n\n`
+      : ''
+
+  const themeCode = isDark
+    ? `const theme = {\n  ...darkTheme,\n  primaryColor: "${primary}",\n  fontSize: "${fontSize}px",\n  daySize: ${daySize},\n  borderRadius: "${borderRadius}px",\n}\n\n`
+    : `const theme = {\n  ...lightTheme,\n  primaryColor: "${primary}",\n  backgroundColor: "${bg}",\n  fontSize: "${fontSize}px",\n  daySize: ${daySize},\n  borderRadius: "${borderRadius}px",\n}\n\n`
+
+  const pickerProps = [
+    `selectionMode="${selectionMode}"`,
+    numberOfMonths !== 1 ? `numberOfMonths={${numberOfMonths}}` : '',
+    mode !== 'inline' ? `mode="${mode}"` : '',
+    locale !== 'en' ? `locale="${locale}"` : '',
+    weekStartsOn !== 0 ? `weekStartsOn={${weekStartsOn}}` : '',
+    showNaturalLanguageInput ? 'showNaturalLanguageInput={true}' : '',
+    selectionMode === 'range' && showPresets ? 'showPresets={true}' : '',
+    selectionMode === 'range' && showPresets && presetDisplay !== 'chips'
+      ? `presetDisplay="${presetDisplay}"`
+      : '',
+    selectionMode === 'range' && showPresets && presetDisplay === 'dropdown'
+      ? 'presetDropdownPlaceholder="Pick a preset range"'
+      : '',
+    showTodayButton ? 'showTodayButton={true}' : '',
+    !showHolidays ? 'showHolidays={false}' : '',
+    !highlightWeekends ? 'highlightWeekends={false}' : '',
+    !customHolidayError && parsedHolidays.length > 0 ? 'customHolidays={customHolidays}' : '',
+    'theme={theme}',
+    'value={value}',
+    'onChange={setValue}',
+  ].filter(Boolean)
+
+  const generatedCode = `import { useState } from 'react'\nimport { DatePicker, ${isDark ? 'darkTheme' : 'lightTheme'} } from 'the-date-picker'\n\nexport function Example() {\n  const [value, setValue] = useState<Date | [Date, Date] | null>(null)\n\n${customHolidayCode}${themeCode}  return (\n    <DatePicker\n${pickerProps.map((prop) => `      ${prop}`).join('\n')}\n    />\n  )\n}`
+
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(generatedCode)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {
+      setCopied(false)
+    }
+  }
+
+  return (
+    <div>
+      <h1 className="demo-section-title">Customize date picker</h1>
+      <p className="demo-section-desc">
+        Tune live props, theme values, and custom holidays, then copy the generated example code.
+      </p>
+      <div className="playground-layout playground-layout--two-column">
+        <div className="playground-left-column">
+          <div className="playground-card playground-card--behavior">
+            <div className="playground-card-title">Behavior</div>
+            <div className="playground-grid">
+              <div className="playground-field">
+                <label>Selection mode</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', selectionMode === 'single' ? 'is-active' : ''].join(' ')} onClick={() => handleSelectionModeChange('single')}>Single</button>
+                  <button type="button" className={['playground-segment', selectionMode === 'range' ? 'is-active' : ''].join(' ')} onClick={() => handleSelectionModeChange('range')}>Range</button>
+                </div>
+              </div>
+              <div className="playground-field">
+                <label>Months</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', numberOfMonths === 1 ? 'is-active' : ''].join(' ')} onClick={() => setNumberOfMonths(1)}>1</button>
+                  <button type="button" className={['playground-segment', numberOfMonths === 2 ? 'is-active' : ''].join(' ')} onClick={() => setNumberOfMonths(2)}>2</button>
+                </div>
+              </div>
+              <div className="playground-field">
+                <label>Mode</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', mode === 'inline' ? 'is-active' : ''].join(' ')} onClick={() => setMode('inline')}>Inline</button>
+                  <button type="button" className={['playground-segment', mode === 'popover' ? 'is-active' : ''].join(' ')} onClick={() => setMode('popover')}>Popover</button>
+                </div>
+              </div>
+              <div className="playground-field">
+                <label>Locale</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', locale === 'en' ? 'is-active' : ''].join(' ')} onClick={() => setLocale('en')}>EN</button>
+                  <button type="button" className={['playground-segment', locale === 'th' ? 'is-active' : ''].join(' ')} onClick={() => setLocale('th')}>TH</button>
+                </div>
+              </div>
+              <div className="playground-field">
+                <label>Week starts on</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', weekStartsOn === 0 ? 'is-active' : ''].join(' ')} onClick={() => setWeekStartsOn(0)}>Sunday</button>
+                  <button type="button" className={['playground-segment', weekStartsOn === 1 ? 'is-active' : ''].join(' ')} onClick={() => setWeekStartsOn(1)}>Monday</button>
+                </div>
+              </div>
+            </div>
+            <div className="playground-toggle-grid">
+              <label><input type="checkbox" checked={showHolidays} onChange={(e) => setShowHolidays(e.target.checked)} /> Holidays</label>
+              <label><input type="checkbox" checked={highlightWeekends} onChange={(e) => setHighlightWeekends(e.target.checked)} /> Weekend highlight</label>
+              <label><input type="checkbox" checked={showTodayButton} onChange={(e) => setShowTodayButton(e.target.checked)} /> Today button</label>
+              <label><input type="checkbox" checked={showNaturalLanguageInput} onChange={(e) => setShowNaturalLanguageInput(e.target.checked)} /> Natural language</label>
+              <label className={selectionMode === 'range' ? '' : 'playground-toggle--disabled'}>
+                <input type="checkbox" checked={showPresets} onChange={(e) => setShowPresets(e.target.checked)} disabled={selectionMode !== 'range'} /> Presets
+              </label>
+              <div className={selectionMode === 'range' && showPresets ? 'playground-field' : 'playground-field playground-toggle--disabled'}>
+                <label>Preset UI</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', presetDisplay === 'chips' ? 'is-active' : ''].join(' ')} onClick={() => setPresetDisplay('chips')} disabled={selectionMode !== 'range' || !showPresets}>Chips</button>
+                  <button type="button" className={['playground-segment', presetDisplay === 'dropdown' ? 'is-active' : ''].join(' ')} onClick={() => setPresetDisplay('dropdown')} disabled={selectionMode !== 'range' || !showPresets}>Dropdown</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="playground-card">
+            <div className="playground-card-title">Theme</div>
+            <div className="playground-grid">
+              <div className="playground-field">
+                <label>Primary color</label>
+                <input type="color" value={primary} onChange={(e) => setPrimary(e.target.value)} />
+              </div>
+              <div className="playground-field">
+                <label>Background color</label>
+                <input type="color" value={bg} onChange={(e) => setBg(e.target.value)} disabled={isDark} />
+              </div>
+              <div className="playground-field">
+                <label>Font size <span className="range-value">{fontSize}px</span></label>
+                <input type="range" min={12} max={18} value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))} />
+              </div>
+              <div className="playground-field">
+                <label>Day size <span className="range-value">{daySize}px</span></label>
+                <input type="range" min={28} max={48} value={daySize} onChange={(e) => setDaySize(Number(e.target.value))} />
+              </div>
+              <div className="playground-field">
+                <label>Border radius <span className="range-value">{borderRadius}px</span></label>
+                <input type="range" min={0} max={24} value={borderRadius} onChange={(e) => setBorderRadius(Number(e.target.value))} />
+              </div>
+              <div className="playground-field">
+                <label>Theme mode</label>
+                <div className="playground-segmented">
+                  <button type="button" className={['playground-segment', !isDark ? 'is-active' : ''].join(' ')} onClick={() => setIsDark(false)}>Light</button>
+                  <button type="button" className={['playground-segment', isDark ? 'is-active' : ''].join(' ')} onClick={() => setIsDark(true)}>Dark</button>
+                </div>
+              </div>
+              <button type="button" className="playground-reset-btn-full" onClick={resetPlaygroundTheme}>
+                Reset theme
+              </button>
+            </div>
+          </div>
+
+          <div className="playground-card">
+            <div className="playground-card-title">Custom holidays</div>
+            <textarea
+              className="json-editor"
+              value={customHolidayJson}
+              onChange={(e) => handleHolidayJsonChange(e.target.value)}
+              spellCheck={false}
+            />
+            {customHolidayError && <div className="json-error">{customHolidayError}</div>}
+          </div>
+        </div>
+
+        <div className="playground-right-column">
+          <div className="playground-preview-section">
+            <DatePicker
+              selectionMode={selectionMode}
+              numberOfMonths={numberOfMonths}
+              mode={mode}
+              locale={locale}
+              weekStartsOn={weekStartsOn}
+              value={value}
+              onChange={setValue}
+              showNaturalLanguageInput={showNaturalLanguageInput}
+              showPresets={selectionMode === 'range' ? showPresets : false}
+              presetDisplay={presetDisplay}
+              presetDropdownPlaceholder="Pick a preset range"
+              showTodayButton={showTodayButton}
+              showHolidays={showHolidays}
+              highlightWeekends={highlightWeekends}
+              customHolidays={customHolidayError ? [] : parsedHolidays}
+              theme={theme}
+            />
+          </div>
+
+          <div className="playground-card">
+            <ValueDisplay value={value} />
+            <div className="playground-code-head">
+              <div className="demo-value-label">Generated code</div>
+              <button type="button" className="playground-copy-btn" onClick={handleCopyCode}>
+                {copied ? 'Copied' : 'Copy code'}
+              </button>
+            </div>
+            <CodeBlock code={generatedCode} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ==============================================================
 // App
 // ==============================================================
@@ -550,8 +853,9 @@ const SECTION_MAP: Record<string, React.FC> = {
   theming: ThemingSection,
   popover: PopoverSection,
   'popover-range-double': PopoverRangeDoubleSection,
-  buddhist: BuddhistSection,
   disabled: DisabledSection,
+  buddhist: BuddhistSection,
+  playground: CustomizeSection,
 }
 
 export default function App() {
