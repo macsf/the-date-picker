@@ -377,8 +377,7 @@
 }
 
 [data-datepicker-root] .dp-preset-select {
-  width: auto;
-  max-width: 100%;
+  width: 100%;
   padding: 8px 10px;
   border: 1px solid var(--dp-border);
   border-radius: 8px;
