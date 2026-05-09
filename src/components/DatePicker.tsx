@@ -40,7 +40,6 @@ export interface DatePickerProps {
   highlightWeekends?: boolean
   showTodayButton?: boolean
   todayButtonLabel?: string
-  calendarSystem?: 'gregorian' | 'buddhist'
   mode?: 'inline' | 'popover'
   triggerFormat?: string
   className?: string
@@ -70,7 +69,6 @@ export function DatePicker({
   highlightWeekends = true,
   showTodayButton = false,
   todayButtonLabel = 'Today',
-  calendarSystem = 'gregorian',
   mode = 'inline',
   triggerFormat,
   className,
@@ -223,7 +221,6 @@ export function DatePicker({
 
   const calendarConfig: CalendarConfig = {
     locale,
-    calendarSystem,
     weekStartsOn,
     highlightWeekends,
     showWeekNumbers,

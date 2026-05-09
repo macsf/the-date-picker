@@ -12,7 +12,6 @@ const WEEKDAY_LABELS_TH = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'
 
 export interface CalendarConfig {
   locale: 'th' | 'en'
-  calendarSystem: 'gregorian' | 'buddhist'
   weekStartsOn: 0 | 1
   highlightWeekends: boolean
   showWeekNumbers: boolean
@@ -51,7 +50,6 @@ export function Calendar({
 }: CalendarProps) {
   const {
     locale,
-    calendarSystem,
     weekStartsOn,
     highlightWeekends,
     showWeekNumbers,
@@ -132,7 +130,6 @@ export function Calendar({
         onMonthSelect={handleMonthSelect}
         onYearSelect={handleYearSelect}
         locale={locale}
-        calendarSystem={calendarSystem}
         minDate={minDate}
         maxDate={maxDate}
       />

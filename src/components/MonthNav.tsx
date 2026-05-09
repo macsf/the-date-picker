@@ -7,7 +7,6 @@ interface MonthNavProps {
   onMonthSelect: (month: number) => void
   onYearSelect: (year: number) => void
   locale: 'th' | 'en'
-  calendarSystem: 'gregorian' | 'buddhist'
   minDate?: Date
   maxDate?: Date
 }
@@ -28,7 +27,6 @@ export function MonthNav({
   onMonthSelect,
   onYearSelect,
   locale,
-  calendarSystem,
   minDate,
   maxDate,
 }: MonthNavProps) {
@@ -80,7 +78,7 @@ export function MonthNav({
         >
           {years.map((y) => (
             <option key={y} value={y}>
-              {calendarSystem === 'buddhist' ? y + 543 : y}
+              {locale === 'th' ? y + 543 : y}
             </option>
           ))}
         </select>

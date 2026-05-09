@@ -60,15 +60,11 @@ export function toBuddhistYear(year: number): number {
 export function formatMonthYear(
   date: Date,
   locale: 'th' | 'en',
-  calendarSystem: 'gregorian' | 'buddhist',
 ): string {
   const month = date.toLocaleString(locale === 'th' ? 'th-TH' : 'en-US', {
     month: 'long',
   })
-  const year =
-    calendarSystem === 'buddhist'
-      ? toBuddhistYear(date.getFullYear())
-      : date.getFullYear()
+  const year = locale === 'th' ? toBuddhistYear(date.getFullYear()) : date.getFullYear()
   return `${month} ${year}`
 }
 
