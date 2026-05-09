@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { format } from 'date-fns'
 import { Calendar, type CalendarConfig } from './Calendar'
 import { PresetChips } from './PresetChips'
@@ -61,8 +61,7 @@ export function DatePicker({
   triggerFormat,
   className,
 }: DatePickerProps) {
-  const mergedTheme = { ...lightTheme, ...theme }
-  const themeVars = injectTheme(mergedTheme)
+  const themeVars = useMemo(() => injectTheme({ ...lightTheme, ...theme }), [theme])
   const popover = usePopover()
 
   const [leftMonth, setLeftMonth] = useState<Date>(() => {
