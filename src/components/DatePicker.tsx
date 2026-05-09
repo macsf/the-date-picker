@@ -10,13 +10,9 @@ import { injectTheme } from '../theme/inject'
 import { lightTheme } from '../theme/light'
 import type { DatePickerTheme } from '../theme/types'
 import type { Preset } from '../utils/presets'
+import type { CustomHolidayConfig } from '../hooks/useHolidays'
 
-export interface CustomHolidayConfig {
-  date: string
-  nameTH: string
-  nameEN: string
-  dotColor?: string
-}
+export type { CustomHolidayConfig }
 
 export interface DatePickerProps {
   numberOfMonths?: 1 | 2

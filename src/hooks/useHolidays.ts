@@ -1,4 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+
+export interface CustomHolidayConfig {
+  date: string
+  nameTH: string
+  nameEN: string
+  dotColor?: string
+}
 
 export interface HolidayEntry {
   date: string
@@ -6,27 +13,39 @@ export interface HolidayEntry {
   type: string
 }
 
-// Map<cacheKey, HolidayEntry[]>
+export interface HolidayDot {
+  name: string
+  dotColor: string
+}
+
+export interface HolidayMap {
+  getHolidaysForDate(date: Date): HolidayDot[]
+}
+
+// Module-level cache shared across all hook instances
 const cache = new Map<string, HolidayEntry[]>()
 
 function getCacheKey(year: number, locale: string, types: string[]): string {
   return `${year}-${locale}-${types.sort().join(',')}`
 }
 
+const DEFAULT_DOT_COLOR = '#EF4444'
+
 export function useHolidays(
   year: number,
   locale: 'th' | 'en',
   types: Array<'public' | 'bank' | 'observance'> = ['public'],
   enabled = true,
-) {
-  const [holidays, setHolidays] = useState<HolidayEntry[]>([])
+  customHolidays: CustomHolidayConfig[] = [],
+): HolidayMap {
+  const [builtIn, setBuiltIn] = useState<HolidayEntry[]>([])
 
   useEffect(() => {
     if (!enabled) return
 
     const key = getCacheKey(year, locale, types)
     if (cache.has(key)) {
-      setHolidays(cache.get(key)!)
+      setBuiltIn(cache.get(key)!)
       return
     }
 
@@ -35,11 +54,10 @@ export function useHolidays(
     import('../data/th-holidays.json').then(({ default: rawData }) => {
       if (cancelled) return
 
-      // rawData is { [year]: HolidayEntry[] }
       const yearData = (rawData as Record<string, HolidayEntry[]>)[String(year)] ?? []
       const filtered = yearData.filter((h) => (types as string[]).includes(h.type))
 
-      // Pick the right locale name field — our JSON stores both 'name' (en) and 'nameTH'
+      // JSON stores both 'name' (en) and 'nameTH'
       const localized = filtered.map((h) => ({
         ...h,
         name:
@@ -49,7 +67,7 @@ export function useHolidays(
       }))
 
       cache.set(key, localized)
-      setHolidays(localized)
+      setBuiltIn(localized)
     })
 
     return () => {
@@ -58,5 +76,28 @@ export function useHolidays(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, locale, JSON.stringify(types), enabled])
 
-  return holidays
+  const holidayMap = useMemo(() => {
+    const map = new Map<string, HolidayDot[]>()
+
+    builtIn.forEach((h) => {
+      const key = h.date.slice(0, 10)
+      const existing = map.get(key) ?? []
+      existing.push({ name: h.name, dotColor: DEFAULT_DOT_COLOR })
+      map.set(key, existing)
+    })
+
+    // Custom holidays override built-in by date key
+    customHolidays.forEach((ch) => {
+      const name = locale === 'th' ? ch.nameTH : ch.nameEN
+      map.set(ch.date, [{ name, dotColor: ch.dotColor ?? DEFAULT_DOT_COLOR }])
+    })
+
+    return map
+  }, [builtIn, customHolidays, locale])
+
+  return {
+    getHolidaysForDate(date: Date): HolidayDot[] {
+      return holidayMap.get(date.toISOString().slice(0, 10)) ?? []
+    },
+  }
 }

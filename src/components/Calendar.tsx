@@ -5,8 +5,7 @@ import { resolveDayState, type DayStateContext } from '../utils/dayState'
 import { DayCell } from './DayCell'
 import { MonthNav } from './MonthNav'
 import { WeekNumbers } from './WeekNumbers'
-import { useHolidays, type HolidayEntry } from '../hooks/useHolidays'
-import type { CustomHolidayConfig } from './DatePicker'
+import { useHolidays, type CustomHolidayConfig } from '../hooks/useHolidays'
 
 const WEEKDAY_LABELS_EN = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']
 const WEEKDAY_LABELS_TH = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
@@ -57,23 +56,7 @@ export function Calendar({
 }: CalendarProps) {
   const { weeks } = buildCalendarGrid(month, weekStartsOn)
   const year = month.getFullYear()
-  const rawHolidays = useHolidays(year, locale, holidayTypes, showHolidays)
-
-  // Build a map of date-string -> holiday info for O(1) lookup
-  const holidayMap = new Map<string, { name: string; dotColor: string }[]>()
-
-  rawHolidays.forEach((h: HolidayEntry) => {
-    const key = h.date.slice(0, 10)
-    const existing = holidayMap.get(key) ?? []
-    existing.push({ name: h.name, dotColor: '#EF4444' })
-    holidayMap.set(key, existing)
-  })
-
-  // Custom holidays override built-in by date key
-  customHolidays.forEach((ch) => {
-    const name = locale === 'th' ? ch.nameTH : ch.nameEN
-    holidayMap.set(ch.date, [{ name, dotColor: ch.dotColor ?? '#EF4444' }])
-  })
+  const holidays = useHolidays(year, locale, holidayTypes, showHolidays, customHolidays)
 
   const weekdays = locale === 'th' ? WEEKDAY_LABELS_TH : WEEKDAY_LABELS_EN
   const orderedWeekdays =
@@ -154,8 +137,7 @@ export function Calendar({
           {weeks.map((week, wi) => (
             <div key={wi} className="dp-week-row">
               {week.map((day, di) => {
-                const dateKey = day.date.toISOString().slice(0, 10)
-                const dayHolidays = holidayMap.get(dateKey) ?? []
+                const dayHolidays = holidays.getHolidaysForDate(day.date)
                 const disabled = checkDisabled(day.date, minDate, maxDate, disabledDates)
                 const { isSelected, isRangeStart, isRangeEnd, isInRange, isToday } =
                   resolveDayState(day.date, dayStateCtx)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { resolveDayState, type DayStateContext } from './dayState'
+import { resolveDayState, type DayStateContext } from '../../utils/dayState'
 
 const today = new Date(2024, 5, 15) // 2024-06-15, fixed for all tests
 const jan1 = new Date(2024, 0, 1)
