@@ -337,18 +337,12 @@
 
 [data-datepicker-root] .dp-preset-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: none;
-}
-
-[data-datepicker-root] .dp-preset-chips::-webkit-scrollbar {
-  display: none;
+  width: calc(7 * var(--dp-day-size));
 }
 
 [data-datepicker-root] .dp-chip {
-  flex-shrink: 0;
   padding: 5px 12px;
   border-radius: 20px;
   border: 1px solid var(--dp-border);
