@@ -55,6 +55,9 @@ const WEEKDAY_AFTER_NEXT = /^(?:the\s+)?(sunday|monday|tuesday|wednesday|thursda
 // "N unit(s) from <anchor>", "a unit from <anchor>" — e.g. "two weeks from yesterday", "a week from tomorrow"
 const UNIT_FROM_ANCHOR = /^(a|\d+|one|two|three|four|five|six|seven|eight|nine|ten)\s+(day|days|week|weeks|month|months)\s+from\s+(.+)$/i
 
+// Holiday with explicit year: "christmas 2027", "halloween 2026"
+const HOLIDAY_WITH_YEAR = /^(christmas|halloween|valentine|"?new\s+year"?|independence\s+day|veterans\s+day|st\.?\s+patrick|cinco\s+de\s+mayo)\s+(\d{4})$/i
+
 // Holiday names → fixed [month, day]
 const HOLIDAYS: Record<string, [number, number]> = {
   christmas: [12, 25],
@@ -215,7 +218,18 @@ export function parseNaturalLanguage(text: string, ref: Date = new Date()): Pars
     return { single: date, text }
   }
 
-  // 6. Nth of month: "the 15th of next month"
+  // 6. Holiday with explicit year: "christmas 2027"
+  const holidayYearMatch = lower.match(HOLIDAY_WITH_YEAR)
+  if (holidayYearMatch) {
+    const holidayName = holidayYearMatch[1]
+    const year = parseInt(holidayYearMatch[2], 10)
+    const entry = HOLIDAYS[holidayName]
+    if (entry) {
+      return { single: new Date(year, entry[0] - 1, entry[1]), text }
+    }
+  }
+
+  // 7. Nth of month: "the 15th of next month"
   const nthMatch = lower.match(NTH_OF_MONTH)
   if (nthMatch) {
     const day = parseInt(nthMatch[1], 10)
@@ -223,7 +237,7 @@ export function parseNaturalLanguage(text: string, ref: Date = new Date()): Pars
     return { single: new Date(anchor.getFullYear(), anchor.getMonth(), day), text }
   }
 
-  // 7. Ordinal weekday of month: "first Monday of June", "last Friday of May"
+  // 8. Ordinal weekday of month: "first Monday of June", "last Friday of May"
   const ordinalMatch = lower.match(ORDINAL_WEEKDAY_OF_MONTH)
   if (ordinalMatch) {
     const ordinal = ordinalMatch[1]

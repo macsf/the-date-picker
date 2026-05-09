@@ -62,10 +62,12 @@ describe('4. Calendar month/year positions', () => {
 // ─── Group 5: Holiday Anchors ──────────────────────────────────────────────────
 
 describe('5. Holiday anchors', () => {
-  it('"next Christmas"    → 2026-12-25', () => expectSingle(parseNaturalLanguage('next Christmas', REF), '2026-12-25'))
-  it('"next Halloween"    → 2026-10-31', () => expectSingle(parseNaturalLanguage('next Halloween', REF), '2026-10-31'))
-  it('"Independence Day"  → 2026-07-04', () => expectSingle(parseNaturalLanguage('Independence Day', REF), '2026-07-04'))
-  it('"New Year\'s Eve"   → 2026-12-31', () => expectSingle(parseNaturalLanguage("New Year's Eve", REF), '2026-12-31'))
+  it('"next Christmas"      → 2026-12-25', () => expectSingle(parseNaturalLanguage('next Christmas', REF), '2026-12-25'))
+  it('"next Halloween"      → 2026-10-31', () => expectSingle(parseNaturalLanguage('next Halloween', REF), '2026-10-31'))
+  it('"Independence Day"    → 2026-07-04', () => expectSingle(parseNaturalLanguage('Independence Day', REF), '2026-07-04'))
+  it('"New Year\'s Eve"     → 2026-12-31', () => expectSingle(parseNaturalLanguage("New Year's Eve", REF), '2026-12-31'))
+  it('"Christmas 2027"      → 2027-12-25 (explicit year)', () => expectSingle(parseNaturalLanguage('Christmas 2027', REF), '2027-12-25'))
+  it('"Halloween 2025"      → 2025-10-31 (explicit year)', () => expectSingle(parseNaturalLanguage('Halloween 2025', REF), '2025-10-31'))
 })
 
 // ─── Group 6: Complex/Nested Phrases ──────────────────────────────────────────
