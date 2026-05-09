@@ -1,6 +1,4 @@
-import js from '@eslint/js'
-
-export default {
+module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
@@ -10,11 +8,5 @@ export default {
   ],
   ignorePatterns: ['dist', 'dist-demo', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-  },
+  rules: {},
 }

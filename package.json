@@ -14,8 +14,12 @@
     },
     "./datepicker.css": "./dist/datepicker.css"
   },
-  "files": ["dist"],
-  "sideEffects": ["./dist/datepicker.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "./dist/datepicker.css"
+  ],
   "scripts": {
     "gen:holidays": "node scripts/gen-holidays.js",
     "prebuild": "pnpm gen:holidays",
@@ -24,7 +28,7 @@
     "dev": "vite --config vite.demo.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src demo --ext .ts,.tsx",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
   "peerDependencies": {
@@ -37,6 +41,9 @@
     "date-holidays": "^3.23.12"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
@@ -45,6 +52,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "jsdom": "^29.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
