@@ -1,151 +1,114 @@
 import { describe, it, expect } from 'vitest'
 import { parseNaturalLanguage } from '../../utils/naturalLanguage'
 
-// Fixed reference date: 2026-05-09 (Saturday) — constructed as local midnight
-const REF = new Date(2026, 4, 9) // month is 0-indexed
+// Fixed reference: Saturday, 2026-05-09
+const REF = new Date(2026, 4, 9)
 
-function localDate(d: Date): string {
+function ld(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 function expectSingle(result: ReturnType<typeof parseNaturalLanguage>, iso: string) {
-  expect(result?.single ? localDate(result.single) : undefined).toBe(iso)
+  expect(result?.single ? ld(result.single) : undefined).toBe(iso)
   expect(result?.range).toBeUndefined()
 }
 
 function expectRange(result: ReturnType<typeof parseNaturalLanguage>, startIso: string, endIso: string) {
-  expect(result?.range?.[0] ? localDate(result.range[0]) : undefined).toBe(startIso)
-  expect(result?.range?.[1] ? localDate(result.range[1]) : undefined).toBe(endIso)
+  expect(result?.range?.[0] ? ld(result.range[0]) : undefined).toBe(startIso)
+  expect(result?.range?.[1] ? ld(result.range[1]) : undefined).toBe(endIso)
   expect(result?.single).toBeUndefined()
 }
 
-describe('parseNaturalLanguage', () => {
-  describe('single dates', () => {
-    it('parses "tomorrow"', () => {
-      expectSingle(parseNaturalLanguage('tomorrow', REF), '2026-05-10')
-    })
+// ─── Group 1: Simple Relative Days ────────────────────────────────────────────
 
-    it('parses "today"', () => {
-      expectSingle(parseNaturalLanguage('today', REF), '2026-05-09')
-    })
+describe('1. Simple relative days', () => {
+  it('"today"              → 2026-05-09', () => expectSingle(parseNaturalLanguage('today', REF), '2026-05-09'))
+  it('"tomorrow"          → 2026-05-10', () => expectSingle(parseNaturalLanguage('tomorrow', REF), '2026-05-10'))
+  it('"yesterday"         → 2026-05-08', () => expectSingle(parseNaturalLanguage('yesterday', REF), '2026-05-08'))
+  it('"day after tomorrow"  → 2026-05-11', () => expectSingle(parseNaturalLanguage('day after tomorrow', REF), '2026-05-11'))
+  it('"day before yesterday" → 2026-05-07', () => expectSingle(parseNaturalLanguage('day before yesterday', REF), '2026-05-07'))
+})
 
-    it('parses "next friday"', () => {
-      expectSingle(parseNaturalLanguage('next friday', REF), '2026-05-15')
-    })
+// ─── Group 2: Specific Number Offsets ─────────────────────────────────────────
 
-    it('parses "next christmas" as Dec 25 of next occurrence', () => {
-      expectSingle(parseNaturalLanguage('next christmas', REF), '2026-12-25')
-    })
+describe('2. Specific number offsets', () => {
+  it('"in 5 days"          → 2026-05-14 (single)', () => expectSingle(parseNaturalLanguage('in 5 days', REF), '2026-05-14'))
+  it('"10 days from now"   → 2026-05-19 (single target date)', () => expectSingle(parseNaturalLanguage('10 days from now', REF), '2026-05-19'))
+  it('"8 days ago"         → 2026-05-01 (single)', () => expectSingle(parseNaturalLanguage('8 days ago', REF), '2026-05-01'))
+  it('"in 2 weeks"         → 2026-05-23 (single)', () => expectSingle(parseNaturalLanguage('in 2 weeks', REF), '2026-05-23'))
+  it('"3 weeks ago"        → 2026-04-18 (single)', () => expectSingle(parseNaturalLanguage('3 weeks ago', REF), '2026-04-18'))
+})
 
-    it('parses "christmas" as Dec 25 of next occurrence', () => {
-      expectSingle(parseNaturalLanguage('christmas', REF), '2026-12-25')
-    })
+// ─── Group 3: Weekday Anchors ──────────────────────────────────────────────────
 
-    it('parses explicit date "Jan 15 2025"', () => {
-      expectSingle(parseNaturalLanguage('Jan 15 2025', REF), '2025-01-15')
-    })
-  })
+describe('3. Weekday anchors', () => {
+  it('"this coming Monday" → 2026-05-11', () => expectSingle(parseNaturalLanguage('this coming Monday', REF), '2026-05-11'))
+  it('"upcoming Wednesday" → 2026-05-13', () => expectSingle(parseNaturalLanguage('upcoming Wednesday', REF), '2026-05-13'))
+  it('"this Sunday"        → 2026-05-10 (tomorrow)', () => expectSingle(parseNaturalLanguage('this Sunday', REF), '2026-05-10'))
+  it('"next Sunday"        → 2026-05-17', () => expectSingle(parseNaturalLanguage('next Sunday', REF), '2026-05-17'))
+  it('"last Friday"        → 2026-05-08', () => expectSingle(parseNaturalLanguage('last Friday', REF), '2026-05-08'))
+})
 
-  describe('explicit ranges', () => {
-    it('parses "Jan 1 - Jan 15 2025"', () => {
-      expectRange(parseNaturalLanguage('Jan 1 - Jan 15 2025', REF), '2025-01-01', '2025-01-15')
-    })
+// ─── Group 4: Calendar Month/Year Positions ────────────────────────────────────
 
-    it('parses "Jan 1 and Mar 15" as two-date range', () => {
-      expectRange(parseNaturalLanguage('Jan 1 and Mar 15', REF), '2026-01-01', '2026-03-15')
-    })
+describe('4. Calendar month/year positions', () => {
+  it('"end of this month"       → 2026-05-31', () => expectSingle(parseNaturalLanguage('end of this month', REF), '2026-05-31'))
+  it('"beginning of next month" → 2026-06-01', () => expectSingle(parseNaturalLanguage('beginning of next month', REF), '2026-06-01'))
+  it('"the 15th of next month"  → 2026-06-15', () => expectSingle(parseNaturalLanguage('the 15th of next month', REF), '2026-06-15'))
+  it('"first Monday of June"    → 2026-06-01', () => expectSingle(parseNaturalLanguage('first Monday of June', REF), '2026-06-01'))
+  it('"last Friday of May"      → 2026-05-29', () => expectSingle(parseNaturalLanguage('last Friday of May', REF), '2026-05-29'))
+})
 
-    it('parses "next christmas to new year" as range', () => {
-      expectRange(parseNaturalLanguage('next christmas to new year', REF), '2026-12-25', '2027-01-01')
-    })
-  })
+// ─── Group 5: Holiday Anchors ──────────────────────────────────────────────────
 
-  describe('duration ranges — forward', () => {
-    it('parses "next 10 days" as range today → today+10 (duration)', () => {
-      expectRange(parseNaturalLanguage('next 10 days', REF), '2026-05-09', '2026-05-19')
-    })
+describe('5. Holiday anchors', () => {
+  it('"next Christmas"    → 2026-12-25', () => expectSingle(parseNaturalLanguage('next Christmas', REF), '2026-12-25'))
+  it('"next Halloween"    → 2026-10-31', () => expectSingle(parseNaturalLanguage('next Halloween', REF), '2026-10-31'))
+  it('"Independence Day"  → 2026-07-04', () => expectSingle(parseNaturalLanguage('Independence Day', REF), '2026-07-04'))
+  it('"New Year\'s Eve"   → 2026-12-31', () => expectSingle(parseNaturalLanguage("New Year's Eve", REF), '2026-12-31'))
+})
 
-    it('parses "within 10 days" as range today → today+10 (deadline)', () => {
-      expectRange(parseNaturalLanguage('within 10 days', REF), '2026-05-09', '2026-05-19')
-    })
+// ─── Group 6: Complex/Nested Phrases ──────────────────────────────────────────
 
-    it('parses "next 2 weeks" as range today → today+14', () => {
-      expectRange(parseNaturalLanguage('next 2 weeks', REF), '2026-05-09', '2026-05-23')
-    })
+describe('6. Complex/nested phrases', () => {
+  it('"the Sunday after next"      → 2026-05-24', () => expectSingle(parseNaturalLanguage('the Sunday after next', REF), '2026-05-24'))
+  it('"10 days after next Friday"  → 2026-05-25', () => expectSingle(parseNaturalLanguage('10 days after next Friday', REF), '2026-05-25'))
+  it('"two weeks from yesterday"   → 2026-05-22', () => expectSingle(parseNaturalLanguage('two weeks from yesterday', REF), '2026-05-22'))
+  it('"a week from tomorrow"       → 2026-05-17', () => expectSingle(parseNaturalLanguage('a week from tomorrow', REF), '2026-05-17'))
+})
 
-    it('parses "next 3 months" as range today → today+3 months', () => {
-      expectRange(parseNaturalLanguage('next 3 months', REF), '2026-05-09', '2026-08-09')
-    })
-  })
+// ─── Duration/Period Ranges ────────────────────────────────────────────────────
 
-  describe('target dates — forward point', () => {
-    it('parses "10 days from now" as single target date today+10', () => {
-      expectSingle(parseNaturalLanguage('10 days from now', REF), '2026-05-19')
-    })
+describe('7. Duration ranges — forward', () => {
+  it('"next 10 days"    → range [today, today+10]', () => expectRange(parseNaturalLanguage('next 10 days', REF), '2026-05-09', '2026-05-19'))
+  it('"within 10 days" → range [today, today+10]', () => expectRange(parseNaturalLanguage('within 10 days', REF), '2026-05-09', '2026-05-19'))
+  it('"next 2 weeks"   → range [today, today+14]', () => expectRange(parseNaturalLanguage('next 2 weeks', REF), '2026-05-09', '2026-05-23'))
+  it('"next 3 months"  → range [today, today+3mo]', () => expectRange(parseNaturalLanguage('next 3 months', REF), '2026-05-09', '2026-08-09'))
+})
 
-    it('parses "2 weeks from now" as single target date today+14', () => {
-      expectSingle(parseNaturalLanguage('2 weeks from now', REF), '2026-05-23')
-    })
+describe('8. Duration ranges — backward', () => {
+  it('"last 7 days"   → range [today-7, today]', () => expectRange(parseNaturalLanguage('last 7 days', REF), '2026-05-02', '2026-05-09'))
+  it('"last 30 days"  → range [today-30, today]', () => expectRange(parseNaturalLanguage('last 30 days', REF), '2026-04-09', '2026-05-09'))
+  it('"past 7 days"   → range [today-7, today]', () => expectRange(parseNaturalLanguage('past 7 days', REF), '2026-05-02', '2026-05-09'))
+  it('"past 30 days"  → range [today-30, today]', () => expectRange(parseNaturalLanguage('past 30 days', REF), '2026-04-09', '2026-05-09'))
+})
 
-    it('parses "3 months from now" as single target date today+3 months', () => {
-      expectSingle(parseNaturalLanguage('3 months from now', REF), '2026-08-09')
-    })
-  })
+describe('9. Named period ranges', () => {
+  it('"this week"   → Mon 2026-05-04 to Sun 2026-05-10', () => expectRange(parseNaturalLanguage('this week', REF), '2026-05-04', '2026-05-10'))
+  it('"last week"   → Mon 2026-04-27 to Sun 2026-05-03', () => expectRange(parseNaturalLanguage('last week', REF), '2026-04-27', '2026-05-03'))
+  it('"next week"   → Mon 2026-05-11 to Sun 2026-05-17', () => expectRange(parseNaturalLanguage('next week', REF), '2026-05-11', '2026-05-17'))
+  it('"this month"  → 2026-05-01 to 2026-05-31', () => expectRange(parseNaturalLanguage('this month', REF), '2026-05-01', '2026-05-31'))
+  it('"last month"  → 2026-04-01 to 2026-04-30', () => expectRange(parseNaturalLanguage('last month', REF), '2026-04-01', '2026-04-30'))
+  it('"next month"  → 2026-06-01 to 2026-06-30', () => expectRange(parseNaturalLanguage('next month', REF), '2026-06-01', '2026-06-30'))
+})
 
-  describe('duration ranges — backward', () => {
-    it('parses "last 7 days" as 7 days ago → today', () => {
-      expectRange(parseNaturalLanguage('last 7 days', REF), '2026-05-02', '2026-05-09')
-    })
+describe('10. Explicit ranges', () => {
+  it('"Jan 1 - Jan 15 2025"          → range', () => expectRange(parseNaturalLanguage('Jan 1 - Jan 15 2025', REF), '2025-01-01', '2025-01-15'))
+  it('"Jan 1 and Mar 15"             → range', () => expectRange(parseNaturalLanguage('Jan 1 and Mar 15', REF), '2026-01-01', '2026-03-15'))
+  it('"next christmas to new year"   → range', () => expectRange(parseNaturalLanguage('next christmas to new year', REF), '2026-12-25', '2027-01-01'))
+})
 
-    it('parses "last 30 days" as 30 days ago → today', () => {
-      expectRange(parseNaturalLanguage('last 30 days', REF), '2026-04-09', '2026-05-09')
-    })
-
-    it('parses "past 7 days" as 7 days ago → today', () => {
-      expectRange(parseNaturalLanguage('past 7 days', REF), '2026-05-02', '2026-05-09')
-    })
-
-    it('parses "past 30 days" as 30 days ago → today', () => {
-      expectRange(parseNaturalLanguage('past 30 days', REF), '2026-04-09', '2026-05-09')
-    })
-  })
-
-  describe('named period ranges', () => {
-    it('parses "this week" as Mon–Sun of current week', () => {
-      // REF is Saturday 2026-05-09, week Mon=2026-05-04 to Sun=2026-05-10
-      expectRange(parseNaturalLanguage('this week', REF), '2026-05-04', '2026-05-10')
-    })
-
-    it('parses "last week" as Mon–Sun of previous week', () => {
-      // REF is Saturday 2026-05-09, previous week Mon=2026-04-27 to Sun=2026-05-03
-      expectRange(parseNaturalLanguage('last week', REF), '2026-04-27', '2026-05-03')
-    })
-
-    it('parses "next week" as Mon–Sun of next week', () => {
-      // REF is Saturday 2026-05-09, next week Mon=2026-05-11 to Sun=2026-05-17
-      expectRange(parseNaturalLanguage('next week', REF), '2026-05-11', '2026-05-17')
-    })
-
-    it('parses "this month" as first–last day of current month', () => {
-      expectRange(parseNaturalLanguage('this month', REF), '2026-05-01', '2026-05-31')
-    })
-
-    it('parses "last month" as first–last day of previous month', () => {
-      expectRange(parseNaturalLanguage('last month', REF), '2026-04-01', '2026-04-30')
-    })
-
-    it('parses "next month" as first–last day of next month', () => {
-      expectRange(parseNaturalLanguage('next month', REF), '2026-06-01', '2026-06-30')
-    })
-  })
-
-  describe('edge cases', () => {
-    it('returns null for empty string', () => {
-      expect(parseNaturalLanguage('', REF)).toBeNull()
-    })
-
-    it('returns null for unrecognized input', () => {
-      expect(parseNaturalLanguage('foobar xyz', REF)).toBeNull()
-    })
-  })
+describe('11. Edge cases', () => {
+  it('empty string → null', () => expect(parseNaturalLanguage('', REF)).toBeNull())
+  it('unrecognized input → null', () => expect(parseNaturalLanguage('foobar xyz', REF)).toBeNull())
 })
