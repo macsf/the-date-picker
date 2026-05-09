@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { mergeHolidays } from '../utils/mergeHolidays'
 
 export interface CustomHolidayConfig {
   date: string
@@ -25,6 +26,14 @@ export interface HolidayMap {
 // Module-level cache shared across all hook instances
 const cache = new Map<string, HolidayEntry[]>()
 
+export function formatDateKey(date: Date): string {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
 function getCacheKey(year: number, locale: string, types: string[]): string {
   return `${year}-${locale}-${types.sort().join(',')}`
 }
@@ -49,30 +58,21 @@ export function useHolidays(
       return
     }
 
-    let cancelled = false
+    const merged = mergeHolidays()
+    const yearData = merged[String(year)] ?? []
+    const filtered = yearData.filter((h) => (types as string[]).includes(h.type))
 
-    import('../data/th-holidays.json').then(({ default: rawData }) => {
-      if (cancelled) return
+    // JSON stores both 'name' (en) and 'nameTH'
+    const localized = filtered.map((h) => ({
+      ...h,
+      name:
+        locale === 'th' && (h as HolidayEntry & { nameTH?: string }).nameTH
+          ? (h as HolidayEntry & { nameTH?: string }).nameTH!
+          : h.name,
+    }))
 
-      const yearData = (rawData as Record<string, HolidayEntry[]>)[String(year)] ?? []
-      const filtered = yearData.filter((h) => (types as string[]).includes(h.type))
-
-      // JSON stores both 'name' (en) and 'nameTH'
-      const localized = filtered.map((h) => ({
-        ...h,
-        name:
-          locale === 'th' && (h as HolidayEntry & { nameTH?: string }).nameTH
-            ? (h as HolidayEntry & { nameTH?: string }).nameTH!
-            : h.name,
-      }))
-
-      cache.set(key, localized)
-      setBuiltIn(localized)
-    })
-
-    return () => {
-      cancelled = true
-    }
+    cache.set(key, localized)
+    setBuiltIn(localized)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, locale, JSON.stringify(types), enabled])
 
@@ -97,7 +97,7 @@ export function useHolidays(
 
   return {
     getHolidaysForDate(date: Date): HolidayDot[] {
-      return holidayMap.get(date.toISOString().slice(0, 10)) ?? []
+      return holidayMap.get(formatDateKey(date)) ?? []
     },
   }
 }

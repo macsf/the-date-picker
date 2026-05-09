@@ -11,6 +11,7 @@ import { lightTheme } from '../theme/light'
 import type { DatePickerTheme } from '../theme/types'
 import type { Preset } from '../utils/presets'
 import type { CustomHolidayConfig } from '../hooks/useHolidays'
+import { toLocalDate } from '../utils/dateNormalize'
 
 export type { CustomHolidayConfig }
 
@@ -65,9 +66,16 @@ export function DatePicker({
   const popover = usePopover()
 
   const [leftMonth, setLeftMonth] = useState<Date>(() => {
-    if (Array.isArray(value) && value[0]) return new Date(value[0].getFullYear(), value[0].getMonth(), 1)
-    if (value instanceof Date) return new Date(value.getFullYear(), value.getMonth(), 1)
-    return new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    const now = toLocalDate(new Date())
+    if (Array.isArray(value) && value[0]) {
+      const normalized = toLocalDate(value[0])
+      return new Date(normalized.getFullYear(), normalized.getMonth(), 1)
+    }
+    if (value instanceof Date) {
+      const normalized = toLocalDate(value)
+      return new Date(normalized.getFullYear(), normalized.getMonth(), 1)
+    }
+    return new Date(now.getFullYear(), now.getMonth(), 1)
   })
 
   const rightMonth = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1)
@@ -84,7 +92,7 @@ export function DatePicker({
 
   const handleSingleClick = useCallback(
     (date: Date) => {
-      onChange?.(date)
+      onChange?.(toLocalDate(date))
       if (mode === 'popover') {
         popover.close()
       }
@@ -113,17 +121,21 @@ export function DatePicker({
   const handleNLCommit = useCallback(
     (result: { single?: Date; range?: [Date, Date] }) => {
       if (selectionMode === 'single' && result.single) {
-        onChange?.(result.single)
-        setLeftMonth(new Date(result.single.getFullYear(), result.single.getMonth(), 1))
+        const normalized = toLocalDate(result.single)
+        onChange?.(normalized)
+        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
       } else if (selectionMode === 'range' && result.range) {
-        onChange?.(result.range)
-        setLeftMonth(new Date(result.range[0].getFullYear(), result.range[0].getMonth(), 1))
+        const normalized = [toLocalDate(result.range[0]), toLocalDate(result.range[1])] as [Date, Date]
+        onChange?.(normalized)
+        setLeftMonth(new Date(normalized[0].getFullYear(), normalized[0].getMonth(), 1))
       } else if (selectionMode === 'range' && result.single) {
-        onChange?.([result.single, result.single])
-        setLeftMonth(new Date(result.single.getFullYear(), result.single.getMonth(), 1))
+        const normalized = toLocalDate(result.single)
+        onChange?.([normalized, normalized])
+        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
       } else if (result.single) {
-        onChange?.(result.single)
-        setLeftMonth(new Date(result.single.getFullYear(), result.single.getMonth(), 1))
+        const normalized = toLocalDate(result.single)
+        onChange?.(normalized)
+        setLeftMonth(new Date(normalized.getFullYear(), normalized.getMonth(), 1))
       }
     },
     [selectionMode, onChange],

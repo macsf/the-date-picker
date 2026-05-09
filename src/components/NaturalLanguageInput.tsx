@@ -1,4 +1,5 @@
 import { useNaturalLanguage } from '../hooks/useNaturalLanguage'
+import { toLocalDate } from '../utils/dateNormalize'
 
 interface NaturalLanguageInputProps {
   selectionMode: 'single' | 'range'
@@ -16,7 +17,11 @@ export function NaturalLanguageInput({
 
   const commit = () => {
     if (!preview) return
-    onCommit(preview)
+    const normalized = {
+      single: preview.single ? toLocalDate(preview.single) : undefined,
+      range: preview.range ? [toLocalDate(preview.range[0]), toLocalDate(preview.range[1])] as [Date, Date] : undefined,
+    }
+    onCommit(normalized)
     setInputValue('')
     setPreview(null)
   }

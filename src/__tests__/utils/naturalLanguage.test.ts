@@ -66,20 +66,26 @@ describe('5. Holiday anchors', () => {
   it('"next Halloween"      → 2026-10-31', () => expectSingle(parseNaturalLanguage('next Halloween', REF), '2026-10-31'))
   it('"Independence Day"    → 2026-07-04', () => expectSingle(parseNaturalLanguage('Independence Day', REF), '2026-07-04'))
   it('"New Year\'s Eve"     → 2026-12-31', () => expectSingle(parseNaturalLanguage("New Year's Eve", REF), '2026-12-31'))
+  it('"Labour Day"          → 2027-05-01 (passed in 2026)', () => expectSingle(parseNaturalLanguage('Labour Day', REF), '2027-05-01'))
   it('"Christmas 2027"      → 2027-12-25 (explicit year)', () => expectSingle(parseNaturalLanguage('Christmas 2027', REF), '2027-12-25'))
   it('"Halloween 2025"      → 2025-10-31 (explicit year)', () => expectSingle(parseNaturalLanguage('Halloween 2025', REF), '2025-10-31'))
+  it('"Labour Day 2026"     → 2026-05-01 (explicit year)', () => expectSingle(parseNaturalLanguage('Labour Day 2026', REF), '2026-05-01'))
 })
 
 // ─── Group 5b: Thai Holiday Anchors ────────────────────────────────────────────
 
 describe('5b. Thai holiday anchors', () => {
-  it('"Songkran"             → 2027-04-13 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Songkran', REF), '2027-04-13'))
-  it('"Thai New Year"        → 2027-04-13 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Thai New Year', REF), '2027-04-13'))
-  it('"Chakri Day"           → 2027-04-06 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Chakri Day', REF), '2027-04-06'))
-  it('"Coronation Day"       → 2027-05-04 (next occurrence after May 9)', () => expectSingle(parseNaturalLanguage('Coronation Day', REF), '2027-05-04'))
-  it('"King\'s Birthday"     → 2026-07-28 (future in 2026)', () => expectSingle(parseNaturalLanguage("King's Birthday", REF), '2026-07-28'))
-  it('"Queen Mother\'s Birthday" → 2026-08-12 (future in 2026)', () => expectSingle(parseNaturalLanguage("Queen Mother's Birthday", REF), '2026-08-12'))
-  it('"Songkran 2027"        → 2027-04-13 (explicit year)', () => expectSingle(parseNaturalLanguage('Songkran 2027', REF), '2027-04-13'))
+  it('"Songkran Festival"             → 2027-04-13 (passed in 2026)', () => expectSingle(parseNaturalLanguage('Songkran Festival', REF), '2027-04-13'))
+  it('"Chakri Memorial Day"           → 2027-04-06 (passed in 2026)', () => expectSingle(parseNaturalLanguage('Chakri Memorial Day', REF), '2027-04-06'))
+  it('"Coronation Day"                → 2027-05-04 (passed in 2026)', () => expectSingle(parseNaturalLanguage('Coronation Day', REF), '2027-05-04'))
+  it('"Queen Suthida\'s Birthday"     → 2026-06-03 (future in 2026)', () => expectSingle(parseNaturalLanguage("Queen Suthida's Birthday", REF), '2026-06-03'))
+  it('"King\'s Birthday"              → 2026-07-28 (future in 2026)', () => expectSingle(parseNaturalLanguage("King's Birthday", REF), '2026-07-28'))
+  it('"The Queen Mother\'s Birthday"  → 2026-08-12 (future in 2026)', () => expectSingle(parseNaturalLanguage("The Queen Mother's Birthday", REF), '2026-08-12'))
+  it('"King Bhumibol Adulyadej Memorial Day" → 2026-10-13 (future in 2026)', () => expectSingle(parseNaturalLanguage('King Bhumibol Adulyadej Memorial Day', REF), '2026-10-13'))
+  it('"King Chulalongkorn Day"        → 2026-10-23 (future in 2026)', () => expectSingle(parseNaturalLanguage('King Chulalongkorn Day', REF), '2026-10-23'))
+  it('"King Bhumibol Adulyadej\'s Birthday" → 2026-12-05 (future in 2026)', () => expectSingle(parseNaturalLanguage("King Bhumibol Adulyadej's Birthday", REF), '2026-12-05'))
+  it('"Constitution Day"              → 2026-12-10 (future in 2026)', () => expectSingle(parseNaturalLanguage('Constitution Day', REF), '2026-12-10'))
+  it('"Chakri Memorial Day 2027"      → 2027-04-06 (explicit year)', () => expectSingle(parseNaturalLanguage('Chakri Memorial Day 2027', REF), '2027-04-06'))
 })
 
 // ─── Group 6: Complex/Nested Phrases ──────────────────────────────────────────

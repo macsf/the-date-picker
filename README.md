@@ -94,6 +94,19 @@ This repo includes two automations:
 
 ---
 
+## Date handling & timezone safety
+
+This library stores and transmits **date-only values** (no time component), formatted as `YYYY-MM-DD`.
+All dates are normalized to local midnight in the user's timezone before being passed to `onChange`.
+
+**Why this matters:** If your backend runs in a different timezone (e.g., GMT) than your users (e.g., Bangkok), dates won't drift.
+A Bangkok user selecting "May 10" will always be stored as `2026-05-10`, never as `2026-05-09`.
+
+Internally, the library uses `toLocalDate()` to strip time components and prevent UTC conversion issues.
+If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10"`), not as timestamps.
+
+---
+
 ## Props reference
 
 | Prop | Type | Default | Description |
