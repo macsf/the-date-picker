@@ -10,10 +10,58 @@ Thai public holidays · natural language input · range selection · theming · 
 ## Installation
 
 ```bash
-pnpm add the-date-picker date-fns
+pnpm add github:macsf/the-date-picker date-fns
 ```
 
-Import the CSS once in your app entry:
+This package is installed directly from GitHub, not from the npm registry.
+The repo builds from source during install via `prepare`, so developers only need to add the dependency and import the package.
+
+## Usage
+
+1. Import the component and the stylesheet once in your app entry.
+2. Keep the selected value in state and pass it back through `onChange`.
+3. Set `selectionMode` and `mode` for the behavior you want.
+
+```tsx
+import { useState } from 'react'
+
+import { DatePicker } from 'the-date-picker'
+import 'the-date-picker/datepicker.css'
+
+function App() {
+  const [value, setValue] = useState<Date | null>(null)
+
+  return (
+    <DatePicker
+      selectionMode="single"
+      mode="inline"
+      value={value}
+      onChange={(nextValue) => setValue(nextValue as Date | null)}
+    />
+  )
+}
+```
+
+For a floating calendar, switch to popover mode:
+
+```tsx
+<DatePicker
+  mode="popover"
+  selectionMode="range"
+  value={value}
+  onChange={setValue}
+/>
+```
+
+Common options:
+
+- `selectionMode="single"` for one date, `selectionMode="range"` for a start/end range.
+- `locale="th"` to show Thai month names and holiday tooltips.
+- `showHolidays` and `holidayTypes` to control holiday dots.
+- `customHolidays` to add your own holiday markers.
+- `theme` to override colors, radius, font, and day size.
+
+Import the CSS once in your app entry if your bundler does not pick it up automatically:
 
 ```ts
 import 'the-date-picker/datepicker.css'
@@ -23,16 +71,16 @@ import 'the-date-picker/datepicker.css'
 
 ## Build steps
 
-The library requires a pre-build step to generate Thai holiday data:
+The library keeps Thai holiday data generated from source as part of the build:
 
 ```bash
 # generates src/data/th-holidays.json using the date-holidays package
 node scripts/gen-holidays.js
 ```
 
-This runs automatically via the `prebuild` npm hook when you run `pnpm build`.
+This runs automatically via the `prebuild` npm hook when you run `pnpm build`, and via `prepare` when the package is installed from GitHub.
 
-To update holiday data (e.g. for a new year range), re-run the script and rebuild.
+Use `pnpm gen:holidays` if you need to refresh holiday data manually, then rebuild or reinstall.
 
 ## GitHub automation
 
@@ -43,27 +91,6 @@ This repo includes two automations:
 - Holiday updates: a scheduled workflow regenerates `src/data/th-holidays.json` and opens a PR when changes are detected.
   - Workflow: `.github/workflows/update-holidays.yml`
   - Schedule: monthly (`0 3 1 * *`) plus manual trigger (`workflow_dispatch`)
-
----
-
-## Quick start
-
-```tsx
-import { DatePicker } from 'the-date-picker'
-import 'the-date-picker/datepicker.css'
-
-function App() {
-  const [value, setValue] = useState<Date | null>(null)
-
-  return (
-    <DatePicker
-      selectionMode="single"
-      value={value}
-      onChange={(v) => setValue(v as Date)}
-    />
-  )
-}
-```
 
 ---
 
