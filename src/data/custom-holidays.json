@@ -1,57 +1,21 @@
 {
-  "2020": [
-    {
-      "date": "2020-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
-  "2021": [
-    {
-      "date": "2021-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
-  "2022": [
-    {
-      "date": "2022-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
-  "2023": [
-    {
-      "date": "2023-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
-  "2024": [
-    {
-      "date": "2024-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
-  "2025": [
-    {
-      "date": "2025-05-01",
-      "name": "Labour Day",
-      "nameTH": "วันแรงงาน",
-      "type": "public"
-    }
-  ],
   "2026": [
     {
       "date": "2026-05-01",
       "name": "Labour Day",
       "nameTH": "วันแรงงาน",
+      "type": "public"
+    },
+    {
+      "date": "2026-06-01",
+      "name": "Substitution for Visakha Bucha Day",
+      "nameTH": "ชดเชยวันวิสาขบูชา",
+      "type": "public"
+    },
+    {
+      "date": "2026-12-07",
+      "name": "Substitution for Father's Day",
+      "nameTH": "วันหยุดชดเชย วันพ่อแห่งชาติ",
       "type": "public"
     }
   ],

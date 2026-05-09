@@ -67,14 +67,23 @@ Import the CSS once in your app entry if your bundler does not pick it up automa
 import 'the-date-picker/datepicker.css'
 ```
 
+Holiday data is also available as a public package export:
+
+```ts
+import holidaysByYear from 'the-date-picker/holidays.json'
+import { getHolidaysForYear, getHolidayMapForYear } from 'the-date-picker'
+```
+
 ---
 
 ## Build steps
 
-The library keeps Thai holiday data generated from source as part of the build:
+The library keeps Thailand holiday data generated from source as part of the build:
 
 ```bash
-# generates src/data/th-holidays.json using the date-holidays package
+# generates:
+# - src/data/th-holidays.json from date-holidays
+# - src/data/holidays.json as built-in + package custom overrides
 node scripts/gen-holidays.js
 ```
 
@@ -132,6 +141,26 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `mode` | `"inline" \| "popover"` | `"inline"` | Inline calendar or floating popover |
 | `triggerFormat` | `string` | `"dd MMM yyyy"` | date-fns format string for popover trigger label |
 | `className` | `string` | — | Extra class name on the root element |
+
+---
+
+## Public holiday data
+
+For consumers that need holiday data outside the picker UI, the package exports:
+
+- `getHolidaysForYear(year, locale, types)` → filtered holiday array
+- `getHolidayMapForYear(year, locale, types)` → `Map<YYYY-MM-DD, holidays[]>`
+- `the-date-picker/holidays.json` → the combined built holiday dataset
+
+Example:
+
+```ts
+import { getHolidaysForYear } from 'the-date-picker'
+
+const holidays = getHolidaysForYear(2026, 'en', ['public'])
+```
+
+The exported JSON is the combined dataset after package-level custom holiday overrides are merged over generated Thailand holiday data.
 
 ---
 
