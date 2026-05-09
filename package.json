@@ -1,0 +1,54 @@
+{
+  "name": "the-date-picker",
+  "version": "0.1.0",
+  "description": "Standalone React date picker library with Thai holiday support",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./datepicker.css": "./dist/datepicker.css"
+  },
+  "files": ["dist"],
+  "sideEffects": ["./dist/datepicker.css"],
+  "scripts": {
+    "prebuild": "node scripts/gen-holidays.js",
+    "build": "vite build && tsc --project tsconfig.build.json",
+    "build:demo": "vite build --config vite.demo.config.ts",
+    "dev": "vite --config vite.demo.config.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src demo --ext .ts,.tsx",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "chrono-node": "^2.7.7",
+    "date-fns": "^3.6.0",
+    "date-holidays": "^3.23.12"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.6.0"
+  }
+}

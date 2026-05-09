@@ -1,0 +1,6 @@
+node_modules/
+dist/
+dist-demo/
+src/data/th-holidays.json
+*.local
+.DS_Store

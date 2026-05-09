@@ -1,0 +1,398 @@
+/* =============================================
+   DatePicker CSS
+   All properties scoped to [data-datepicker-root]
+   ============================================= */
+
+/* Default tokens (light theme) */
+[data-datepicker-root] {
+  --dp-font-family: system-ui, -apple-system, sans-serif;
+  --dp-font-size: 14px;
+  --dp-primary: #2563eb;
+  --dp-primary-text: #ffffff;
+  --dp-range: #dbeafe;
+  --dp-text: #111827;
+  --dp-muted: #9ca3af;
+  --dp-bg: #ffffff;
+  --dp-surface: #f3f4f6;
+  --dp-border: #e5e7eb;
+  --dp-radius: 12px;
+  --dp-day-size: 36px;
+  --dp-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Root panel */
+[data-datepicker-root] .dp-calendar-panel {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--dp-bg);
+  border: 1px solid var(--dp-border);
+  border-radius: var(--dp-radius);
+  box-shadow: var(--dp-shadow);
+  padding: 16px;
+  font-family: var(--dp-font-family);
+  font-size: var(--dp-font-size);
+  color: var(--dp-text);
+  box-sizing: border-box;
+}
+
+/* Month layout */
+[data-datepicker-root] .dp-months {
+  display: flex;
+  gap: 24px;
+}
+
+/* =============================================
+   Month navigation
+   ============================================= */
+
+[data-datepicker-root] .dp-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+[data-datepicker-root] .dp-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--dp-text);
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+[data-datepicker-root] .dp-nav-btn:hover:not(:disabled) {
+  background: var(--dp-surface);
+}
+
+[data-datepicker-root] .dp-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+[data-datepicker-root] .dp-month-year-labels {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+[data-datepicker-root] .dp-month-select,
+[data-datepicker-root] .dp-year-select {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--dp-font-size);
+  font-weight: 600;
+  color: var(--dp-text);
+  font-family: var(--dp-font-family);
+  padding: 2px 4px;
+  border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+[data-datepicker-root] .dp-month-select:hover,
+[data-datepicker-root] .dp-year-select:hover {
+  background: var(--dp-surface);
+}
+
+/* =============================================
+   Calendar grid
+   ============================================= */
+
+[data-datepicker-root] .dp-grid-container {
+  display: flex;
+  gap: 0;
+}
+
+[data-datepicker-root] .dp-grid {
+  flex: 1;
+}
+
+[data-datepicker-root] .dp-weekday-row {
+  display: grid;
+  grid-template-columns: repeat(7, var(--dp-day-size));
+  margin-bottom: 2px;
+}
+
+[data-datepicker-root] .dp-weekday-label {
+  width: var(--dp-day-size);
+  height: calc(var(--dp-day-size) * 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--dp-font-size) - 1px);
+  color: var(--dp-muted);
+  font-weight: 500;
+}
+
+[data-datepicker-root] .dp-week-row {
+  display: grid;
+  grid-template-columns: repeat(7, var(--dp-day-size));
+}
+
+/* =============================================
+   Week numbers
+   ============================================= */
+
+[data-datepicker-root] .dp-week-numbers {
+  display: flex;
+  flex-direction: column;
+  margin-right: 4px;
+  padding-top: calc(var(--dp-day-size) * 0.8 + 2px);
+}
+
+[data-datepicker-root] .dp-week-number-header,
+[data-datepicker-root] .dp-week-number {
+  width: 24px;
+  height: var(--dp-day-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--dp-font-size) - 2px);
+  color: var(--dp-muted);
+}
+
+/* =============================================
+   Day cells
+   ============================================= */
+
+[data-datepicker-root] .dp-day-wrapper {
+  position: relative;
+  width: var(--dp-day-size);
+  height: var(--dp-day-size);
+}
+
+/* Range fill background */
+[data-datepicker-root] .dp-range-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--dp-range);
+  z-index: 0;
+}
+
+/* Cap on range start: left half is not filled */
+[data-datepicker-root] .dp-range-fill--start {
+  left: 50%;
+}
+
+/* Cap on range end: right half is not filled */
+[data-datepicker-root] .dp-range-fill--end {
+  right: 50%;
+}
+
+/* Row start: left half rounded */
+[data-datepicker-root] .dp-range-fill--row-start {
+  border-radius: 50% 0 0 50%;
+}
+
+/* Row end: right half rounded */
+[data-datepicker-root] .dp-range-fill--row-end {
+  border-radius: 0 50% 50% 0;
+}
+
+[data-datepicker-root] .dp-day {
+  position: relative;
+  z-index: 1;
+  width: var(--dp-day-size);
+  height: var(--dp-day-size);
+  border-radius: 50%;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--dp-font-size);
+  color: var(--dp-text);
+  font-family: var(--dp-font-family);
+  gap: 2px;
+  transition: background 0.1s;
+}
+
+[data-datepicker-root] .dp-day:hover:not(:disabled) {
+  background: var(--dp-surface);
+}
+
+[data-datepicker-root] .dp-day--other-month {
+  color: var(--dp-muted);
+}
+
+[data-datepicker-root] .dp-day--disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+[data-datepicker-root] .dp-day--today .dp-day-number {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+[data-datepicker-root] .dp-day--selected {
+  background: var(--dp-primary) !important;
+  color: var(--dp-primary-text) !important;
+}
+
+[data-datepicker-root] .dp-day--range-start,
+[data-datepicker-root] .dp-day--range-end {
+  background: var(--dp-primary) !important;
+  color: var(--dp-primary-text) !important;
+}
+
+[data-datepicker-root] .dp-day-number {
+  line-height: 1;
+}
+
+/* =============================================
+   Holiday dots
+   ============================================= */
+
+[data-datepicker-root] .dp-holiday-dots {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+[data-datepicker-root] .dp-holiday-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+[data-datepicker-root] .dp-holiday-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: #f9fafb;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* =============================================
+   Natural language input
+   ============================================= */
+
+[data-datepicker-root] .dp-nl-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+[data-datepicker-root] .dp-nl-field {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--dp-border);
+  border-radius: 8px;
+  font-size: var(--dp-font-size);
+  font-family: var(--dp-font-family);
+  color: var(--dp-text);
+  background: var(--dp-bg);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+[data-datepicker-root] .dp-nl-field:focus {
+  border-color: var(--dp-primary);
+}
+
+[data-datepicker-root] .dp-nl-preview {
+  font-size: calc(var(--dp-font-size) - 1px);
+  color: var(--dp-primary);
+  padding: 0 2px;
+}
+
+/* =============================================
+   Preset chips
+   ============================================= */
+
+[data-datepicker-root] .dp-preset-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+[data-datepicker-root] .dp-preset-chips::-webkit-scrollbar {
+  display: none;
+}
+
+[data-datepicker-root] .dp-chip {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--dp-border);
+  background: var(--dp-bg);
+  color: var(--dp-text);
+  font-size: calc(var(--dp-font-size) - 1px);
+  font-family: var(--dp-font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+
+[data-datepicker-root] .dp-chip:hover {
+  background: var(--dp-surface);
+}
+
+[data-datepicker-root] .dp-chip--active {
+  background: var(--dp-primary);
+  color: var(--dp-primary-text);
+  border-color: var(--dp-primary);
+}
+
+/* =============================================
+   Popover trigger
+   ============================================= */
+
+.dp-trigger {
+  padding: 8px 14px;
+  border: 1px solid var(--dp-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--dp-bg, #ffffff);
+  font-size: var(--dp-font-size, 14px);
+  font-family: var(--dp-font-family, system-ui, sans-serif);
+  color: var(--dp-text, #111827);
+  cursor: pointer;
+}
+
+/* Popover portal wrapper */
+.dp-popover {
+  /* position is set inline via style prop */
+}
+
+/* =============================================
+   Accessibility utility
+   ============================================= */
+
+[data-datepicker-root] .dp-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
