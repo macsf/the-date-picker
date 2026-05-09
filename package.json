@@ -1,6 +1,6 @@
 {
   "name": "the-date-picker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Standalone React date picker library with Thai holiday support",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -24,8 +24,7 @@
   "scripts": {
     "gen:holidays": "node scripts/gen-holidays.js",
     "prebuild": "node scripts/update-readme-version.js && pnpm gen:holidays",
-    "prepare": "pnpm build",
-    "build": "vite build && tsc --project tsconfig.build.json && node scripts/copy-holidays.js",
+    "build": "vite build && tsc --project tsconfig.build.json && node scripts/copy-holidays.js && pnpm build:demo",
     "build:demo": "vite build --config vite.demo.config.ts",
     "dev": "vite --config vite.demo.config.ts",
     "typecheck": "tsc --noEmit",
