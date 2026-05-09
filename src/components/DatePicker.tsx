@@ -118,6 +118,9 @@ export function DatePicker({
       } else if (selectionMode === 'range' && result.range) {
         onChange?.(result.range)
         setLeftMonth(new Date(result.range[0].getFullYear(), result.range[0].getMonth(), 1))
+      } else if (selectionMode === 'range' && result.single) {
+        onChange?.([result.single, result.single])
+        setLeftMonth(new Date(result.single.getFullYear(), result.single.getMonth(), 1))
       } else if (result.single) {
         onChange?.(result.single)
         setLeftMonth(new Date(result.single.getFullYear(), result.single.getMonth(), 1))

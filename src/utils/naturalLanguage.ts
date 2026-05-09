@@ -232,7 +232,7 @@ export function parseNaturalLanguage(text: string, ref: Date = new Date()): Pars
     if (monthIdx !== null && weekday !== undefined) {
       const n = ordinal === 'last' ? -1 : (ORDINAL_MAP[ordinal] ?? 1)
       // Use current year; if the month has passed, try next year
-      let year = ref.getFullYear()
+      const year = ref.getFullYear()
       let date = nthWeekdayOfMonth(year, monthIdx, weekday, n)
       if (!date || date < ref) date = nthWeekdayOfMonth(year + 1, monthIdx, weekday, n)
       if (date) return { single: date, text }

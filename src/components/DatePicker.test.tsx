@@ -1,8 +1,22 @@
+import { useState } from 'react'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import { DatePicker } from './DatePicker'
+
+function ControlledRangeNaturalLanguagePicker() {
+  const [value, setValue] = useState<Date | [Date, Date] | null>(null)
+
+  return (
+    <DatePicker
+      selectionMode="range"
+      value={value}
+      onChange={setValue}
+      showNaturalLanguageInput
+    />
+  )
+}
 
 describe('DatePicker popover mode', () => {
   it('closes after selecting a single date', async () => {
@@ -52,6 +66,32 @@ describe('DatePicker popover mode', () => {
 
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    })
+  })
+})
+
+describe('DatePicker natural language input', () => {
+  it('selects a one-day range when a single-date phrase is entered in range mode', async () => {
+    const user = userEvent.setup()
+    render(<ControlledRangeNaturalLanguagePicker />)
+
+    await user.type(
+      screen.getByRole('textbox', { name: 'Natural language date input (English only)' }),
+      'today{enter}',
+    )
+
+    const todayLabel = new Date().toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: todayLabel })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      )
     })
   })
 })
