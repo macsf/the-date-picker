@@ -42,6 +42,3 @@ jobs:
 
       - name: Build library
         run: pnpm build
-
-      - name: Build demo
-        run: pnpm build:demo

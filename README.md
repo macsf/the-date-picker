@@ -102,6 +102,15 @@ This repo includes two automations:
   - Workflow: `.github/workflows/update-holidays.yml`
   - Schedule: monthly (`0 3 1 * *`) plus manual trigger (`workflow_dispatch`)
 
+### Commit flags
+
+Include these in a commit message to control what runs on push to `main`:
+
+| Flag | Effect |
+|---|---|
+| `[skip ci]` | Skips the entire release workflow (no validate, no build, no deploy) |
+| `#no-release` | Runs validate + build + deploy, but skips version bump and GitHub Release |
+
 ---
 
 ## Date handling & timezone safety

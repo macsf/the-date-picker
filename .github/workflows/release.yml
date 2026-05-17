@@ -18,6 +18,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: version-bump
@@ -27,6 +29,9 @@ jobs:
   bump:
     if: ${{ !contains(github.event.head_commit.message, 'skip-ci') || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -62,25 +67,36 @@ jobs:
             fi
           fi
 
-      - name: Bump version, build dist, and tag
+      - name: Build, bump, and tag
         run: |
-          TYPE=${{ steps.bump.outputs.type }}
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          SHOULD_RELEASE=true
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]] && \
+             echo "${{ github.event.head_commit.message }}" | grep -q "#no-release"; then
+            SHOULD_RELEASE=false
+          fi
 
-          npm version "$TYPE" --no-git-tag-version
-          NEW_VER=$(node -p "require('./package.json').version")
+          if [ "$SHOULD_RELEASE" = true ]; then
+            TYPE=${{ steps.bump.outputs.type }}
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          sed -i "s/version-[0-9.]*-blue/version-${NEW_VER}-blue/" README.md
+            npm version "$TYPE" --no-git-tag-version
+            NEW_VER=$(node -p "require('./package.json').version")
+
+            sed -i "s/version-[0-9.]*-blue/version-${NEW_VER}-blue/" README.md
+          fi
 
           pnpm build
 
-          git add package.json README.md src/data/th-holidays.json dist/
-          git commit -m "chore: release v${NEW_VER} [skip ci]"
-          git tag "v${NEW_VER}"
-          git push origin main --tags
+          if [ "$SHOULD_RELEASE" = true ]; then
+            git add package.json README.md src/data/th-holidays.json dist/
+            git commit -m "chore: release v${NEW_VER} [skip ci]"
+            git tag "v${NEW_VER}"
+            git push origin main --tags
+          fi
 
       - name: Create GitHub Release
+        if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '#no-release') }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -88,3 +104,15 @@ jobs:
           gh release create "v${NEW_VER}" \
             --title "v${NEW_VER}" \
             --notes "$(git log --format='- %s' $(git describe --tags --abbrev=0 @^ 2>/dev/null || echo 'HEAD~1')..@)"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-demo
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
