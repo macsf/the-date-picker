@@ -73,6 +73,6 @@ jobs:
           pnpm build
 
           git add package.json README.md src/data/th-holidays.json dist/
-          git commit -m "chore: bump version to v${NEW_VER} [skip ci]"
+          git commit -m "chore: release v${NEW_VER} [skip ci]"
           git tag "v${NEW_VER}"
           git push origin main --tags
