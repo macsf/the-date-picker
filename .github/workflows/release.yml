@@ -1,4 +1,4 @@
-name: Bump Version
+name: Release
 
 on:
   push:
@@ -59,7 +59,7 @@ jobs:
             fi
           fi
 
-      - name: Bump version and update README
+      - name: Bump version, build dist, and tag
         run: |
           TYPE=${{ steps.bump.outputs.type }}
           git config user.name "github-actions[bot]"
@@ -70,7 +70,9 @@ jobs:
 
           sed -i "s/version-[0-9.]*-blue/version-${NEW_VER}-blue/" README.md
 
-          git add package.json README.md
-          git commit -m "chore: bump version to v${NEW_VER}"
+          pnpm build
+
+          git add package.json README.md src/data/th-holidays.json dist/
+          git commit -m "chore: bump version to v${NEW_VER} [skip ci]"
           git tag "v${NEW_VER}"
           git push origin main --tags
