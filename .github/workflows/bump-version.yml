@@ -1,0 +1,76 @@
+name: Bump Version
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      type:
+        description: Bump type
+        required: false
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+
+concurrency:
+  group: version-bump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    if: ${{ !contains(github.event.head_commit.message, 'skip-ci') || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Determine bump type
+        id: bump
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "type=${{ inputs.type }}" >> "$GITHUB_OUTPUT"
+          else
+            MSG="${{ github.event.head_commit.message }}"
+            if echo "$MSG" | grep -q "#major"; then
+              echo "type=major" >> "$GITHUB_OUTPUT"
+            elif echo "$MSG" | grep -q "#minor"; then
+              echo "type=minor" >> "$GITHUB_OUTPUT"
+            else
+              echo "type=patch" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Bump version and update README
+        run: |
+          TYPE=${{ steps.bump.outputs.type }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          npm version "$TYPE" --no-git-tag-version
+          NEW_VER=$(node -p "require('./package.json').version")
+
+          sed -i "s/version-[0-9.]*-blue/version-${NEW_VER}-blue/" README.md
+
+          git add package.json README.md
+          git commit -m "chore: bump version to v${NEW_VER}"
+          git tag "v${NEW_VER}"
+          git push origin main --tags

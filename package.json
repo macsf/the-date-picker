@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "gen:holidays": "node scripts/gen-holidays.js",
-    "prebuild": "node scripts/update-readme-version.js && pnpm gen:holidays",
+    "prebuild": "pnpm gen:holidays",
     "build": "vite build && tsc --project tsconfig.build.json && node scripts/copy-holidays.js && pnpm build:demo",
     "build:demo": "vite build --config vite.demo.config.ts",
     "dev": "vite --config vite.demo.config.ts",
