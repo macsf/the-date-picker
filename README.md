@@ -1,7 +1,7 @@
 # the-date-picker
 
 [![CI](https://github.com/macsf/the-date-picker/actions/workflows/ci.yml/badge.svg)](https://github.com/macsf/the-date-picker/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.2.0-blue)](./package.json)
+[![Version](https://img.shields.io/badge/version-0.2.1-blue)](./package.json)
 
 A standalone React date picker library written in TypeScript (strict mode).
 Thai public holidays · natural language input · range selection · theming · Buddhist Era support.
