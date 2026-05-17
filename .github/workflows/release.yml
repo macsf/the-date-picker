@@ -43,6 +43,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Validate
+        run: pnpm typecheck && pnpm lint && pnpm test
+
       - name: Determine bump type
         id: bump
         run: |
