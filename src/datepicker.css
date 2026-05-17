@@ -258,6 +258,7 @@
 }
 
 [data-datepicker-root] .dp-day--today .dp-day-number {
+  font-weight: bold;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
