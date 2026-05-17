@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import pkg from '../package.json'
 import { DatePicker, lightTheme, darkTheme } from 'the-date-picker'
 import type { DatePickerTheme, CustomHolidayConfig } from 'the-date-picker'
 
@@ -865,7 +866,7 @@ export default function App() {
   return (
     <div className="demo-layout">
       <aside className="demo-sidebar">
-        <div className="demo-sidebar-title">DatePicker</div>
+        <div className="demo-sidebar-title">DatePicker <span className="demo-version">v{pkg.version}</span></div>
         <nav>
           <ul className="demo-nav">
             {SECTIONS.map((s) => (

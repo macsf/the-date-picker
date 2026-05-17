@@ -21,7 +21,7 @@ body {
 
 /* Sidebar */
 .demo-sidebar {
-  width: 220px;
+  width: 300px;
   flex-shrink: 0;
   background: #ffffff;
   border-right: 1px solid #e5e7eb;
@@ -39,6 +39,15 @@ body {
   text-transform: uppercase;
   color: #6b7280;
   padding: 0 20px 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.demo-version {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #9ca3af;
 }
 
 .demo-nav {
