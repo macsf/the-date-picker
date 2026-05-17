@@ -76,3 +76,12 @@ jobs:
           git commit -m "chore: release v${NEW_VER} [skip ci]"
           git tag "v${NEW_VER}"
           git push origin main --tags
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NEW_VER=$(node -p "require('./package.json').version")
+          gh release create "v${NEW_VER}" \
+            --title "v${NEW_VER}" \
+            --notes "$(git log --format='- %s' $(git describe --tags --abbrev=0 @^ 2>/dev/null || echo 'HEAD~1')..@)"
