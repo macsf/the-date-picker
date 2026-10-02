@@ -39,7 +39,7 @@
   "dependencies": {
     "chrono-node": "^2.7.7",
     "date-fns": "^3.6.0",
-    "date-holidays": "^3.23.12"
+    "date-holidays": "^3.32.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
