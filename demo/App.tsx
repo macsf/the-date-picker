@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import pkg from '../package.json'
 import { DatePicker, lightTheme, darkTheme } from 'the-date-picker'
-import type { DatePickerTheme, CustomHolidayConfig } from 'the-date-picker'
+import type { DatePickerTheme, CustomHolidayConfig, RelativeBound } from 'the-date-picker'
 
 // ---- Utility: format value for display ----
 function fmtValue(v: Date | [Date, Date] | null): string {
@@ -113,7 +113,7 @@ const SECTIONS = [
   { id: 'theming', label: '7. Theming' },
   { id: 'popover', label: '8. Popover mode' },
   { id: 'popover-range-double', label: '9. Popover range double month' },
-  { id: 'disabled', label: '10. Disabled dates' },
+  { id: 'disabled', label: '10. Date limits' },
   { id: 'buddhist', label: '11. Buddhist calendar' },
   { id: 'playground', label: '12. Customize demo' },
 ]
@@ -507,37 +507,130 @@ function PopoverRangeDoubleSection() {
 }
 
 function DisabledSection() {
-  const [value, setValue] = useState<Date | null>(null)
-  const today = new Date()
-  const minDate = new Date(today.getFullYear(), today.getMonth(), 5)
-  const maxDate = new Date(today.getFullYear(), today.getMonth(), 25)
-  const disabledDates = [
-    new Date(today.getFullYear(), today.getMonth(), 10),
-    new Date(today.getFullYear(), today.getMonth(), 15),
-  ]
+  const [wideRange, setWideRange] = useState<Date | null>(null)
+  const [boundedRange, setBoundedRange] = useState<Date | null>(null)
+  const [untilToday, setUntilToday] = useState<Date | null>(null)
+  const [untilYesterday, setUntilYesterday] = useState<Date | null>(null)
+  const [last30Days, setLast30Days] = useState<Date | null>(null)
 
   return (
     <div>
-      <h1 className="demo-section-title">Disabled dates + min/max</h1>
+      <h1 className="demo-section-title">Date limits</h1>
       <p className="demo-section-desc">
-        min=5th, max=25th of this month. 10th and 15th explicitly disabled.
+        from sets the earliest day. until sets the latest day. Each one is today, or a number of days, weeks, months, or years ago or from now. minDate and maxDate still set absolute days.
       </p>
-      <div className="demo-row">
-        <div className="demo-preview">
-          <DatePicker
-            selectionMode="single"
-            value={value}
-            onChange={(v) => setValue(v as Date | null)}
-            minDate={minDate}
-            maxDate={maxDate}
-            disabledDates={disabledDates}
-          />
+      <div>
+        <div style={{ marginBottom: 40 }}>
+          <h2 className="demo-section-title">From 50 Years Ago</h2>
+          <p className="demo-section-desc">
+            The earliest day is 50 years ago.
+          </p>
+          <div className="demo-row">
+            <div className="demo-preview">
+              <DatePicker
+                selectionMode="single"
+                value={wideRange}
+                onChange={(v) => setWideRange(v as Date | null)}
+                from={{ yearsAgo: 50 }}
+              />
+            </div>
+            <div className="demo-info">
+              <ValueDisplay value={wideRange} />
+              <CodeBlock
+                code={`<DatePicker\n  from={{ yearsAgo: 50 }}\n/>`}
+              />
+            </div>
+          </div>
         </div>
-        <div className="demo-info">
-          <ValueDisplay value={value} />
-          <CodeBlock
-            code={`<DatePicker\n  minDate={new Date(2026, 4, 5)}\n  maxDate={new Date(2026, 4, 25)}\n  disabledDates={[new Date(2026, 4, 10)]}\n/>`}
-          />
+        <div style={{ marginBottom: 40 }}>
+          <h2 className="demo-section-title">At Least 18 Years Old and No More Than 60 Years Old</h2>
+          <p className="demo-section-desc">
+            The earliest day is no more than 60 years ago. The latest day is at least 18 years old.
+          </p>
+          <div className="demo-row">
+            <div className="demo-preview">
+              <DatePicker
+                selectionMode="single"
+                value={boundedRange}
+                onChange={(v) => setBoundedRange(v as Date | null)}
+                from={{ yearsAgo: 60 }}
+                until={{ yearsAgo: 18 }}
+              />
+            </div>
+            <div className="demo-info">
+              <ValueDisplay value={boundedRange} />
+              <CodeBlock
+                code={`<DatePicker\n  from={{ yearsAgo: 60 }}\n  until={{ yearsAgo: 18 }}\n/>`}
+              />
+            </div>
+          </div>
+        </div>
+        <div style={{ marginBottom: 40 }}>
+          <h2 className="demo-section-title">No Later Than Today</h2>
+          <p className="demo-section-desc">
+            until today stops on today. Tomorrow and every later month or year are unavailable.
+          </p>
+          <div className="demo-row">
+            <div className="demo-preview">
+              <DatePicker
+                selectionMode="single"
+                value={untilToday}
+                onChange={(v) => setUntilToday(v as Date | null)}
+                until="today"
+              />
+            </div>
+            <div className="demo-info">
+              <ValueDisplay value={untilToday} />
+              <CodeBlock
+                code={`<DatePicker\n  until="today"\n/>`}
+              />
+            </div>
+          </div>
+        </div>
+        <div style={{ marginBottom: 40 }}>
+          <h2 className="demo-section-title">No Later Than Yesterday</h2>
+          <p className="demo-section-desc">
+            until yesterday stops on yesterday. Today and every later day are unavailable.
+          </p>
+          <div className="demo-row">
+            <div className="demo-preview">
+              <DatePicker
+                selectionMode="single"
+                value={untilYesterday}
+                onChange={(v) => setUntilYesterday(v as Date | null)}
+                until="yesterday"
+              />
+            </div>
+            <div className="demo-info">
+              <ValueDisplay value={untilYesterday} />
+              <CodeBlock
+                code={`<DatePicker\n  until="yesterday"\n/>`}
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 className="demo-section-title">Last 30 Days</h2>
+          <p className="demo-section-desc">
+            The earliest day is 30 days ago. The latest day is today. Weeks and months use the same shape.
+          </p>
+          <div className="demo-row">
+            <div className="demo-preview">
+              <DatePicker
+                selectionMode="single"
+                value={last30Days}
+                onChange={(v) => setLast30Days(v as Date | null)}
+                from={{ daysAgo: 30 }}
+                until="today"
+              />
+            </div>
+            <div className="demo-info">
+              <ValueDisplay value={last30Days} />
+              <CodeBlock
+                code={`<DatePicker\n  from={{ daysAgo: 30 }}\n  until="today"\n/>`}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -574,6 +667,13 @@ function BuddhistSection() {
   )
 }
 
+function relativeBoundCode(name: 'from' | 'until', bound: RelativeBound | undefined): string {
+  if (!bound) return ''
+  if (bound === 'today' || bound === 'yesterday') return `${name}="${bound}"`
+  const [unit, count] = Object.entries(bound)[0]
+  return `${name}={{ ${unit}: ${count} }}`
+}
+
 function CustomizeSection() {
   const [value, setValue] = useState<Date | [Date, Date] | null>(null)
   const [selectionMode, setSelectionMode] = useState<'single' | 'range'>('single')
@@ -587,6 +687,7 @@ function CustomizeSection() {
   const [showTodayButton, setShowTodayButton] = useState(false)
   const [showHolidays, setShowHolidays] = useState(true)
   const [highlightWeekends, setHighlightWeekends] = useState(true)
+  const [dateLimit, setDateLimit] = useState<'none' | 'today' | 'yesterday' | 'until-18' | 'from-60-until-18'>('none')
   const [isDark, setIsDark] = useState(false)
   const [primary, setPrimary] = useState('#2563eb')
   const [bg, setBg] = useState('#ffffff')
@@ -617,6 +718,21 @@ function CustomizeSection() {
     setSelectionMode(next)
     setValue(null)
   }
+
+  const handleDateLimitChange = (next: 'none' | 'today' | 'yesterday' | 'until-18' | 'from-60-until-18') => {
+    setDateLimit(next)
+    setValue(null)
+  }
+
+  const fromBound: RelativeBound | undefined = dateLimit === 'from-60-until-18' ? { yearsAgo: 60 } : undefined
+  const untilBound: RelativeBound | undefined =
+    dateLimit === 'today'
+      ? 'today'
+      : dateLimit === 'yesterday'
+        ? 'yesterday'
+        : dateLimit === 'until-18' || dateLimit === 'from-60-until-18'
+        ? { yearsAgo: 18 }
+        : undefined
 
   const handleHolidayJsonChange = (next: string) => {
     setCustomHolidayJson(next)
@@ -672,6 +788,8 @@ function CustomizeSection() {
     !showHolidays ? 'showHolidays={false}' : '',
     !highlightWeekends ? 'highlightWeekends={false}' : '',
     !customHolidayError && parsedHolidays.length > 0 ? 'customHolidays={customHolidays}' : '',
+    relativeBoundCode('from', fromBound),
+    relativeBoundCode('until', untilBound),
     'theme={theme}',
     'value={value}',
     'onChange={setValue}',
@@ -727,6 +845,21 @@ function CustomizeSection() {
                   <button type="button" className={['playground-segment', locale === 'en' ? 'is-active' : ''].join(' ')} onClick={() => setLocale('en')}>EN</button>
                   <button type="button" className={['playground-segment', locale === 'th' ? 'is-active' : ''].join(' ')} onClick={() => setLocale('th')}>TH</button>
                 </div>
+              </div>
+              <div className="playground-field">
+                <label>Date limit</label>
+                <select
+                  className="demo-control-select"
+                  value={dateLimit}
+                  onChange={(e) => handleDateLimitChange(e.target.value as 'none' | 'today' | 'yesterday' | 'until-18' | 'from-60-until-18')}
+                  aria-label="Date limit"
+                >
+                  <option value="none">None</option>
+                  <option value="today">Until Today</option>
+                  <option value="yesterday">Until Yesterday</option>
+                  <option value="until-18">At Least 18 Years Old</option>
+                  <option value="from-60-until-18">From 60 Years Ago Until 18 Years Ago</option>
+                </select>
               </div>
               <div className="playground-field">
                 <label>Week starts on</label>
@@ -820,6 +953,8 @@ function CustomizeSection() {
               showHolidays={showHolidays}
               highlightWeekends={highlightWeekends}
               customHolidays={customHolidayError ? [] : parsedHolidays}
+              from={fromBound}
+              until={untilBound}
               theme={theme}
             />
           </div>

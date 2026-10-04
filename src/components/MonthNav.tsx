@@ -1,4 +1,5 @@
 import { addMonths, getMonth, getYear } from 'date-fns'
+import { getSelectableYears, isMonthDisabled } from '../utils/dateBounds'
 
 interface MonthNavProps {
   month: Date
@@ -34,11 +35,7 @@ export function MonthNav({
   const currentYear = getYear(month)
   const months = locale === 'th' ? MONTHS_TH : MONTHS_EN
 
-  // Year range: 10 years back and 10 years forward from current
-  const years: number[] = []
-  for (let y = currentYear - 10; y <= currentYear + 10; y++) {
-    years.push(y)
-  }
+  const years = getSelectableYears(currentYear, minDate, maxDate)
 
   const prevDisabled = minDate
     ? addMonths(month, -1) < new Date(minDate.getFullYear(), minDate.getMonth(), 1)
@@ -65,7 +62,7 @@ export function MonthNav({
           aria-label="Select month"
         >
           {months.map((m, i) => (
-            <option key={i} value={i}>
+            <option key={i} value={i} disabled={isMonthDisabled(currentYear, i, minDate, maxDate)}>
               {m}
             </option>
           ))}
