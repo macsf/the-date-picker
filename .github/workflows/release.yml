@@ -5,37 +5,25 @@ on:
     branches:
       - main
   workflow_dispatch:
-    inputs:
-      type:
-        description: Bump type
-        required: false
-        default: patch
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: version-bump
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  bump:
-    if: ${{ !contains(github.event.head_commit.message, 'skip-ci') || github.event_name == 'workflow_dispatch' }}
+  deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
         with:
@@ -51,59 +39,8 @@ jobs:
       - name: Validate
         run: pnpm typecheck && pnpm lint && pnpm test
 
-      - name: Determine bump type
-        id: bump
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            echo "type=${{ inputs.type }}" >> "$GITHUB_OUTPUT"
-          else
-            MSG="${{ github.event.head_commit.message }}"
-            if echo "$MSG" | grep -q "#major"; then
-              echo "type=major" >> "$GITHUB_OUTPUT"
-            elif echo "$MSG" | grep -q "#minor"; then
-              echo "type=minor" >> "$GITHUB_OUTPUT"
-            else
-              echo "type=patch" >> "$GITHUB_OUTPUT"
-            fi
-          fi
-
-      - name: Build, bump, and tag
-        run: |
-          SHOULD_RELEASE=true
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" ]] && \
-             echo "${{ github.event.head_commit.message }}" | grep -q "#no-release"; then
-            SHOULD_RELEASE=false
-          fi
-
-          if [ "$SHOULD_RELEASE" = true ]; then
-            TYPE=${{ steps.bump.outputs.type }}
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-
-            npm version "$TYPE" --no-git-tag-version
-            NEW_VER=$(node -p "require('./package.json').version")
-
-            sed -i "s/version-[0-9.]*-blue/version-${NEW_VER}-blue/" README.md
-          fi
-
-          pnpm build
-
-          if [ "$SHOULD_RELEASE" = true ]; then
-            git add package.json README.md src/data/th-holidays.json dist/
-            git commit -m "chore: release v${NEW_VER} [skip ci]"
-            git tag "v${NEW_VER}"
-            git push origin main --tags
-          fi
-
-      - name: Create GitHub Release
-        if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '#no-release') }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          NEW_VER=$(node -p "require('./package.json').version")
-          gh release create "v${NEW_VER}" \
-            --title "v${NEW_VER}" \
-            --notes "$(git log --format='- %s' $(git describe --tags --abbrev=0 @^ 2>/dev/null || echo 'HEAD~1')..@)"
+      - name: Build
+        run: pnpm build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

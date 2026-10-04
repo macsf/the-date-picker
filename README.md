@@ -57,20 +57,24 @@ For a floating calendar, switch to popover mode:
 Common options:
 
 - `selectionMode="single"` for one date, `selectionMode="range"` for a start/end range.
-- `locale="th"` to show Thai month names and holiday tooltips.
+- `locale="th"` to show Thai month names, Buddhist Era years, and holiday tooltips.
 - `showHolidays` and `holidayTypes` to control holiday dots.
 - `customHolidays` to add your own holiday markers.
 - `theme` to override colors, radius, font, and day size.
-- `minDate` and `maxDate` to limit which days, months, and years can be chosen.
-- `from` and `until` to count that window from today.
+### Fixed days
 
-From 60 years ago until 18 years ago:
+`minDate` is the earliest selectable day. `maxDate` is the latest. These stay on the calendar dates you pass.
 
 ```tsx
-<DatePicker from={{ yearsAgo: 60 }} until={{ yearsAgo: 18 }} />
+<DatePicker
+  minDate={new Date(2026, 0, 1)}
+  maxDate={new Date(2026, 11, 31)}
+/>
 ```
 
-`from` sets the earliest day. `until` sets the latest day. Each value is `"today"`, `"yesterday"`, or one count: `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`.
+### Days counted from today
+
+`from` is the earliest day. `until` is the latest. The window moves as today changes. Each value is `"today"`, `"yesterday"`, or one count: `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`.
 
 Nothing later than today:
 
@@ -84,10 +88,34 @@ Nothing later than yesterday:
 <DatePicker until="yesterday" />
 ```
 
-The last 30 days. Weeks and months use the same shape, for example `{ weeksAgo: 2 }` or `{ monthsFromNow: 1 }`.
+The last 30 days:
 
 ```tsx
 <DatePicker from={{ daysAgo: 30 }} until="today" />
+```
+
+Two weeks on either side of today:
+
+```tsx
+<DatePicker from={{ weeksAgo: 2 }} until={{ weeksFromNow: 2 }} />
+```
+
+Six months on either side of today:
+
+```tsx
+<DatePicker from={{ monthsAgo: 6 }} until={{ monthsFromNow: 6 }} />
+```
+
+From 60 years ago until 18 years ago:
+
+```tsx
+<DatePicker from={{ yearsAgo: 60 }} until={{ yearsAgo: 18 }} />
+```
+
+If a fixed day and a counted day are both set, the tighter day wins. Here the latest day is today, because that is earlier than 1 January 2030:
+
+```tsx
+<DatePicker maxDate={new Date(2030, 0, 1)} until="today" />
 ```
 
 Import the CSS once in your app entry if your bundler does not pick it up automatically:
@@ -122,22 +150,25 @@ Use `pnpm gen:holidays` if you need to refresh holiday data manually, then rebui
 
 ## GitHub automation
 
-This repo includes two automations:
+This repo includes these automations:
 
+- Pull requests: `.github/workflows/ci.yml` runs typecheck, lint, tests, and the library build.
+- Main: `.github/workflows/release.yml` runs the same checks, builds the demo, and deploys it to GitHub Pages. It does not change the package version.
 - Library updates: Dependabot opens weekly PRs for npm dependencies and GitHub Actions versions.
   - Config: `.github/dependabot.yml`
 - Holiday updates: a scheduled workflow regenerates `src/data/th-holidays.json` and opens a PR when changes are detected.
   - Workflow: `.github/workflows/update-holidays.yml`
   - Schedule: monthly (`0 3 1 * *`) plus manual trigger (`workflow_dispatch`)
 
-### Commit flags
+### Version
 
-Include these in a commit message to control what runs on push to `main`:
+Change the version in `package.json` by hand. Keep the version badge at the top of this file on the same number.
+
+### Commit flags
 
 | Flag | Effect |
 |---|---|
-| `[skip ci]` | Skips the entire release workflow (no validate, no build, no deploy) |
-| `#no-release` | Runs validate + build + deploy, but skips version bump and GitHub Release |
+| `[skip ci]` | Skips the release workflow on push to `main` (no validate, no build, no deploy) |
 
 ---
 
@@ -162,7 +193,7 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `selectionMode` | `"single" \| "range"` | `"single"` | Single date or date range selection |
 | `value` | `Date \| [Date, Date] \| null` | `null` | Controlled value |
 | `onChange` | `(value: Date \| [Date, Date] \| null) => void` | — | Change handler |
-| `locale` | `"th" \| "en"` | `"en"` | Language for month names and holiday tooltips |
+| `locale` | `"th" \| "en"` | `"en"` | Language for month names and holiday tooltips. `"th"` also shows Buddhist Era years (Gregorian + 543). |
 | `theme` | `DatePickerTheme` | `lightTheme` | Theme override object |
 | `presets` | `Preset[]` | built-in | Custom preset chips (replaces built-ins entirely) |
 | `presetDisplay` | `"chips" \| "dropdown"` | `"chips"` | Render range presets as chips or a select dropdown |
@@ -183,7 +214,6 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `highlightWeekends` | `boolean` | `true` | Highlight Saturday and Sunday dates with the theme weekend color |
 | `showTodayButton` | `boolean` | `false` | Show a footer action that selects today immediately |
 | `todayButtonLabel` | `string` | `"Today"` | Override the footer action label |
-| `calendarSystem` | `"gregorian" \| "buddhist"` | `"gregorian"` | Display year as BE (+543) when `"buddhist"` |
 | `mode` | `"inline" \| "popover"` | `"inline"` | Inline calendar or floating popover |
 | `triggerFormat` | `string` | `"dd MMM yyyy"` | date-fns format string for popover trigger label |
 | `className` | `string` | — | Extra class name on the root element |
@@ -217,11 +247,13 @@ Weekend header labels use `weekendHeaderTextColor`, while weekend day cells use 
 
 | Key | Type | Default (light) | Description |
 |-----|------|-----------------|-------------|
-| `fontFamily` | `string` | `system-ui, sans-serif` | Font family |
+| `fontFamily` | `string` | `system-ui, -apple-system, sans-serif` | Font family |
 | `fontSize` | `string` | `"14px"` | Base font size, scales all text |
 | `primaryColor` | `string` | `"#2563EB"` | Selected date fill + active chip |
 | `primaryTextColor` | `string` | `"#FFFFFF"` | Text on `primaryColor` background |
 | `rangeColor` | `string` | `"#DBEAFE"` | In-range day fill |
+| `weekendHeaderTextColor` | `string` | `"#FCA5A5"` | Weekend column header text |
+| `weekendTextColor` | `string` | `"#DC2626"` | Weekend day text |
 | `textColor` | `string` | `"#111827"` | Default day text |
 | `mutedTextColor` | `string` | `"#9CA3AF"` | Out-of-month day text |
 | `backgroundColor` | `string` | `"#FFFFFF"` | Calendar widget background |
