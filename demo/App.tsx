@@ -701,11 +701,6 @@ function CustomizeSection() {
   const [copied, setCopied] = useState(false)
   const [calendarKey, setCalendarKey] = useState(0)
 
-  const resetCalendar = () => {
-    setValue(null)
-    setCalendarKey((current) => current + 1)
-  }
-
   const resetPlaygroundTheme = () => {
     setIsDark(false)
     setPrimary('#2563eb')
@@ -713,6 +708,27 @@ function CustomizeSection() {
     setFontSize(14)
     setDaySize(36)
     setBorderRadius(12)
+  }
+
+  const resetCalendar = () => {
+    setValue(null)
+    setSelectionMode('single')
+    setNumberOfMonths(1)
+    setMode('inline')
+    setLocale('en')
+    setWeekStartsOn(0)
+    setShowNaturalLanguageInput(false)
+    setShowPresets(true)
+    setPresetDisplay('chips')
+    setShowTodayButton(false)
+    setShowHolidays(true)
+    setHighlightWeekends(true)
+    setDateLimit('none')
+    resetPlaygroundTheme()
+    setCustomHolidayJson(DEFAULT_PLAYGROUND_JSON)
+    setCustomHolidayError(null)
+    setCopied(false)
+    setCalendarKey((current) => current + 1)
   }
 
   let parsedHolidays: CustomHolidayConfig[] = []
