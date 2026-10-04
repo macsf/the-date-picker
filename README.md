@@ -61,6 +61,34 @@ Common options:
 - `showHolidays` and `holidayTypes` to control holiday dots.
 - `customHolidays` to add your own holiday markers.
 - `theme` to override colors, radius, font, and day size.
+- `minDate` and `maxDate` to limit which days, months, and years can be chosen.
+- `from` and `until` to count that window from today.
+
+From 60 years ago until 18 years ago:
+
+```tsx
+<DatePicker from={{ yearsAgo: 60 }} until={{ yearsAgo: 18 }} />
+```
+
+`from` sets the earliest day. `until` sets the latest day. Each value is `"today"`, `"yesterday"`, or one count: `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`.
+
+Nothing later than today:
+
+```tsx
+<DatePicker until="today" />
+```
+
+Nothing later than yesterday:
+
+```tsx
+<DatePicker until="yesterday" />
+```
+
+The last 30 days. Weeks and months use the same shape, for example `{ weeksAgo: 2 }` or `{ monthsFromNow: 1 }`.
+
+```tsx
+<DatePicker from={{ daysAgo: 30 }} until="today" />
+```
 
 Import the CSS once in your app entry if your bundler does not pick it up automatically:
 
@@ -146,8 +174,10 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 | `showPresets` | `boolean` | `false` | Show quick-select preset chips |
 | `showHolidays` | `boolean` | `true` | Show holiday dots |
 | `showWeekNumbers` | `boolean` | `false` | Show ISO week numbers in left gutter |
-| `minDate` | `Date` | — | Dates before this are disabled |
-| `maxDate` | `Date` | — | Dates after this are disabled |
+| `minDate` | `Date` | — | Earliest selectable date. Earlier days, months, and years are unavailable. With only `minDate` set, the year menu continues 10 years past the visible year. |
+| `maxDate` | `Date` | — | Latest selectable date. Later days, months, and years are unavailable. With only `maxDate` set, the year menu goes back 120 years. |
+| `from` | `RelativeBound` | — | Earliest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `minDate` is also set, the later day wins. |
+| `until` | `RelativeBound` | — | Latest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `maxDate` is also set, the earlier day wins. |
 | `disabledDates` | `Date[]` | — | Specific dates to disable |
 | `weekStartsOn` | `0 \| 1` | `0` | Week start: 0 = Sunday, 1 = Monday |
 | `highlightWeekends` | `boolean` | `true` | Highlight Saturday and Sunday dates with the theme weekend color |

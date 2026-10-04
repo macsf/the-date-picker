@@ -1,10 +1,14 @@
 import { isSameDay } from 'date-fns'
 import type { Preset } from '../utils/presets'
 import { builtInPresets } from '../utils/presets'
+import { isDisabled } from '../utils/disabled'
 
 interface PresetChipsProps {
   presets?: Preset[]
   value: [Date, Date] | null
+  minDate?: Date
+  maxDate?: Date
+  disabledDates?: Date[]
   onSelect: (range: [Date, Date]) => void
   display?: 'chips' | 'dropdown'
   dropdownPlaceholder?: string
@@ -14,12 +18,20 @@ interface PresetChipsProps {
 export function PresetChips({
   presets,
   value,
+  minDate,
+  maxDate,
+  disabledDates,
   onSelect,
   display = 'chips',
   dropdownPlaceholder = 'Quick select range',
   dropdownAriaLabel = 'Quick select presets',
 }: PresetChipsProps) {
   const activePresets = presets ?? builtInPresets
+
+  const isPresetBlocked = (preset: Preset): boolean => {
+    const [start, end] = preset.resolve()
+    return isDisabled(start, minDate, maxDate, disabledDates) || isDisabled(end, minDate, maxDate, disabledDates)
+  }
 
   const isActive = (preset: Preset): boolean => {
     if (!value) return false
@@ -44,7 +56,7 @@ export function PresetChips({
         >
           <option value="">{dropdownPlaceholder}</option>
           {activePresets.map((preset, i) => (
-            <option key={i} value={i}>
+            <option key={i} value={i} disabled={isPresetBlocked(preset)}>
               {preset.label}
             </option>
           ))}
@@ -60,6 +72,7 @@ export function PresetChips({
           key={i}
           className={['dp-chip', isActive(preset) ? 'dp-chip--active' : ''].join(' ')}
           onClick={() => onSelect(preset.resolve())}
+          disabled={isPresetBlocked(preset)}
           type="button"
         >
           {preset.label}

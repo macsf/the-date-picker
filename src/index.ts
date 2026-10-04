@@ -1,6 +1,6 @@
 import './datepicker.css'
 export { DatePicker } from './components/DatePicker'
-export type { DatePickerProps, CustomHolidayConfig } from './components/DatePicker'
+export type { DatePickerProps, CustomHolidayConfig, RelativeBound } from './components/DatePicker'
 export {
   getHolidaysForYear,
   getHolidayMapForYear,
