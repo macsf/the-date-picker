@@ -1,10 +1,20 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import { computePopoverPosition } from '../utils/popover'
 
 export interface PopoverPosition {
   top: number
   left: number
   placement: 'bottom' | 'top'
+}
+
+function isTriggerTarget(trigger: HTMLElement | null, target: Node): boolean {
+  if (!trigger) return false
+  if (trigger.contains(target)) return true
+  if (!(target instanceof Element)) return false
+  const label = target.closest('label')
+  if (!label) return false
+  if (trigger.id && label.htmlFor === trigger.id) return true
+  return label.contains(trigger)
 }
 
 export function usePopover() {
@@ -14,6 +24,7 @@ export function usePopover() {
     left: 0,
     placement: 'bottom',
   })
+  const [placed, setPlaced] = useState(false)
   const triggerRef = useRef<HTMLElement | null>(null)
   const popoverRef = useRef<HTMLElement | null>(null)
 
@@ -22,7 +33,7 @@ export function usePopover() {
   const toggle = useCallback(() => setIsOpen((v) => !v), [])
 
   const updatePosition = useCallback(() => {
-    if (!triggerRef.current || !popoverRef.current) return
+    if (!triggerRef.current || !popoverRef.current) return false
     setPosition(
       computePopoverPosition({
         triggerRect: triggerRef.current.getBoundingClientRect(),
@@ -33,20 +44,26 @@ export function usePopover() {
         scrollY: window.scrollY,
       }),
     )
+    return true
   }, [])
+
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      setPlaced(false)
+      return
+    }
+    if (updatePosition()) setPlaced(true)
+  }, [isOpen, updatePosition])
 
   useEffect(() => {
     if (!isOpen) return
 
-    // Wait for popover to mount before measuring
-    const frame = requestAnimationFrame(updatePosition)
-
     const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as Node
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(e.target as Node) &&
-        triggerRef.current &&
-        !triggerRef.current.contains(e.target as Node)
+        !popoverRef.current.contains(target) &&
+        !isTriggerTarget(triggerRef.current, target)
       ) {
         close()
       }
@@ -61,7 +78,6 @@ export function usePopover() {
     window.addEventListener('scroll', updatePosition, true)
 
     return () => {
-      cancelAnimationFrame(frame)
       document.removeEventListener('mousedown', handleOutsideClick)
       document.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('resize', updatePosition)
@@ -69,5 +85,5 @@ export function usePopover() {
     }
   }, [isOpen, close, updatePosition])
 
-  return { isOpen, open, close, toggle, position, triggerRef, popoverRef }
+  return { isOpen, open, close, toggle, position, placed, triggerRef, popoverRef }
 }

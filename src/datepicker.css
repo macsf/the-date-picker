@@ -453,6 +453,7 @@
    ============================================= */
 
 .dp-trigger {
+  box-sizing: border-box;
   padding: 8px 14px;
   border: 1px solid var(--dp-border, #e5e7eb);
   border-radius: 8px;
@@ -460,7 +461,12 @@
   font-size: var(--dp-font-size, 14px);
   font-family: var(--dp-font-family, system-ui, sans-serif);
   color: var(--dp-text, #111827);
+  text-align: left;
   cursor: pointer;
+}
+
+.dp-trigger--empty {
+  color: #9ca3af;
 }
 
 /* Popover portal wrapper */

@@ -1,7 +1,7 @@
 # the-date-picker
 
-[![CI](https://github.com/macsf/the-date-picker/actions/workflows/ci.yml/badge.svg)](https://github.com/macsf/the-date-picker/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-0.3.2-blue)](./package.json)
+![CI](https://github.com/macsf/the-date-picker/actions/workflows/ci.yml/badge.svg)
+![Version](https://img.shields.io/badge/version-0.3.3-blue)
 
 A standalone React date picker library written in TypeScript (strict mode).
 Thai public holidays · natural language input · range selection · theming · Buddhist Era support.
@@ -21,7 +21,13 @@ The repo builds from source during install via `prepare`, so developers only nee
 
 1. Import the component and the stylesheet once in your app entry.
 2. Keep the selected value in state and pass it back through `onChange`.
-3. Set `selectionMode` and `mode` for the behavior you want.
+3. Use `mode="inline"` when the calendar stays on the page. Use `mode="popover"` with `trigger` when your own field should open it.
+
+
+
+### Inline
+
+The calendar is always visible. `mode` defaults to `"inline"`.
 
 ```tsx
 import { useState } from 'react'
@@ -43,16 +49,101 @@ function App() {
 }
 ```
 
-For a floating calendar, switch to popover mode:
+If the page already has its own popup, keep the picker inline inside it. The library renders the calendar and reports the chosen date. Your button opens and closes the popup.
+
+```tsx
+<YourPopover open={open} onOpenChange={setOpen}>
+  <DatePicker
+    mode="inline"
+    value={value}
+    onChange={(nextValue) => {
+      setValue(nextValue as Date | null)
+      setOpen(false)
+    }}
+  />
+</YourPopover>
+```
+
+
+
+### Trigger
+
+`mode="popover"` floats the calendar from a field. Pass `trigger` to render that field yourself. Put `field.ref` and `field.onClick` on the control that should open the calendar, and show `field.label` as its value.
+
+```tsx
+function BirthdayField() {
+  const [birthday, setBirthday] = useState<Date | null>(null)
+
+  return (
+    <DatePicker
+      mode="popover"
+      value={birthday}
+      onChange={(nextValue) => setBirthday(nextValue as Date | null)}
+      until={{ yearsAgo: 18 }}
+      triggerFormat="dd/MM/yyyy"
+      triggerPlaceholder="dd/mm/yyyy"
+      trigger={(field) => (
+        <div className="form_group mb-3">
+          <label htmlFor="birth_date" className="form-label">Birthday</label>
+          <input
+            ref={field.ref}
+            type="text"
+            id="birth_date"
+            name="birth_date"
+            value={field.label}
+            className="form-control"
+            placeholder={field.placeholder}
+            inputMode="numeric"
+            maxLength={10}
+            onClick={field.onClick}
+            readOnly
+          />
+        </div>
+      )}
+    />
+  )
+}
+```
+
+`field.ref` is a callback. React calls it with the input element, and the calendar is positioned under that element. `field.label` is `""` until a date is chosen, then a [date-fns](https://date-fns.org/docs/format) string. `dd/MM/yyyy` is day, month, year (`MM` is the month; `mm` is minutes). `readOnly` keeps typing from replacing the chosen date. A label with `for="birth_date"` still opens the calendar, because it activates that input.
+
+`field` values:
+
+
+| Property      | What it is                                                  |
+| ------------- | ----------------------------------------------------------- |
+| `ref`         | Callback. Attach it to the control that opens the calendar. |
+| `onClick`     | Opens the calendar, or closes it if it is already open.     |
+| `label`       | Formatted selection, or `""` when nothing is selected.      |
+| `placeholder` | The `triggerPlaceholder` value.                             |
+| `isOpen`      | Whether the calendar is open.                               |
+
+
+For a range, `label` stays `""` until both dates are chosen, then it is `start - end` using `triggerFormat`.
 
 ```tsx
 <DatePicker
   mode="popover"
   selectionMode="range"
-  value={value}
-  onChange={setValue}
+  numberOfMonths={2}
+  value={period}
+  onChange={setPeriod}
+  triggerFormat="dd/MM/yyyy"
+  triggerPlaceholder="dd/mm/yyyy - dd/mm/yyyy"
+  trigger={(field) => (
+    <input
+      ref={field.ref}
+      type="text"
+      value={field.label}
+      placeholder={field.placeholder}
+      onClick={field.onClick}
+      readOnly
+    />
+  )}
 />
 ```
+
+Omit `trigger` to use the built-in button. It shows `triggerPlaceholder` (`"Select date"`) until a date is chosen.
 
 Common options:
 
@@ -61,6 +152,9 @@ Common options:
 - `showHolidays` and `holidayTypes` to control holiday dots.
 - `customHolidays` to add your own holiday markers.
 - `theme` to override colors, radius, font, and day size.
+
+
+
 ### Fixed days
 
 `minDate` is the earliest selectable day. `maxDate` is the latest. These stay on the calendar dates you pass.
@@ -71,6 +165,8 @@ Common options:
   maxDate={new Date(2026, 11, 31)}
 />
 ```
+
+
 
 ### Days counted from today
 
@@ -133,6 +229,8 @@ import { getHolidaysForYear, getHolidayMapForYear } from 'the-date-picker'
 
 ---
 
+
+
 ## Build steps
 
 The library keeps Thailand holiday data generated from source as part of the build:
@@ -160,17 +258,23 @@ This repo includes these automations:
   - Workflow: `.github/workflows/update-holidays.yml`
   - Schedule: monthly (`0 3 1 * *`) plus manual trigger (`workflow_dispatch`)
 
+
+
 ### Version
 
 Change the version in `package.json` by hand. Keep the version badge at the top of this file on the same number.
 
 ### Commit flags
 
-| Flag | Effect |
-|---|---|
+
+| Flag        | Effect                                                                          |
+| ----------- | ------------------------------------------------------------------------------- |
 | `[skip ci]` | Skips the release workflow on push to `main` (no validate, no build, no deploy) |
 
+
 ---
+
+
 
 ## Date handling & timezone safety
 
@@ -185,40 +289,49 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 
 ---
 
+
+
 ## Props reference
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `numberOfMonths` | `1 \| 2` | `1` | Number of calendar months to display. The calendar opens on today, or on the latest selectable day when today is unavailable. In `2`-month mode the right month is that day and the left month is the month before it. Each panel can still be navigated independently. |
-| `selectionMode` | `"single" \| "range"` | `"single"` | Single date or date range selection |
-| `value` | `Date \| [Date, Date] \| null` | `null` | Controlled value |
-| `onChange` | `(value: Date \| [Date, Date] \| null) => void` | — | Change handler |
-| `locale` | `"th" \| "en"` | `"en"` | Language for month names and holiday tooltips. `"th"` also shows Buddhist Era years (Gregorian + 543). |
-| `theme` | `DatePickerTheme` | `lightTheme` | Theme override object |
-| `presets` | `Preset[]` | built-in | Custom preset chips (replaces built-ins entirely) |
-| `presetDisplay` | `"chips" \| "dropdown"` | `"chips"` | Render range presets as chips or a select dropdown |
-| `presetDropdownPlaceholder` | `string` | `"Quick select range"` | Placeholder option text for dropdown presets |
-| `presetDropdownAriaLabel` | `string` | `"Quick select presets"` | Accessible label for dropdown presets |
-| `customHolidays` | `CustomHolidayConfig[]` | `[]` | Custom holiday dots merged over built-in holidays |
-| `holidayTypes` | `Array<"public" \| "bank" \| "observance">` | `["public"]` | Which holiday types to display |
-| `showNaturalLanguageInput` | `boolean` | `false` | Show the natural language text input |
-| `showPresets` | `boolean` | `false` | Show quick-select preset chips |
-| `showHolidays` | `boolean` | `true` | Show holiday dots |
-| `showWeekNumbers` | `boolean` | `false` | Show ISO week numbers in left gutter |
-| `minDate` | `Date` | — | Earliest selectable date. Earlier days, months, and years are unavailable. With only `minDate` set, the year menu continues 10 years past the visible year. |
-| `maxDate` | `Date` | — | Latest selectable date. Later days, months, and years are unavailable. With only `maxDate` set, the year menu goes back 120 years. |
-| `from` | `RelativeBound` | — | Earliest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `minDate` is also set, the later day wins. |
-| `until` | `RelativeBound` | — | Latest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `maxDate` is also set, the earlier day wins. |
-| `disabledDates` | `Date[]` | — | Specific dates to disable |
-| `weekStartsOn` | `0 \| 1` | `0` | Week start: 0 = Sunday, 1 = Monday |
-| `highlightWeekends` | `boolean` | `true` | Highlight Saturday and Sunday dates with the theme weekend color |
-| `showTodayButton` | `boolean` | `false` | Show a footer action that selects today immediately |
-| `todayButtonLabel` | `string` | `"Today"` | Override the footer action label |
-| `mode` | `"inline" \| "popover"` | `"inline"` | Inline calendar or floating popover |
-| `triggerFormat` | `string` | `"dd MMM yyyy"` | date-fns format string for popover trigger label |
-| `className` | `string` | — | Extra class name on the root element |
+
+| Prop                        | Type                                           | Default                  | Description                                                                                                                                                                                                                                                             |
+| --------------------------- | ---------------------------------------------- | ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `numberOfMonths`            | `1 | 2`                                        | `1`                      | Number of calendar months to display. The calendar opens on today, or on the latest selectable day when today is unavailable. In `2`-month mode the right month is that day and the left month is the month before it. Each panel can still be navigated independently. |
+| `selectionMode`             | `"single" | "range"`                           | `"single"`               | Single date or date range selection                                                                                                                                                                                                                                     |
+| `value`                     | `Date | [Date, Date] | null`                   | `null`                   | Controlled value                                                                                                                                                                                                                                                        |
+| `onChange`                  | `(value: Date | [Date, Date] | null) => void`  | —                        | Change handler                                                                                                                                                                                                                                                          |
+| `locale`                    | `"th" | "en"`                                  | `"en"`                   | Language for month names and holiday tooltips. `"th"` also shows Buddhist Era years (Gregorian + 543).                                                                                                                                                                  |
+| `theme`                     | `DatePickerTheme`                              | `lightTheme`             | Theme override object                                                                                                                                                                                                                                                   |
+| `presets`                   | `Preset[]`                                     | built-in                 | Custom preset chips (replaces built-ins entirely)                                                                                                                                                                                                                       |
+| `presetDisplay`             | `"chips" | "dropdown"`                         | `"chips"`                | Render range presets as chips or a select dropdown                                                                                                                                                                                                                      |
+| `presetDropdownPlaceholder` | `string`                                       | `"Quick select range"`   | Placeholder option text for dropdown presets                                                                                                                                                                                                                            |
+| `presetDropdownAriaLabel`   | `string`                                       | `"Quick select presets"` | Accessible label for dropdown presets                                                                                                                                                                                                                                   |
+| `customHolidays`            | `CustomHolidayConfig[]`                        | `[]`                     | Custom holiday dots merged over built-in holidays                                                                                                                                                                                                                       |
+| `holidayTypes`              | `Array<"public" | "bank" | "observance">`      | `["public"]`             | Which holiday types to display                                                                                                                                                                                                                                          |
+| `showNaturalLanguageInput`  | `boolean`                                      | `false`                  | Show the natural language text input                                                                                                                                                                                                                                    |
+| `showPresets`               | `boolean`                                      | `false`                  | Show quick-select preset chips                                                                                                                                                                                                                                          |
+| `showHolidays`              | `boolean`                                      | `true`                   | Show holiday dots                                                                                                                                                                                                                                                       |
+| `showWeekNumbers`           | `boolean`                                      | `false`                  | Show ISO week numbers in left gutter                                                                                                                                                                                                                                    |
+| `minDate`                   | `Date`                                         | —                        | Earliest selectable date. Earlier days, months, and years are unavailable. With only `minDate` set, the year menu continues 10 years past the visible year.                                                                                                             |
+| `maxDate`                   | `Date`                                         | —                        | Latest selectable date. Later days, months, and years are unavailable. With only `maxDate` set, the year menu goes back 120 years.                                                                                                                                      |
+| `from`                      | `RelativeBound`                                | —                        | Earliest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `minDate` is also set, the later day wins.                                                                  |
+| `until`                     | `RelativeBound`                                | —                        | Latest day, counted from today. `"today"`, `"yesterday"`, or one of `daysAgo`, `weeksAgo`, `monthsAgo`, `yearsAgo`, or the same unit with `FromNow`. When `maxDate` is also set, the earlier day wins.                                                                  |
+| `disabledDates`             | `Date[]`                                       | —                        | Specific dates to disable                                                                                                                                                                                                                                               |
+| `weekStartsOn`              | `0 | 1`                                        | `0`                      | Week start: 0 = Sunday, 1 = Monday                                                                                                                                                                                                                                      |
+| `highlightWeekends`         | `boolean`                                      | `true`                   | Highlight Saturday and Sunday dates with the theme weekend color                                                                                                                                                                                                        |
+| `showTodayButton`           | `boolean`                                      | `false`                  | Show a footer action that selects today immediately                                                                                                                                                                                                                     |
+| `todayButtonLabel`          | `string`                                       | `"Today"`                | Override the footer action label                                                                                                                                                                                                                                        |
+| `mode`                      | `"inline" | "popover"`                         | `"inline"`               | `"inline"` keeps the calendar on the page. `"popover"` floats it from a field.                                                                                                                                                                                          |
+| `triggerFormat`             | `string`                                       | `"dd MMM yyyy"`          | date-fns format for the field text. A complete range is `start - end`.                                                                                                                                                                                                  |
+| `triggerPlaceholder`        | `string`                                       | `"Select date"`          | Field text before a date is chosen.                                                                                                                                                                                                                                     |
+| `triggerAriaLabel`          | `string`                                       | —                        | Accessible name for the built-in popover button. Ignored when `trigger` is set.                                                                                                                                                                                         |
+| `trigger`                   | `(field: DatePickerTriggerField) => ReactNode` | —                        | Render your own field. Put `field.ref` and `field.onClick` on the control, and show `field.label` as its value. See Usage.                                                                                                                                              |
+| `className`                 | `string`                                       | —                        | Extra class name on the root element                                                                                                                                                                                                                                    |
+
 
 ---
+
+
 
 ## Public holiday data
 
@@ -240,28 +353,32 @@ The exported JSON is the combined dataset after package-level custom holiday ove
 
 ---
 
+
+
 ## Theme keys reference
 
 Pass a partial `DatePickerTheme` object to the `theme` prop. Any omitted key falls back to `lightTheme`.
 Weekend header labels use `weekendHeaderTextColor`, while weekend day cells use `weekendTextColor`.
 
-| Key | Type | Default (light) | Description |
-|-----|------|-----------------|-------------|
-| `fontFamily` | `string` | `system-ui, -apple-system, sans-serif` | Font family |
-| `fontSize` | `string` | `"14px"` | Base font size, scales all text |
-| `primaryColor` | `string` | `"#2563EB"` | Selected date fill + active chip |
-| `primaryTextColor` | `string` | `"#FFFFFF"` | Text on `primaryColor` background |
-| `rangeColor` | `string` | `"#DBEAFE"` | In-range day fill |
-| `weekendHeaderTextColor` | `string` | `"#FCA5A5"` | Weekend column header text |
-| `weekendTextColor` | `string` | `"#DC2626"` | Weekend day text |
-| `textColor` | `string` | `"#111827"` | Default day text |
-| `mutedTextColor` | `string` | `"#9CA3AF"` | Out-of-month day text |
-| `backgroundColor` | `string` | `"#FFFFFF"` | Calendar widget background |
-| `surfaceColor` | `string` | `"#F3F4F6"` | Day cell hover background |
-| `borderColor` | `string` | `"#E5E7EB"` | Widget border |
-| `borderRadius` | `string` | `"12px"` | Widget corner radius |
-| `daySize` | `number` | `36` | Day cell diameter in px, scales the entire grid |
-| `shadow` | `string` | `"0 4px 16px rgba(0,0,0,0.10)"` | Box shadow on widget |
+
+| Key                      | Type     | Default (light)                        | Description                                     |
+| ------------------------ | -------- | -------------------------------------- | ----------------------------------------------- |
+| `fontFamily`             | `string` | `system-ui, -apple-system, sans-serif` | Font family                                     |
+| `fontSize`               | `string` | `"14px"`                               | Base font size, scales all text                 |
+| `primaryColor`           | `string` | `"#2563EB"`                            | Selected date fill + active chip                |
+| `primaryTextColor`       | `string` | `"#FFFFFF"`                            | Text on `primaryColor` background               |
+| `rangeColor`             | `string` | `"#DBEAFE"`                            | In-range day fill                               |
+| `weekendHeaderTextColor` | `string` | `"#FCA5A5"`                            | Weekend column header text                      |
+| `weekendTextColor`       | `string` | `"#DC2626"`                            | Weekend day text                                |
+| `textColor`              | `string` | `"#111827"`                            | Default day text                                |
+| `mutedTextColor`         | `string` | `"#9CA3AF"`                            | Out-of-month day text                           |
+| `backgroundColor`        | `string` | `"#FFFFFF"`                            | Calendar widget background                      |
+| `surfaceColor`           | `string` | `"#F3F4F6"`                            | Day cell hover background                       |
+| `borderColor`            | `string` | `"#E5E7EB"`                            | Widget border                                   |
+| `borderRadius`           | `string` | `"12px"`                               | Widget corner radius                            |
+| `daySize`                | `number` | `36`                                   | Day cell diameter in px, scales the entire grid |
+| `shadow`                 | `string` | `"0 4px 16px rgba(0,0,0,0.10)"`        | Box shadow on widget                            |
+
 
 Two built-in themes are exported:
 
@@ -270,6 +387,8 @@ import { lightTheme, darkTheme } from 'the-date-picker'
 ```
 
 ---
+
+
 
 ## customHolidays example
 
@@ -296,6 +415,8 @@ Custom holidays override built-in holidays on the same date.
 `dotColor` defaults to `#EF4444` if omitted.
 
 ---
+
+
 
 ## Next.js integration
 
@@ -325,6 +446,8 @@ import 'the-date-picker/datepicker.css'
 
 ---
 
+
+
 ## Vite integration
 
 No extra config needed. Import the CSS in your entry file:
@@ -335,6 +458,8 @@ import 'the-date-picker/datepicker.css'
 ```
 
 ---
+
+
 
 ## Dev & demo
 

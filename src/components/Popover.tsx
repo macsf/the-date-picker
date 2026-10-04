@@ -4,12 +4,13 @@ import type { PopoverPosition } from '../hooks/usePopover'
 
 interface PopoverProps {
   isOpen: boolean
+  placed: boolean
   position: PopoverPosition
   popoverRef: React.RefObject<HTMLElement>
   children: React.ReactNode
 }
 
-export function Popover({ isOpen, position, popoverRef, children }: PopoverProps) {
+export function Popover({ isOpen, placed, position, popoverRef, children }: PopoverProps) {
   if (!isOpen) return null
 
   return createPortal(
@@ -21,6 +22,7 @@ export function Popover({ isOpen, position, popoverRef, children }: PopoverProps
         top: position.top,
         left: position.left,
         zIndex: 9999,
+        visibility: placed ? 'visible' : 'hidden',
       }}
       role="dialog"
       aria-modal="true"

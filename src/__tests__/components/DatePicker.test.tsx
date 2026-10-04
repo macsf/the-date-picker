@@ -80,6 +80,54 @@ describe('DatePicker popover mode', () => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     })
   })
+
+  it('writes the chosen date into the field passed to trigger', () => {
+    render(
+      <DatePicker
+        mode="popover"
+        value={new Date(2026, 9, 3)}
+        until="yesterday"
+        triggerFormat="dd/MM/yyyy"
+        triggerPlaceholder="dd/mm/yyyy"
+        trigger={(field) => (
+          <input
+            ref={field.ref}
+            id="birth_date"
+            name="birth_date"
+            aria-label="วัน เดือน ปีเกิด"
+            value={field.label}
+            placeholder={field.placeholder}
+            onClick={field.onClick}
+            readOnly
+          />
+        )}
+      />,
+    )
+
+    expect(screen.getByRole('textbox', { name: 'วัน เดือน ปีเกิด' })).toHaveValue('03/10/2026')
+  })
+
+  it('opens the calendar from the field onClick', async () => {
+    const user = userEvent.setup()
+    render(
+      <DatePicker
+        mode="popover"
+        trigger={(field) => (
+          <input
+            ref={field.ref}
+            aria-label="วัน เดือน ปีเกิด"
+            value={field.label}
+            onClick={field.onClick}
+            readOnly
+          />
+        )}
+      />,
+    )
+
+    await user.click(screen.getByRole('textbox', { name: 'วัน เดือน ปีเกิด' }))
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
 })
 
 function ControlledSingleTodayPicker() {

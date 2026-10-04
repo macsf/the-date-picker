@@ -85,7 +85,25 @@ export interface DatePickerProps {
   todayButtonLabel?: string
   mode?: 'inline' | 'popover'
   triggerFormat?: string
+  /** Shown in the popover field before a date is chosen. */
+  triggerPlaceholder?: string
+  /** Accessible name for the default popover button. */
+  triggerAriaLabel?: string
+  /**
+   * Render the form field yourself. Put `ref` and `onClick` on the control
+   * that should open the calendar, and show `label` as its value.
+   */
+  trigger?: (field: DatePickerTriggerField) => React.ReactNode
   className?: string
+}
+
+export interface DatePickerTriggerField {
+  ref: React.RefCallback<HTMLElement>
+  onClick: () => void
+  /** Formatted date, or an empty string when nothing is selected. */
+  label: string
+  placeholder: string
+  isOpen: boolean
 }
 
 export function DatePicker({
@@ -116,6 +134,9 @@ export function DatePicker({
   todayButtonLabel = 'Today',
   mode = 'inline',
   triggerFormat,
+  triggerPlaceholder = 'Select date',
+  triggerAriaLabel,
+  trigger,
   className,
 }: DatePickerProps) {
   const { minDate, maxDate } = resolveRelativeBounds({
@@ -277,7 +298,7 @@ export function DatePicker({
   const defaultTriggerFormat =
     selectionMode === 'range' ? 'dd MMM yyyy' : 'dd MMM yyyy'
 
-  const triggerLabel = (() => {
+  const triggerValue = (() => {
     const fmt = triggerFormat ?? defaultTriggerFormat
     if (Array.isArray(value) && value[0] && value[1]) {
       return `${format(value[0], fmt)} - ${format(value[1], fmt)}`
@@ -285,7 +306,7 @@ export function DatePicker({
     if (value instanceof Date) {
       return format(value, fmt)
     }
-    return 'Select date'
+    return ''
   })()
 
   const calendarConfig: CalendarConfig = {
@@ -376,21 +397,38 @@ export function DatePicker({
     </div>
   )
 
+  const bindTrigger = useCallback((node: HTMLElement | null) => {
+    popover.triggerRef.current = node
+  }, [popover.triggerRef])
+
   if (mode === 'popover') {
+    const field: DatePickerTriggerField = {
+      ref: bindTrigger,
+      onClick: popover.toggle,
+      label: triggerValue,
+      placeholder: triggerPlaceholder,
+      isOpen: popover.isOpen,
+    }
     return (
       <>
-        <button
-          ref={popover.triggerRef as React.RefObject<HTMLButtonElement>}
-          className="dp-trigger"
-          onClick={popover.toggle}
-          type="button"
-          aria-haspopup="dialog"
-          aria-expanded={popover.isOpen}
-        >
-          {triggerLabel}
-        </button>
+        {trigger ? (
+          trigger(field)
+        ) : (
+          <button
+            ref={bindTrigger}
+            className={['dp-trigger', triggerValue ? '' : 'dp-trigger--empty'].filter(Boolean).join(' ')}
+            type="button"
+            onClick={popover.toggle}
+            aria-label={triggerAriaLabel}
+            aria-haspopup="dialog"
+            aria-expanded={popover.isOpen}
+          >
+            {triggerValue || triggerPlaceholder}
+          </button>
+        )}
         <Popover
           isOpen={popover.isOpen}
+          placed={popover.placed}
           position={popover.position}
           popoverRef={popover.popoverRef}
         >

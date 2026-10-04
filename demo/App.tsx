@@ -4,12 +4,18 @@ import { DatePicker, lightTheme, darkTheme } from 'the-date-picker'
 import type { DatePickerTheme, CustomHolidayConfig, RelativeBound } from 'the-date-picker'
 
 // ---- Utility: format value for display ----
+function fmtDay(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
 function fmtValue(v: Date | [Date, Date] | null): string {
   if (!v) return 'null'
   if (Array.isArray(v)) {
-    return JSON.stringify([v[0].toISOString().slice(0, 10), v[1].toISOString().slice(0, 10)])
+    return JSON.stringify([fmtDay(v[0]), fmtDay(v[1])])
   }
-  return JSON.stringify(v.toISOString().slice(0, 10))
+  return JSON.stringify(fmtDay(v))
 }
 
 // ---- Code block renderer ----
@@ -115,7 +121,8 @@ const SECTIONS = [
   { id: 'popover-range-double', label: '9. Popover range double month' },
   { id: 'disabled', label: '10. Date limits' },
   { id: 'buddhist', label: '11. Buddhist calendar' },
-  { id: 'playground', label: '12. Customize demo' },
+  { id: 'multi', label: '12. Multiple calendars' },
+  { id: 'playground', label: '13. Customize demo' },
 ]
 
 // ==============================================================
@@ -1003,6 +1010,93 @@ function CustomizeSection() {
   )
 }
 
+function MultiCalendarSection() {
+  const [birthday, setBirthday] = useState<Date | null>(null)
+  const [period, setPeriod] = useState<[Date, Date] | null>(null)
+
+  return (
+    <div>
+      <h1 className="demo-section-title">Multiple calendars</h1>
+      <p className="demo-section-desc">
+        Click a field to open its calendar. The field fills in after you choose a date. Birthday cannot be later than yesterday.
+      </p>
+      <form
+        onSubmit={(event) => event.preventDefault()}
+        style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 28 }}
+      >
+        <DatePicker
+          locale="th"
+          mode="popover"
+          value={birthday}
+          onChange={(v) => setBirthday(v as Date | null)}
+          until={{ yearsAgo: 18 }}
+          triggerFormat="dd/MM/yyyy"
+          triggerPlaceholder="dd/mm/yyyy"
+          trigger={(field) => (
+            <div className="form_group">
+              <label htmlFor="birth_date" className="form-label" style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>
+                วัน เดือน ปีเกิด (อายุขั้นต่ำ 18 ปี)
+              </label>
+              <input
+                ref={field.ref}
+                type="text"
+                id="birth_date"
+                name="birth_date"
+                value={field.label}
+                className="form-control"
+                placeholder={field.placeholder}
+                inputMode="numeric"
+                maxLength={10}
+                readOnly
+                onClick={field.onClick}
+                style={{ width: '22rem', boxSizing: 'border-box', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8 }}
+              />
+            </div>
+          )}
+        />
+        <DatePicker
+          locale="th"
+          mode="popover"
+          selectionMode="range"
+          numberOfMonths={2}
+          value={period}
+          onChange={(v) => setPeriod(v as [Date, Date] | null)}
+          triggerFormat="dd/MM/yyyy"
+          triggerPlaceholder="dd/mm/yyyy - dd/mm/yyyy"
+          trigger={(field) => (
+            <div className="form_group">
+              <label htmlFor="period" className="form-label" style={{ display: 'block', marginBottom: 6, fontWeight: 600 }}>
+                ระหว่างวันที่
+              </label>
+              <input
+                ref={field.ref}
+                type="text"
+                id="period"
+                name="period"
+                value={field.label}
+                className="form-control"
+                placeholder={field.placeholder}
+                readOnly
+                onClick={field.onClick}
+                style={{ width: '22rem', boxSizing: 'border-box', padding: '8px 12px', border: '1px solid #d1d5db', borderRadius: 8 }}
+              />
+            </div>
+          )}
+        />
+      </form>
+      <div className="demo-info">
+        <div className="demo-value-label">Birthday</div>
+        <div className="demo-value">{fmtValue(birthday)}</div>
+        <div className="demo-value-label">Period</div>
+        <div className="demo-value">{fmtValue(period)}</div>
+        <CodeBlock
+          code={`<DatePicker\n  locale="th"\n  mode="popover"\n  value={birthday}\n  onChange={setBirthday}\n  until="{ yearsAgo: 18 }"\n  triggerFormat="dd/MM/yyyy"\n  triggerPlaceholder="dd/mm/yyyy"\n  trigger={(field) => (\n    <div className="form_group">\n      <label htmlFor="birth_date" className="form-label">วัน เดือน ปีเกิด</label>\n      <input\n        ref={field.ref}\n        type="text"\n        id="birth_date"\n        name="birth_date"\n        value={field.label}\n        className="form-control"\n        placeholder={field.placeholder}\n        inputMode="numeric"\n        maxLength={10}\n        onClick={field.onClick}\n        readOnly\n      />\n    </div>\n  )}\n/>\n\n<DatePicker\n  locale="th"\n  mode="popover"\n  selectionMode="range"\n  numberOfMonths={2}\n  value={period}\n  onChange={setPeriod}\n  triggerFormat="dd/MM/yyyy"\n  triggerPlaceholder="dd/mm/yyyy - dd/mm/yyyy"\n  trigger={(field) => (\n    <div className="form_group">\n      <label htmlFor="period" className="form-label">ระหว่างวันที่</label>\n      <input\n        ref={field.ref}\n        type="text"\n        id="period"\n        name="period"\n        value={field.label}\n        className="form-control"\n        placeholder={field.placeholder}\n        readOnly\n        onClick={field.onClick}\n      />\n    </div>\n  )}\n/>`}
+        />
+      </div>
+    </div>
+  )
+}
+
 // ==============================================================
 // App
 // ==============================================================
@@ -1020,6 +1114,7 @@ const SECTION_MAP: Record<string, React.FC> = {
   disabled: DisabledSection,
   buddhist: BuddhistSection,
   playground: CustomizeSection,
+  multi: MultiCalendarSection,
 }
 
 export default function App() {
