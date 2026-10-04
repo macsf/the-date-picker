@@ -11,12 +11,49 @@ import { lightTheme } from '../theme/light'
 import type { DatePickerTheme } from '../theme/types'
 import type { Preset } from '../utils/presets'
 import type { CustomHolidayConfig } from '../hooks/useHolidays'
-import { clampVisibleMonth, resolveRelativeBounds, type RelativeBound } from '../utils/dateBounds'
+import { clampVisibleMonth, getVisibleMonths, resolveRelativeBounds, type RelativeBound } from '../utils/dateBounds'
 import { toLocalDate } from '../utils/dateNormalize'
 import { isDisabled as checkDisabled } from '../utils/disabled'
 
 export type { CustomHolidayConfig }
 export type { RelativeBound }
+
+function monthStartFrom(date: Date): Date {
+  const normalized = toLocalDate(date)
+  return new Date(normalized.getFullYear(), normalized.getMonth(), 1)
+}
+
+function isDayInBounds(date: Date, minDate?: Date, maxDate?: Date): boolean {
+  const day = toLocalDate(date).getTime()
+  if (minDate && day < toLocalDate(minDate).getTime()) return false
+  if (maxDate && day > toLocalDate(maxDate).getTime()) return false
+  return true
+}
+
+function resolveVisibleMonths(
+  value: Date | [Date, Date] | null,
+  numberOfMonths: 1 | 2,
+  minDate?: Date,
+  maxDate?: Date,
+): { left: Date; right: Date } {
+  const opening = getVisibleMonths(numberOfMonths, minDate, maxDate)
+  const selected = value instanceof Date ? value : Array.isArray(value) ? value[0] : null
+  if (!selected || !isDayInBounds(selected, minDate, maxDate)) return opening
+
+  const left = clampVisibleMonth(monthStartFrom(selected), minDate, maxDate)
+  if (numberOfMonths === 1) return { left, right: left }
+
+  const end = Array.isArray(value) ? value[1] : undefined
+  const endMonth = end && isDayInBounds(end, minDate, maxDate) ? monthStartFrom(end) : null
+  const right = clampVisibleMonth(
+    endMonth && !isSameMonth(left, endMonth)
+      ? endMonth
+      : new Date(left.getFullYear(), left.getMonth() + 1, 1),
+    minDate,
+    maxDate,
+  )
+  return { left, right }
+}
 
 export interface DatePickerProps {
   numberOfMonths?: 1 | 2
@@ -90,48 +127,17 @@ export function DatePicker({
   const themeVars = useMemo(() => injectTheme({ ...lightTheme, ...theme }), [theme])
   const popover = usePopover()
 
-  const [leftMonth, setLeftMonth] = useState<Date>(() => {
-    const now = toLocalDate(new Date())
-    let candidate = new Date(now.getFullYear(), now.getMonth(), 1)
-    if (Array.isArray(value) && value[0]) {
-      const normalized = toLocalDate(value[0])
-      candidate = new Date(normalized.getFullYear(), normalized.getMonth(), 1)
-    } else if (value instanceof Date) {
-      const normalized = toLocalDate(value)
-      candidate = new Date(normalized.getFullYear(), normalized.getMonth(), 1)
-    }
-    return clampVisibleMonth(candidate, minDate, maxDate)
-  })
-  const [rightMonth, setRightMonth] = useState<Date>(() => {
-    let candidate = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1)
-    if (Array.isArray(value) && value[1]) {
-      const start = value[0] ? toLocalDate(value[0]) : null
-      const normalized = toLocalDate(value[1])
-      if (start && !isSameMonth(start, normalized)) {
-        candidate = new Date(normalized.getFullYear(), normalized.getMonth(), 1)
-      }
-    }
-    return clampVisibleMonth(candidate, minDate, maxDate)
-  })
+  const visibleMonths = resolveVisibleMonths(value, numberOfMonths, minDate, maxDate)
+  const [leftMonth, setLeftMonth] = useState<Date>(visibleMonths.left)
+  const [rightMonth, setRightMonth] = useState<Date>(visibleMonths.right)
 
-  const boundsKey = `${minDate?.getTime() ?? ''}|${maxDate?.getTime() ?? ''}`
+  const boundsKey = `${minDate?.getTime() ?? ''}|${maxDate?.getTime() ?? ''}|${numberOfMonths}`
   const [appliedBoundsKey, setAppliedBoundsKey] = useState(boundsKey)
   if (appliedBoundsKey !== boundsKey) {
     setAppliedBoundsKey(boundsKey)
-    setLeftMonth((current) => {
-      const next = clampVisibleMonth(current, minDate, maxDate)
-      if (next.getFullYear() === current.getFullYear() && next.getMonth() === current.getMonth()) {
-        return current
-      }
-      return next
-    })
-    setRightMonth((current) => {
-      const next = clampVisibleMonth(current, minDate, maxDate)
-      if (next.getFullYear() === current.getFullYear() && next.getMonth() === current.getMonth()) {
-        return current
-      }
-      return next
-    })
+    const nextMonths = resolveVisibleMonths(value, numberOfMonths, minDate, maxDate)
+    setLeftMonth(nextMonths.left)
+    setRightMonth(nextMonths.right)
   }
 
   const [announcement, setAnnouncement] = useState('')

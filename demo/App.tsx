@@ -196,7 +196,9 @@ function DoubleSection() {
   return (
     <div>
       <h1 className="demo-section-title">Double month view</h1>
-      <p className="demo-section-desc">Two months side by side. Each panel navigates independently.</p>
+      <p className="demo-section-desc">
+        Two months side by side. The right month starts on today, or the latest available day. The left month starts one month earlier.
+      </p>
       <div className="demo-row">
         <div className="demo-preview">
           <DatePicker
@@ -697,6 +699,12 @@ function CustomizeSection() {
   const [customHolidayJson, setCustomHolidayJson] = useState(DEFAULT_PLAYGROUND_JSON)
   const [customHolidayError, setCustomHolidayError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [calendarKey, setCalendarKey] = useState(0)
+
+  const resetCalendar = () => {
+    setValue(null)
+    setCalendarKey((current) => current + 1)
+  }
 
   const resetPlaygroundTheme = () => {
     setIsDark(false)
@@ -885,6 +893,9 @@ function CustomizeSection() {
                 </div>
               </div>
             </div>
+            <button type="button" className="playground-reset-btn-full" onClick={resetCalendar}>
+              Reset Calendar
+            </button>
           </div>
 
           <div className="playground-card">
@@ -938,6 +949,7 @@ function CustomizeSection() {
         <div className="playground-right-column">
           <div className="playground-preview-section">
             <DatePicker
+              key={calendarKey}
               selectionMode={selectionMode}
               numberOfMonths={numberOfMonths}
               mode={mode}

@@ -189,7 +189,7 @@ If you serialize dates to a backend, send them as ISO date strings (`"2026-05-10
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `numberOfMonths` | `1 \| 2` | `1` | Number of calendar months to display. In `2`-month mode, left and right visible months can be navigated independently. |
+| `numberOfMonths` | `1 \| 2` | `1` | Number of calendar months to display. The calendar opens on today, or on the latest selectable day when today is unavailable. In `2`-month mode the right month is that day and the left month is the month before it. Each panel can still be navigated independently. |
 | `selectionMode` | `"single" \| "range"` | `"single"` | Single date or date range selection |
 | `value` | `Date \| [Date, Date] \| null` | `null` | Controlled value |
 | `onChange` | `(value: Date \| [Date, Date] \| null) => void` | — | Change handler |

@@ -146,6 +146,81 @@ describe('DatePicker min and max dates', () => {
     ).not.toBeInTheDocument()
   })
 
+  it('opens the right month on the current month', () => {
+    const today = new Date()
+    render(<DatePicker numberOfMonths={2} selectionMode="range" />)
+
+    const months = screen.getAllByRole('combobox', { name: 'Select month' })
+    expect(months[1]).toHaveValue(String(today.getMonth()))
+  })
+
+  it('opens the left month one month before today', () => {
+    const previous = new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1)
+    render(<DatePicker numberOfMonths={2} selectionMode="range" />)
+
+    const months = screen.getAllByRole('combobox', { name: 'Select month' })
+    expect(months[0]).toHaveValue(String(previous.getMonth()))
+  })
+
+  it('opens the right month on the latest available month', () => {
+    const latest = boundDate({ yearsAgo: 18 })
+    render(<DatePicker numberOfMonths={2} selectionMode="range" until={{ yearsAgo: 18 }} />)
+
+    const years = screen.getAllByRole('combobox', { name: 'Select year' })
+    expect(years[1]).toHaveValue(String(latest.getFullYear()))
+  })
+
+  it('opens the left month one month before the latest available month', () => {
+    const latest = boundDate({ yearsAgo: 18 })
+    const previous = new Date(latest.getFullYear(), latest.getMonth() - 1, 1)
+    render(<DatePicker numberOfMonths={2} selectionMode="range" from={{ yearsAgo: 60 }} until={{ yearsAgo: 18 }} />)
+
+    const months = screen.getAllByRole('combobox', { name: 'Select month' })
+    expect(months[0]).toHaveValue(String(previous.getMonth()))
+  })
+
+  it('moves a two month range onto the latest month when a max date is applied', async () => {
+    function LimitLater() {
+      const [maxDate, setMaxDate] = useState<Date | undefined>(undefined)
+      return (
+        <>
+          <button type="button" onClick={() => setMaxDate(new Date(2008, 9, 4))}>
+            Apply limit
+          </button>
+          <DatePicker numberOfMonths={2} maxDate={maxDate} />
+        </>
+      )
+    }
+
+    const user = userEvent.setup()
+    render(<LimitLater />)
+    await user.click(screen.getByRole('button', { name: 'Apply limit' }))
+
+    const years = screen.getAllByRole('combobox', { name: 'Select year' })
+    expect(years[1]).toHaveValue('2008')
+  })
+
+  it('moves the left month to the month before that latest month', async () => {
+    function LimitLater() {
+      const [maxDate, setMaxDate] = useState<Date | undefined>(undefined)
+      return (
+        <>
+          <button type="button" onClick={() => setMaxDate(new Date(2008, 9, 4))}>
+            Apply limit
+          </button>
+          <DatePicker numberOfMonths={2} maxDate={maxDate} />
+        </>
+      )
+    }
+
+    const user = userEvent.setup()
+    render(<LimitLater />)
+    await user.click(screen.getByRole('button', { name: 'Apply limit' }))
+
+    const months = screen.getAllByRole('combobox', { name: 'Select month' })
+    expect(months[0]).toHaveValue('8')
+  })
+
   it('moves onto the max month when maxDate is applied after mount', async () => {
     function LimitLater() {
       const [maxDate, setMaxDate] = useState<Date | undefined>(undefined)

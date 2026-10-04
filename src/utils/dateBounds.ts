@@ -39,6 +39,41 @@ export function clampVisibleMonth(month: Date, minDate?: Date, maxDate?: Date): 
   return visible
 }
 
+function calendarDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+/** Today when it can be selected, otherwise the nearest in-range day. */
+export function getAnchorDate(minDate?: Date, maxDate?: Date, today: Date = new Date()): Date {
+  const now = calendarDay(today)
+  if (maxDate && now.getTime() > calendarDay(maxDate).getTime()) return calendarDay(maxDate)
+  if (minDate && now.getTime() < calendarDay(minDate).getTime()) return calendarDay(minDate)
+  return now
+}
+
+/**
+ * Months to show when the picker opens.
+ * One month shows the anchor month.
+ * Two months put the anchor month on the right and the previous month on the left.
+ */
+export function getVisibleMonths(
+  numberOfMonths: 1 | 2,
+  minDate?: Date,
+  maxDate?: Date,
+  today: Date = new Date(),
+): { left: Date; right: Date } {
+  const anchor = getAnchorDate(minDate, maxDate, today)
+  const right = clampVisibleMonth(monthStart(anchor.getFullYear(), anchor.getMonth()), minDate, maxDate)
+  if (numberOfMonths === 1) return { left: right, right }
+
+  const left = clampVisibleMonth(
+    monthStart(right.getFullYear(), right.getMonth() - 1),
+    minDate,
+    maxDate,
+  )
+  return { left, right }
+}
+
 export function getSelectableYears(
   visibleYear: number,
   minDate?: Date,

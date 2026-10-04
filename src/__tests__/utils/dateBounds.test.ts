@@ -5,6 +5,7 @@ import {
   OPEN_PAST_YEAR_SPAN,
   UNBOUNDED_YEAR_SPAN,
   clampVisibleMonth,
+  getVisibleMonths,
   getSelectableYears,
   isMonthDisabled,
   resolveRelativeBounds,
@@ -26,6 +27,33 @@ describe('clampVisibleMonth', () => {
   it('keeps a month that sits inside the bounds', () => {
     const visible = clampVisibleMonth(new Date(2024, 3, 1), new Date(2024, 0, 1), new Date(2024, 11, 31))
     expect(visible).toEqual(new Date(2024, 3, 1))
+  })
+})
+
+describe('getVisibleMonths', () => {
+  const today = new Date(2026, 9, 4)
+
+  it('puts today on the right and the previous month on the left', () => {
+    expect(getVisibleMonths(2, undefined, undefined, today)).toEqual({
+      left: new Date(2026, 8, 1),
+      right: new Date(2026, 9, 1),
+    })
+  })
+
+  it('puts the latest available month on the right when today is later', () => {
+    expect(getVisibleMonths(2, new Date(1966, 9, 4), new Date(2008, 9, 4), today).right).toEqual(
+      new Date(2008, 9, 1),
+    )
+  })
+
+  it('puts the month before the latest available month on the left', () => {
+    expect(getVisibleMonths(2, new Date(1966, 9, 4), new Date(2008, 9, 4), today).left).toEqual(
+      new Date(2008, 8, 1),
+    )
+  })
+
+  it('shows the anchor month when only one month is visible', () => {
+    expect(getVisibleMonths(1, undefined, new Date(2008, 5, 15), today).left).toEqual(new Date(2008, 5, 1))
   })
 })
 
