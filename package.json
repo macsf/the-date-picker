@@ -37,9 +37,9 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "chrono-node": "^2.7.7",
+    "chrono-node": "^2.10.3",
     "date-fns": "^3.6.0",
-    "date-holidays": "^3.32.0"
+    "date-holidays": "^3.37.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
