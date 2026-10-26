@@ -6,7 +6,7 @@ interface PopoverProps {
   isOpen: boolean
   placed: boolean
   position: PopoverPosition
-  popoverRef: React.RefObject<HTMLElement>
+  popoverRef: React.RefObject<HTMLElement | null>
   children: React.ReactNode
 }
 
