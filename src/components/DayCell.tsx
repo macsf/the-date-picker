@@ -18,6 +18,7 @@ interface DayCellProps {
   isToday: boolean
   isWeekend: boolean
   holidays: HolidayInfo[]
+  showHolidays: boolean
   onClick: (date: Date) => void
   onMouseEnter: (date: Date) => void
   onMouseLeave: () => void
@@ -36,6 +37,7 @@ export function DayCell({
   isToday,
   isWeekend,
   holidays,
+  showHolidays,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -53,6 +55,7 @@ export function DayCell({
   if (isInRange) classNames.push('dp-day--in-range')
   if (isRangeStart) classNames.push('dp-day--range-start')
   if (isRangeEnd) classNames.push('dp-day--range-end')
+  if (!showHolidays) classNames.push('dp-day--no-holidays')
   if (isInRange && isRowStart) classNames.push('dp-day--row-start')
   if (isInRange && isRowEnd) classNames.push('dp-day--row-end')
 

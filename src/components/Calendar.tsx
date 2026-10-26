@@ -180,6 +180,7 @@ export function Calendar({
                     isToday={isToday}
                     isWeekend={isWeekend}
                     holidays={dayHolidays}
+                    showHolidays={showHolidays}
                     onClick={onDayClick}
                     onMouseEnter={onDayHover}
                     onMouseLeave={() => onDayHover(null)}
