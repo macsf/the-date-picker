@@ -239,6 +239,13 @@
   transition: background 0.1s;
 }
 
+/* Holidays off: no dot row, so center the number */
+[data-datepicker-root] .dp-day--no-holidays {
+  justify-content: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 [data-datepicker-root] .dp-day:hover:not(:disabled) {
   background: var(--dp-surface);
 }
