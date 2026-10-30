@@ -18,3 +18,12 @@ updates:
       development:
         dependency-type: development
         update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      timezone: Asia/Bangkok
+    groups:
+      actions:
+        patterns: ["*"]
