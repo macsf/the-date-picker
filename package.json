@@ -2,7 +2,6 @@
   "name": "the-date-picker",
   "version": "0.3.3",
   "description": "Standalone React date picker library with Thai holiday support",
-  "packageManager": "pnpm@12.16.1",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
