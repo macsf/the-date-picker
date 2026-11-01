@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { DatePicker } from '../../components/DatePicker'
 import { resolveRelativePoint, type RelativeBound } from '../../utils/dateBounds'
@@ -10,6 +10,11 @@ function boundDate(bound: RelativeBound): Date {
   const resolved = resolveRelativePoint(bound, new Date())
   if (!resolved) throw new Error('unresolved bound')
   return resolved
+}
+
+/** Mid-month so today and yesterday stay on the same visible calendar. */
+function freezeMidMonth(): void {
+  vi.useFakeTimers({ now: new Date(2026, 9, 15) })
 }
 
 function dayLabel(date: Date): string {
@@ -22,6 +27,10 @@ function dayLabel(date: Date): string {
 }
 
 describe('DatePicker min and max dates', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
   it('opens on the latest month a birthday max date allows', () => {
     render(<DatePicker maxDate={new Date(2008, 5, 15)} />)
 
@@ -116,6 +125,7 @@ describe('DatePicker min and max dates', () => {
   })
 
   it('disables dates after today when maxDate is today', () => {
+    freezeMidMonth()
     const today = new Date()
     const maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
     const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
@@ -293,12 +303,14 @@ describe('DatePicker min and max dates', () => {
   })
 
   it('disables today when until is yesterday', () => {
+    freezeMidMonth()
     render(<DatePicker until="yesterday" />)
 
     expect(screen.getByRole('button', { name: dayLabel(new Date()) })).toBeDisabled()
   })
 
   it('keeps yesterday selectable when until is yesterday', () => {
+    freezeMidMonth()
     const yesterday = boundDate('yesterday')
     render(<DatePicker until="yesterday" />)
 
@@ -306,12 +318,14 @@ describe('DatePicker min and max dates', () => {
   })
 
   it('disables today when until is 1 day ago', () => {
+    freezeMidMonth()
     render(<DatePicker until={{ daysAgo: 1 }} />)
 
     expect(screen.getByRole('button', { name: dayLabel(new Date()) })).toBeDisabled()
   })
 
   it('keeps the day 1 day ago selectable', () => {
+    freezeMidMonth()
     const yesterday = boundDate({ daysAgo: 1 })
     render(<DatePicker until={{ daysAgo: 1 }} />)
 
